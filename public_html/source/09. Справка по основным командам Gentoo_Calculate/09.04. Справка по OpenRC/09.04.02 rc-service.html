@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>rc-service</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="RC-SERVICE">RC-SERVICE<a href="#RC-SERVICE" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>rc-service</strong> - обнаружение и запуск OpenRC-служб в заданными аргументами</p>
+
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>rc-service</strong> [<strong>-i , -ifexists</strong> ] <em>служба команда</em> [... ] <strong>rc-service -e , -exists</strong> <em>служба</em> <strong>rc-service -l , -list rc-service -r , -resolve</strong> <em>служба</em></p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Сценарии служб могут располагаться в разных местах в зависимости от системы. <strong>rc-service</strong> позволяет найти запрашиваемую службу и запустить ее с заданными аргументами.</p>
+
+
+	<p>Если задан аргумент <strong>-i , -ifexists</strong>, то <strong>rc-service</strong> возвращает 0 даже в том случае, если служба не существует. Если задан аргумент <strong>-l , -list</strong>, то <strong>rc-service</strong> выводит все доступные службы.</p>
+
+
+	<p><strong>-e , -exists</strong> возвращает 0, если утилите удается найти запрошенную службу, иначе возвращает -1. <strong>-r , -resolve</strong> ведет себя аналогично, а также выводит полный путь службы в окне терминала.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">rc</a></strong>(8), <strong>stdout</strong>(3)</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Roy Marples &lt;<a class="email" href="mailto:roy@marples.name">roy@marples.name</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+</body>
+</html>

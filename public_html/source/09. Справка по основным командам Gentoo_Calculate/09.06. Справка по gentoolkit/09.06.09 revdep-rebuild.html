@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>revdep-rebuild</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="revdep-rebuild">revdep-rebuild<a href="#revdep-rebuild" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+revdep-rebuild - Gentoo: восстановление нарушенных обратных зависимостей 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>revdep-rebuild</strong> [ОПЦИИ] [--] [ОПЦИИ EMERGE]</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Утилита <em>revdep-rebuild</em> проверяет библиотеки и бинарные файлы на предмет неудовлетворенных зависимостей совместно используемых библиотек и пытается исправить нарушенные зависимости путем переустановки этих бинарных файлов и библиотек. Ее полезно использовать в тех случаях, когда установка одного пакета нарушает нормальную работу других, зависящих от него.</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>-C | --nocolor</strong></p>
+
+
+	<p style="padding-left:4em;">Отключить цветной вывод. (Эта опция также передается portage.)</p>
+
+
+	<p><strong>-d | --debug</strong></p>
+
+
+	<p style="padding-left:4em;">Выводить большое количество дополнительной информации (на основе обработки -xv в bash)</p>
+
+
+	<p><strong>-e | --exact</strong></p>
+
+
+	<p style="padding-left:4em;">Устанавливать последние версии найденных пакетов, не принимая во внимание СЛОТ.</p>
+
+
+	<p><strong>-h | --help</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести справку по синтаксису утилиты.</p>
+
+
+	<p><strong>-i | --ignore</strong></p>
+
+
+	<p style="padding-left:4em;">Удалить временные файлы, оставшиеся с предыдущих запусков программы.</p>
+
+
+	<p><strong>-k | --keep-temp</strong></p>
+
+
+	<p style="padding-left:4em;">Принудительно сохранять временные файлы даже после того, как revdep-rebuild успешно пересоберет пакеты. Несмотря на эту опцию, некорректные и устаревшие временные файлы БУДУТ удалены.</p>
+
+
+	<p><strong>--library ИМЯ | -L ИМЯ</strong></p>
+
+
+	<p style="padding-left:4em;">Искать обратные зависимости для определенной библиотеки или группы библиотек, а не для всех библиотек в системе. Будут установлены пакеты, использующие указанную библиотеку. ИМЯ может быть полным путем доступа к библиотеке либо регулярным выражением. (См. regex(7).)</p>
+
+
+	<p><strong>-l | --no-ld-path</strong></p>
+
+
+	<p style="padding-left:4em;">Не устанавливать LD_LIBRARY_PATH. <strong>Примечание:</strong> использование этой опции приведет к тому, что revdep-rebuild включит в журнал и некоторые файлы, в действительности не требующие переустановки.</p>
+
+
+	<p><strong>-o | --no-order</strong></p>
+
+
+	<p style="padding-left:4em;">Не проверять порядок сборки по списку глубоких зависимостей. В результате revdep-rebuild будет работать быстрее, но при сборке могут возникнуть ошибки. В этом случае попытайтесь запустить revdep-rebuild без опции -o и только потом оформляйте сообщение об ошибке на багтрекере.</p>
+
+
+	<p><strong>-p | --pretend</strong></p>
+
+
+	<p style="padding-left:4em;">"Холостой" запуск утилиты. Временные файлы не будут удалены. (Использование сразу двух опций, -k -p, избыточно, но не опасно.) При запуске revdep-rebuild не от root'а опция --pretend подразумевается.</p>
+
+
+	<p><strong>-P | --no-progress</strong></p>
+
+
+	<p style="padding-left:4em;">Отключить графическое отображение хода работы утилиты.</p>
+
+
+	<p><strong>-q | --quiet</strong></p>
+
+
+	<p style="padding-left:4em;">Уменьшить объем выводимой информации и отключить отображение хода работы.  (Эта опция также передается portage.)</p>
+
+
+	<p><strong>-v | --verbose</strong></p>
+
+
+	<p style="padding-left:4em;">Увеличить объем выводимой информации.  (Будет выведена среда поиска revdep-rebuild.)</p>
+
+
+	<p><strong>Опции, стоящие после --, игнорируются revdep-rebuild и напрямую передаются emerge.</strong></p>
+
+
+	<h2 id="НАСТРОЙКА">НАСТРОЙКА<a href="#НАСТРОЙКА" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В настоящее время revdep-rebuild более не использует жестко закодированные пути. Если вы хотите изменить стандартное поведение утилиты, редактируйте значения описанных ниже переменных.</p>
+
+
+LD_LIBRARY_MASK - Маска особо анализируемых библиотек 
+
+SEARCH_DIRS - Перечень каталогов, по которым будет осуществляться поиск исполняемых файлов и библиотек 
+
+SEARCH_DIRS_MASK - Перечень каталогов, которые будут исключены из области поиска 
+
+	<p>Вы можете переопределить эти переменные, установив переменную в окружении перед установкой. Для этого следует включить соответствующую запись в /etc/make.conf или поместить файл с необходимыми переменными по адресу /etc/revdep-rebuild.</p>
+
+
+	<p>Переменные считываются и устанавливаются в следующем порядке:</p>
+
+
+настройки рабочей среды - временные изменения, внесенные пользователем <br />/etc/make.conf - постоянные изменения, внесенные пользователем <br />/etc/revdep-rebuild/* - постоянные изменения, внесенные авторами ебилда 
+
+	<p>Хотя пользователь может редактировать по своему усмотрению файлы в каталоге /etc/revdep-rebuild, имейте в виду, что данный каталог не защищен по умолчанию от изменений конфигурации - и, следовательно, лежащие в нем файлы могут быть удалены и/или перезаписаны при установке очередного ебилда. Чтобы изменить это поведение, добавьте /etc/revdep-rebuild в значение переменной CONFIG_PROTECT в файле /etc/make.conf.</p>
+
+
+"-*" означает, что содержимое переменной будет очищено начиная с указанного места. Если, например, установлено SEARCH_DIRS="/usr/bin -*", то переменная SEARCH_DIRS будет содержать только /usr/bin 
+
+	<p>revdep-rebuild использует значения переменных NOCOLOR и PORTAGE_NICENESS, выставленные в файле /etc/make.conf</p>
+
+
+	<h2 id="ПРИМЕРЫ">ПРИМЕРЫ<a href="#ПРИМЕРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Перед полноценным запуском revdep-rebuild рекомендуется сначала выполнить следующее: <br /><strong>revdep-rebuild --ignore --pretend</strong></p>
+
+
+	<p>Для поиска по всей системе, кроме каталогов /mnt и /home: <br /><strong>env SEARCH_DIRS="/ -*" SEARCH_DIRS_MASK="/mnt /home" revdep-rebuild</strong></p>
+
+
+	<p>Для пересборки пакетов, которые зависят от libkdecore.so.4 из KDE 3.3: <br /><strong>revdep-rebuild --library /usr/kde/3.3/lib/libkdecore.so.4</strong></p>
+
+
+	<p>Для пересборки пакетов, которые зависят от libImlib.so и libImlib2.so: <br /><strong>revdep-rebuild --library libImlib[2]*.so.*</strong></p>
+
+
+	<h2 id="ФАЙЛЫ">ФАЙЛЫ<a href="#ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>revdep-rebuild сохраняет ряд псевдо-временных файлов в каталоге /var/cache/revdep-rebuild/. Их удаление может повысить точность, но работа утилиты замедлится:</p>
+
+
+	<p><em>0_env.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит переменные окружения</p>
+
+
+	<p><em>1_files.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит список файлов, включенных в поиск</p>
+
+
+	<p><em>2_ldpath.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит путь LDPATH</p>
+
+
+	<p><em>3_broken.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит список "битых" файлов</p>
+
+
+	<p><em>3_errors.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит вывод ошибок ldd</p>
+
+
+	<p><em>4_raw.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит "сырой" список пакетов</p>
+
+
+	<p><em>4_owners.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит список владельцев файлов</p>
+
+
+	<p><em>4_pkgs.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит неотсортированные простые имена пакетов</p>
+
+
+	<p><em>4_ebuilds.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит неотсортированные атомы</p>
+
+
+	<p><em>5_order.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит отсортированные атомы</p>
+
+
+	<p><em>6_status.rr</em></p>
+
+
+	<p style="padding-left:4em;">Содержит вывод ошибок ldd</p>
+
+
+	<h2 id="ВОЗВРАЩАЕМОЕ-ЗНАЧЕНИЕ">ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ<a href="#ВОЗВРАЩАЕМОЕ-ЗНАЧЕНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>revdep-rebuild возвращает нуль при завершении, если и сама утилита, <strong>и emerge</strong> отработали успешно; в противном случае возвращается число, отличное от нуля.</p>
+
+
+	<h2 id="ОШИБКИ">ОШИБКИ<a href="#ОШИБКИ" class="wiki-anchor">&para;</a></h2>
+
+
+Об обнаруженных ошибках сообщайте на &lt;http://bugs.gentoo.org&gt; - но только в том случае, если речь не об ошибке сборки с опцией -o или -e. К сообщению приложите файлы из каталога /var/cache/revdep-rebuild/, вывод команды emerge --info... и ваши патчи. ;) 
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">emerge</a></strong>(1), <strong><a href=".html" class="wiki-page">portage</a></strong>(5), regex(7)</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+</body>
+</html>

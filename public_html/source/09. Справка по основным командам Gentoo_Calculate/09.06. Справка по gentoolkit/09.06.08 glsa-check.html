@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>glsa-check</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="glsa-check">glsa-check<a href="#glsa-check" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+glsa-check - Gentoo: утилита для локального мониторинга с помощью предупреждений по безопасности GLSA 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>glsa-check &lt;<em>опция</em>&gt; [<em>список-glsa</em>]</p>
+
+
+	<p>Аргумент [<em>список glsa</em>] может содержать произвольное количество номеров GLSA, файлов, содержащих GLSA, или специальных идентификаторов: 'all' (все) и 'affected' (выявленные у вас уязвимости).</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Данная утилита предназначена для локального мониторинга системы с помощью предупреждений по безопасности Gentoo Linux (GLSA). Прежде чем обращаться на багтрекер, ознакомьтесь со следующей документацией: <br /><noindex><a class="external" href="http://www.gentoo.org/security" ref="nofollow">http://www.gentoo.org/security</a></noindex>.</p>
+
+
+	<p>Примечание: для эффективной работы утилиты следует регулярно обновлять локальное дерево портежей.</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>-l, --list</strong></p>
+
+
+	<p style="padding-left:4em;">вывести краткий отчет по GLSA из <em>списка glsa</em>, в том числе информацию о наличии известных уязвимостей</p>
+
+
+	<p><strong>-d, --dump, --print</strong></p>
+
+
+	<p style="padding-left:4em;">вывести полную информацию по GLSAs из <em>списка glsa</em></p>
+
+
+	<p><strong>-t, --test</strong></p>
+
+
+	<p style="padding-left:4em;">проверить, влияют ли GLSA из <em>списка glsa</em> на систему, и вывести их номера</p>
+
+
+	<p><strong>-p, --pretend</strong></p>
+
+
+	<p style="padding-left:4em;">проверить, относятся ли GLSA из <em>списка glsa</em> к вашей системе</p>
+
+
+	<p><strong>-f, --fix</strong></p>
+
+
+	<p style="padding-left:4em;">попытаться автоматически наложить заданные исправления GLSA из <em>списка glsa-list</em> на вашу систему с помощью emerge. При этом пакеты будут обновлены до последней версии, но если нет пути обновления, пакеты удалятся не будут (экспериментальная опция).</p>
+
+
+	<p><strong>-i, --inject</strong></p>
+
+
+	<p style="padding-left:4em;">Поместить данные GLSA в файл glsa_injected.</p>
+
+
+	<p><strong>-n, --nocolor</strong></p>
+
+
+	<p style="padding-left:4em;">Отключить цветной вывод (опционально).</p>
+
+
+	<p><strong>-h, --help</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести эту справку.</p>
+
+
+	<p><strong>-V, --version</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести информацию об утилите.</p>
+
+
+	<p><strong>-v, --verbose</strong></p>
+
+
+	<p style="padding-left:4em;">Использовать более подробный вывод (опционально).</p>
+
+
+	<p><strong>-c, --cve</strong></p>
+
+
+	<p style="padding-left:4em;">Показать номера CVE в режиме списка (опционально).</p>
+
+
+	<p><strong>-q, --quiet</strong></p>
+
+
+	<p style="padding-left:4em;">Использовать краткий вывод и не отправлять пустых писем (опционально).</p>
+
+
+	<p><strong>-m, --mail</strong></p>
+
+
+	<p style="padding-left:4em;">Отправить письмо с данными GLSA администратору.</p>
+
+
+	<h2 id="ФАЙЛЫ">ФАЙЛЫ<a href="#ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/var/lib/portage/glsa_injected</strong></p>
+
+
+	<p style="padding-left:4em;">Содержит список номеров GLSA, которые были исправлены и никогда не будут отображаться как 'affected' на данной системе. Каждая строка файла должна содержать только один номер GLSA (например, '200804-02').</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>0.3</p>
+</body>
+</html>

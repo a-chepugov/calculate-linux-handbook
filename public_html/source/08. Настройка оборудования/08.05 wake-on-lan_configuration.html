@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>wake-on-lan configuration</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-Wake-on-Lan">Настройка Wake-on-Lan<a href="#Настройка-Wake-on-Lan" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Wake-On-Lan - технология, позволяющая включать компьютер по сети.</p>
+
+
+	<h2 id="Требование-к-ведомому-компьютеру">Требование к ведомому компьютеру<a href="#Требование-к-ведомому-компьютеру" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li><em>ATX</em> источник питания, материнская плата с поддержкой <em>Wake-On-Lan</em></li>
+		<li>сетевой адаптер с поддержкой <em>Wake-On-Lan</em></li>
+		<li>известный <em>MAC-адрес</em> сетевого адаптера</li>
+	</ul>
+
+
+	<h2 id="Требование-к-ведущему-компьютеру">Требование к ведущему компьютеру<a href="#Требование-к-ведущему-компьютеру" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>специальная программа, умеющая отсылать <em>Magic Packet</em></li>
+	</ul>
+
+
+	<h2 id="Принцип-работы">Принцип работы<a href="#Принцип-работы" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Ведомый компьютер находится в дежурном режиме (<em>stand by</em>) и выдает питание на сетевой адаптер. Сетевой адаптер находится в режиме пониженного энергопотребления, просматривая все пакеты, приходящие на его <em>MAC-адрес</em>, но ничего не отвечая на них. Если один из них окажется <em>Magic Packet</em>, то сетевой адаптер выдаёт сигнал на включение питания компьютера.</p>
+
+
+	<h2 id="Реализация">Реализация<a href="#Реализация" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Включаем поддержку <em>WoL</em> в <em>BIOS</em> на ведомом компьютере. Это может быть одноименный пункт наподобие <em>Wake On Lan Enable</em>, либо <em>Power On By PCIE</em> и т.д., может также быть, что этот режим в <em>BIOS</em> не меняется, а материнская плата поддерживает его по умолчанию.<br />Чтобы определить, поддерживает ли сетевая карта <em>WoL</em>, - загружаем ведомый компьютер набираем в консоли<br /><pre>
+ethtool eth0
+</pre><br />Получаем результат:<br /><pre>
+Settings for eth0:
+        Supported ports: [ MII ]
+        Supported link modes:   10baseT/Half 10baseT/Full
+                                100baseT/Half 100baseT/Full
+                                1000baseT/Full
+        Supports auto-negotiation: Yes
+        Advertised link modes:  10baseT/Half 10baseT/Full
+                                100baseT/Half 100baseT/Full
+                                1000baseT/Full
+        Advertised auto-negotiation: Yes
+        Speed: 1000Mb/s
+        Duplex: Full
+        Port: MII
+        PHYAD: 1
+        Transceiver: external
+        Auto-negotiation: on
+        Supports Wake-on: g
+        Wake-on: d
+        Link detected: yes
+</pre><br />Нас интересуют строчка <em>Supports Wake-on</em> и <em>Wake-on</em>. Первая показывает доступные режимы сетевого адаптера на пробуждение (<em>g</em> - как раз пробуждение по <em>Magic Pocket</em>), а вторая - текущий режим (<em>d</em> означает выключенный <em>WoL</em>).</p>
+
+
+	<p>Для того, чтобы перевести сетевую карту в режим <em>WoL</em>, используется команда<br /><pre>
+ethtool -s eth0 wol g
+</pre><br />Для выключения режима <em>WoL</em><br /><pre>
+ethtool -s eth0 wol d
+</pre><br />Сетевой адаптер может поддерживать сохранение состояния, в которое его перевели, но может и сбрасывать (чаще всего на <em>d</em>), поэтому при каждой загрузке необходимо будет устанавливать нужный режим <em>WoL</em>.</p>
+
+
+Добавляем в <em>/etc/conf.d/net</em> следующие строки - они будут включать режим <em>WoL</em> на всех сетевых адаптерах, которые его поддерживают:<br /><pre>
+preup() {
+   if ethtool $1 | grep "Supports Wake-on:" | grep g &gt;/dev/null;
+     then
+       ethtool -s $1 wol g
+     fi
+}
+</pre><br />Для получение <em>MAC-адреса</em> сетевого адаптера на ведомом компьютере можно
+	<ul>
+	<li>выполнить команду на ведомом компьютере<br /><pre>
+ ifconfig -a
+ eth0     Link encap:Ethernet  HWaddr 01:02:03:04:05:06
+          inet addr:192.168.1.2  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::215:f2ff:fe6f:3487/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:71495 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:76190 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:23164212 (22.0 MiB)  TX bytes:7625016 (7.2 MiB)
+          Interrupt:217 Base address:0xd400
+</pre></li>
+		<li>выполнить команду на ведущем компьютере, которая отобразит <em>ARP-кэш</em><br /><pre>
+ arp
+
+ Address                  HWtype  HWaddress           Flags Mask            Iface
+ 10.0.0.1                 ether   00:01:02:03:04:05   C                     eth0
+ 10.0.0.2                 ether   06:07:08:09:0a:0b   C                     eth0
+ 10.0.0.3                 ether   0c:0d:0e:0f:10:11   C                     eth0
+</pre></li>
+		<li>для того, чтобы все компьютеры сети попали в кэш, можно воспользоваться утилитой <em>nmap</em>, которая пропингует компьютеры в сети и их MAC-адреса попадут в кэш<br /><pre>
+nmap -v -Sp 10.0.0.0/24
+</pre><br />Для пробужения компьютера используем утилиту <em>wol</em> на ведущем компьютере<br /><pre>
+wol MAC-адрес
+</pre></li>
+	</ul>
+
+
+	<p>При работе с программами следует учитывать, что не все компьютеры включаются сразу после подключения в электрическую сеть. Это связано с отсутствием процесса инициализации подачи питания на сетевую карту (компьютер еще не включался и не знает, какие устройства следует питать чтобы получать специальные сигналы, среди которых будет магический пакет). Поэтому следует произвести одно предварительное включение вручную. Если существует необходимость избавиться от данной проблемы (например, сервер закрывается на ключ или находится очень далеко), следует установить в <em>BIOS</em> параметр питания <em>Wake After Power Fail</em> в значение <em>ON</em>.</p>
+</body>
+</html>

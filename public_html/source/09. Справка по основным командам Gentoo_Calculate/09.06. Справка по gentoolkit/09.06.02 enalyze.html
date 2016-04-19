@@ -1,0 +1,282 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>enalyze</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="ENALYZE">ENALYZE<a href="#ENALYZE" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+enalyze - анализатор установленных пакетов Gentoo 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>enalyze </strong><em>[глобальные опции] </em><strong>модуль </strong><em>[локальные опции]</em><strong>ЦЕЛЬ</strong></p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>enalyze</strong> представляет собой набор модулей, предназначенных для анализа состояния установленных пакетов Gentoo, а именно проверки USE-флагов или ключевых слов, с которыми устанавливались данные пакеты, и их текущей маскировки.<br />По вашему желанию утилита также может генерировать или восстанавливать файлы /etc/portage/package.*.</p>
+
+
+	<p><strong>ОСТОРОЖНО:</strong> Данная утилита находится в стадии бета-тестирования, поэтому некоторые возможности и опции в дальнейшем могут быть изменены. Все файлы, создаваемые <strong>enalyze</strong>, сохраняются в вашей домашней директории и без вашего вмешательства не могут никак повлиять на систему.</p>
+
+
+	<h2 id="ГЛОБАЛЬНЫЕ-ОПЦИИ">ГЛОБАЛЬНЫЕ ОПЦИИ<a href="#ГЛОБАЛЬНЫЕ-ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>-h, --help</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести справочную информацию.</p>
+
+
+	<p><strong>-q, --quiet</strong></p>
+
+
+	<p style="padding-left:4em;">Выводить как можно более краткую информацию. С некоторыми модулями использование этой опции может ускорить работу утилиты.</p>
+
+
+	<p><strong>-C, --no-color</strong></p>
+
+
+	<p style="padding-left:4em;">Не использовать цветной вывод.</p>
+
+
+	<p><strong>-N, --no-pipe</strong></p>
+
+
+	<p style="padding-left:4em;">Отключить автоматическое обнаружение перенаправления. Используйте эту опцию, если вы не хотите, чтобы <strong>enalyze</strong> проверял, отображается ли вывод утилиты на экране или передается другой команде, и в зависимости от этого использовал определенные настройки цвета и степени подробности выводимой информации.</p>
+
+
+	<p><strong>-V, --version</strong></p>
+
+
+	<p style="padding-left:4em;">Отобразить используемую версию <strong>Gentoolkit</strong>. Если вы оформляете заявку на багтрекере, включайте в нее вывод команды с этой опцией. (см. ниже раздел <strong>ОШИБКИ</strong>)</p>
+
+
+	<h2 id="МОДУЛИ">МОДУЛИ<a href="#МОДУЛИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>enalyze</strong> использует систему модулей. Каждый модуль имеет полное и сокращенное название. В списке ниже используются обозначения вида "<strong>модуль (m)</strong>", где <em>m</em> - сокращенное, а <em>модуль</em> - полное имя.</p>
+
+
+	<p>Чтобы просмотреть <strong>справку</strong> по интересующему вас модулю, используйте <strong>-h</strong> или <strong>--help </strong> либо как глобальную опцию (указав ее между <strong>enalyze</strong> и названием модуля), либо локально (после названия модуля).</p>
+
+
+	<h3 id="-analyze-a-ОПЦИИ-ЦЕЛЬ"> analyze (a) [ОПЦИИ] ЦЕЛЬ<a href="#-analyze-a-ОПЦИИ-ЦЕЛЬ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Анализирует все установленные пакеты по <em>ЦЕЛи</em>.</p>
+
+
+	<p><em>ЦЕЛЬ:</em></p>
+
+
+	<p><strong>use</strong></p>
+
+
+	<p style="padding-left:4em;">Анализирует пакеты, установленные с указанными USE-флагами, и выводит результаты.</p>
+
+
+	<p><strong>pkguse</strong></p>
+
+
+	<p style="padding-left:4em;">Анализирует информацию о USE-флагах из файла PKGUSE для установленного пакета; этот файл содержит только настройки флагов из каталога /etc/portage/package.use в момент установки.</p>
+
+
+	<p><strong>keywords</strong></p>
+
+
+	<p style="padding-left:4em;">Анализирует записанные ключевые слова и выводит результаты.</p>
+
+
+	<p><strong>unmask</strong></p>
+
+
+	<p style="padding-left:4em;">Анализирует установленные пакеты и дерево портежей на предмет пакетов, требующих размаскировки, и выводит результат.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-u, --unset</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в обработку также используемые USE-флаги, которые не были установлены для некоторых пакетов.</p>
+
+
+	<p><strong>-v, --verbose</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести более подробный результат, в том числе сведения о ходе выполнения текущего задания.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+enalyze a --verbose --unset use
+
+	<p style="padding-left:4em;">Будет выведен отчет обо всех USE-флагах, использованных при установке пакетов. (--unset) В отчет будут включены все флаги, которые были использованы, но не были установлены для отдельных пакетов. (--verbose) Кроме того, будет выведен перечень пакетов, которые использовали настройки USE-флагов. Утилита выведет полный список USE-флагов и сообщит сведения о каждом флаге до 3 раз с указанием его статуса {"+","-"; " " обозначает неустановленный флаг} перед именем флага. Вывод будет цветным: красным цветом обозначается отключенный флаг, синим - включенный, обычным текстом - неустановленный.</p>
+
+
+	<h3 id="-rebuild-r-ОПЦИИ-ЦЕЛЬ"> rebuild (r) [ОПЦИИ] ЦЕЛЬ<a href="#-rebuild-r-ОПЦИИ-ЦЕЛЬ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Создать список всех пакетов для настроек <em>ЦЕЛи</em>, которые необходимы для настроек, отличных от стандартных.</p>
+
+
+	<p><em>ЦЕЛЬ:</em></p>
+
+
+	<p><strong>use</strong></p>
+
+
+	<p style="padding-left:4em;">Анализирует USE-флаги и выводит результат.</p>
+
+
+	<p><strong>keywords</strong></p>
+
+
+	<p style="padding-left:4em;">Анализирует ключевые слова и выводит результат.</p>
+
+
+	<p><strong>unmask</strong></p>
+
+
+	<p style="padding-left:4em;">Анализирует установленные пакеты и дерево портежей на предмет пакетов, которые требуют размаскировки, и выводит результат / создает новый файл в каталоге /etc/portage/package.unmask.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-a, --all</strong></p>
+
+
+	<p style="padding-left:4em;">Создать файлы/вывод для всех <em>ЦЕЛей</em>, для которых это необходимо. (Эта функция еще не реализована.)</p>
+
+
+	<p><strong>-e, --excact</strong></p>
+
+
+	<p style="padding-left:4em;">Использовать в записях префикс пакета =, а также  информацию о версии. <br />Образец:  =КАТЕГОРИЯ/ПАКЕТ-ВЕРСИЯ флаг1 флаг2</p>
+
+
+	<p><strong>-p, --pretend</strong></p>
+
+
+	<p style="padding-left:4em;">Не перенаправлять вывод в файл, а отображать его на экране.</p>
+
+
+	<p><strong>-v, --verbose</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести более подробный результат, в том числе сведения о ходе выполнения текущего задания.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+	<p>enalyze rebuild -p use</p>
+
+
+	<p style="padding-left:4em;">Будет проанализирована база данных устанавленных пакетов и текущие настройки системных USE-флагов, и утилита выведет результаты в следующем виде: </p>
+
+
+	<p style="padding-left:4em;">КАТЕГОРИЯ/ПАКЕТ -флаг1 -флаг2 флаг3 флаг4...</p>
+
+
+	<h3 id="-clean-c-ОПЦИИ-ЦЕЛЬ"> clean (c) [ОПЦИИ] ЦЕЛЬ<a href="#-clean-c-ОПЦИИ-ЦЕЛЬ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Очищает все пакеты от настроек, указанных в аргументе <em>ЦЕЛЬ</em>, которые по сравнению с текущими и ебилдом пакета являются устаревшими. (Эта функция еще не реализована.)</p>
+
+
+	<p><em>ЦЕЛЬ:</em></p>
+
+
+	<p><strong>use</strong></p>
+
+
+	<p style="padding-left:4em;">Анализирует USE-флаги и файл(ы) в каталоге /etc/portage/package.use на предмет повторяющихся или более не используемых пакетом записей.</p>
+
+
+	<p><strong>keywords</strong></p>
+
+
+	<p style="padding-left:4em;">Анализирует ключевые слова и файл(ы) в каталоге /etc/portage/package.keywords, которые более не нужны.</p>
+
+
+	<p><strong>unmask</strong></p>
+
+
+	<p style="padding-left:4em;">Анализирует установленные пакеты, файл(ы) в каталоге /etc/portage/package.unmask и дерево портежей на предмет пакетов, которые более не требуют размаскировки.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-a, --all</strong></p>
+
+
+	<p style="padding-left:4em;">Очистить файлы/вывод для всех <em>ЦЕЛей</em>, для которых это необходимо.(Эта функция еще не реализована.)</p>
+
+
+	<p><strong>-p, --pretend</strong></p>
+
+
+	<p style="padding-left:4em;">Вывод не будет перенаправлен в файл, а отобразится на экране терминала.</p>
+
+
+	<p><strong>-v, --verbose</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести более подробный результат, в том числе сведения о ходе выполнения текущего задания.</p>
+
+
+	<h2 id="ОШИБКИ">ОШИБКИ<a href="#ОШИБКИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Об обнаруженных ошибках сообщайте на <noindex><a class="external" href="http://bugs.gentoo.org" ref="nofollow">http://bugs.gentoo.org</a></noindex>.</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Brian Dolbec &lt;<a class="email" href="mailto:brian.dolbec@gmail.com">brian.dolbec@gmail.com</a>&gt;, 2010</li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Февраль 2010</p>
+</body>
+</html>

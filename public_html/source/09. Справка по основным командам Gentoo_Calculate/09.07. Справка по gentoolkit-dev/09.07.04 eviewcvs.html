@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>eviewcvs</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="EVIEWCVS">EVIEWCVS<a href="#EVIEWCVS" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+eviewcvs - Gentoo: генерирует URL для ViewCVS 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>eviewcvs [ <em>файлы</em> ]</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Утилита генерирует список URL для ViewCVS на основе перечисленных в аргументе файлов или, если аргумента нет, файлов в текущем каталоге. Первая часть вывода (выделена зеленым цветом) представляет собой ссылки, позволяющие просмотреть сами файлы. Вторая часть вывода (выделена синим цветом) содержит ссылки, позволяющие отследить разницу между последней ревизией и текущим состоянием.</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В настоящее время утилита eviewcvs настолько проста, что не предусматривает опций. Возможно, в дальнейшем будут добавлены справочные <strong>--help</strong> и <strong>--version</strong>, но на данный момент достаточно для получения этой информации отслеживать версию gentoolkit.</p>
+
+
+	<h2 id="ПРИМЕРЫ">ПРИМЕРЫ<a href="#ПРИМЕРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Чтобы сгенерировать ссылки для ViewCVS для определенного файла, выполните:</p>
+
+
+<pre>
+ $ eviewcvs package.mask
+ http://www.gentoo.org/cgi-bin/viewcvs.cgi/profiles/package.mask?rev=1.3716&#38;content-type=text/vnd.viewcvs-markup 
+ http://www.gentoo.org/cgi-bin/viewcvs.cgi/profiles/package.mask?r1=1.3715&#38;r2=1.3716 
+</pre>
+
+	<p>Чтобы сгенерировать ссылки для ViewCVS для всех файлов в каталоге, выполните:</p>
+
+
+<pre>
+ $ cd portage/net-misc/keychain 
+ $ eviewcvs 
+ http://sources.gentoo.org/viewcvs.py/gentoo-x86/net-misc/keychain/ChangeLog?rev=1.54&#38;view=markup 
+ http://sources.gentoo.org/viewcvs.py/gentoo-x86/net-misc/keychain/Manifest?rev=1.86&#38;view=markup 
+ http://sources.gentoo.org/viewcvs.py/gentoo-x86/net-misc/keychain/keychain-2.6.1.ebuild?rev=1.3&#38;view=markup 
+ http://sources.gentoo.org/viewcvs.py/gentoo-x86/net-misc/keychain/keychain-2.6.2.ebuild?rev=1.1&#38;view=markup 
+ http://sources.gentoo.org/viewcvs.py/gentoo-x86/net-misc/keychain/metadata.xml?rev=1.3&#38;view=markup 
+ http://sources.gentoo.org/viewcvs.py/gentoo-x86/net-misc/keychain/ChangeLog?r1=1.53&#38;r2=1.54 
+ http://sources.gentoo.org/viewcvs.py/gentoo-x86/net-misc/keychain/Manifest?r1=1.85&#38;r2=1.86 
+ http://sources.gentoo.org/viewcvs.py/gentoo-x86/net-misc/keychain/keychain-2.6.1.ebuild?r1=1.2&#38;r2=1.3 
+ http://sources.gentoo.org/viewcvs.py/gentoo-x86/net-misc/keychain/metadata.xml?r1=1.2&#38;r2=1.3 
+</pre>
+
+	<h2 id="АВТОР">АВТОР<a href="#АВТОР" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Aron Griffis &lt;<a class="email" href="mailto:agriffis@gentoo.org">agriffis@gentoo.org</a>&gt;<br />Об обнаруженных ошибках сообщайте автору на <noindex><a class="external" href="http://bugs.gentoo.org/" ref="nofollow">http://bugs.gentoo.org/</a></noindex></li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>2009-05-06</p>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>re-encoding mp3 tags</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Перекодировка-mp3-тегов">Перекодировка mp3 тегов<a href="#Перекодировка-mp3-тегов" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Linux уже давно успешно использует универсальную многобайтовую кодировку UTF-8. Засилье операционной системы <em>Windows</em> во многих случаях ломает стандарты. Как пример - всепроникающая кодировка <em>CP1251</em>, заполонившая сайты настолько, что веб-мастера попросту забывают указывать кодировку страниц своих сайтов.</p>
+
+
+	<p>Аналогична ситуация и с тегами <em>mp3</em>, где властвует <em>CP1251</em>.</p>
+
+
+	<p>К счастью, в версии ID3v2.4 появилась возможность хранения тегов в формате <em>UTF-8</em>.</p>
+
+
+	<p><a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a> включает пакет <em>media-libs/mutagen</em> для работы с тегами. Для перекодирования тегов вашей коллекции <em>mp3</em>-файлов из кодировки <em>CP1251</em> в <em>UTF-8</em> перейдите в директорию с музыкальной коллекцией и выполните:<br /><pre>
+find -iname '*.mp3' -print0 | xargs -0 mid3iconv -eCP1251 --remove-v1
+</pre></p>
+
+
+	<p>Флаг "--remove-v1" удаляет записи из первой версии тегов.</p>
+</body>
+</html>

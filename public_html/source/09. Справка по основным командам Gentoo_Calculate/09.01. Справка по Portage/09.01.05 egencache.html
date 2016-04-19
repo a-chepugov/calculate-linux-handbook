@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>egencache</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="EGENCACHE">EGENCACHE<a href="#EGENCACHE" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+egencache - кэширование метаданных репозитариев ебилдов 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>egencache</strong> <em>[опции] --update [ATOM]</em>...</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Утилита <em>egencache</em> кэширует метаданные репозитариев ебилдов и сохраняет их в каталоге <em>metadata/cache/</em> внутри самого репозитария, для дальнейшего распространения.</p>
+
+
+	<h2 id="ДЕЙСТВИЯ">ДЕЙСТВИЯ<a href="#ДЕЙСТВИЯ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>--update [ATOM] ... </strong></p>
+
+
+	<p style="padding-left:4em;">Обновляет каталог <em>metadata/cache/</em> (метаданные будут генерироваться по необходимости). Если атомы пакетов не указаны, обновлены будут все элементы подряд. Подробнее о синтаксисе атомов пакетов см. <strong><a href="ebuild.html" class="wiki-page">ebuild</a>(5)</strong>.</p>
+
+
+	<p><strong>--update-changelogs</strong></p>
+
+
+	<p style="padding-left:4em;">Обновляет ChangeLog-файлы из журналов SCM (поддерживается только для репозитариев на Git).</p>
+
+
+	<p><strong>--update-use-local-desc</strong></p>
+
+
+	<p style="padding-left:4em;">Обновляет файл <em>profiles/use.local.desc</em> из metadata.xml.</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>--cache-dir=CACHE_DIR</strong></p>
+
+
+	<p style="padding-left:4em;">Определяет расположение промежуточного кэша метаданных, который сохраняется в другом формате, включающем состояние еклассов. О том, почему в этом необходимо, см. в разделе <strong>ОШИБКИ</strong>.<br />По умолчанию - /var/cache/edb/dep.</p>
+
+
+	<p><strong>--config-root=PORTAGE_CONFIGROOT</strong></p>
+
+
+	<p style="padding-left:4em;">Определяет расположение конфигурационных файлов portage. <br />По умолчанию это корневой каталог, /.</p>
+
+
+	<p><strong>--ignore-default-opts</strong></p>
+
+
+	<p style="padding-left:4em;">При использовании этой опции значения <em>EGENCACHE_DEFAULT_OPTS</em> будут игнорироваться.</p>
+
+
+	<p><strong>--jobs=JOBS</strong></p>
+
+
+	<p style="padding-left:4em;">Определяет максимальное число распараллеленных процессов сборки. См. также родственную опцию <strong>--load-average</strong>.</p>
+
+
+	<p><strong>--load-average=LOAD</strong></p>
+
+
+	<p style="padding-left:4em;">Определяет максимальную среднюю загрузку при параллельной сборке.</p>
+
+
+	<p><strong>--portdir=PORTDIR</strong></p>
+
+
+	<p style="padding-left:4em;">Переопределяет расположение дерева портежей.</p>
+
+
+	<p><strong>--portdir-overlay=PORTDIR_OVERLAY</strong></p>
+
+
+	<p style="padding-left:4em;">Переопределяет переменную PORTDIR_OVERLAY (одновременно необходимо использовать опцию --repo).</p>
+
+
+	<p><strong>--preserve-comments</strong></p>
+
+
+	<p style="padding-left:4em;">Сохраняет комментарии, обнаруженные в файле вывода use.local.desc. Для этого файл вывода должен существовать до вызова egencache.</p>
+
+
+	<p><strong>--repo=REPO</strong></p>
+
+
+	<p style="padding-left:4em;">Определяет имя рабочего репозитария (по умолчанию репозитарий расположен в <strong>PORTDIR</strong>). Оно должно соответствовать записи <strong>repo_name</strong> (см. <strong><a href=".html" class="wiki-page">portage</a></strong>(5)) одного из репозитариев, сконфигурированных с помощью переменной  <strong>PORTDIR</strong> или <strong>PORTDIR_OVERLAY</strong> (см. <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5)).</p>
+
+
+	<p><strong>--rsync</strong></p>
+
+
+	<p style="padding-left:4em;">При использовании в связке с действием <strong>--update</strong> включает альтернативный способ синхронизации на тот случай, если содержимое кэша изменилось, но не изменилось ни время изменения, ни размер, вследствие чего rsync не может отследить изменения; подобные ситуации разрешаются путем обновления времени последнего изменения (и соответствующей записи в кэше). Эта опция имеет смысл только при распространении данных с помощью таких механизмов как <strong>rsync</strong>(1), осуществляющих контроль версий на основе меток времени и размера файлов  (см. <strong>ошибка 139134</strong>). Она не нужна, если используется <strong>git</strong>(1), поскольку последний работает более тонко, выявляя изменения в инодах (описание см. в файле <em>racy-git.txt</em> из комплекта документации по Git).</p>
+
+
+	<p><strong>--tolerant</strong></p>
+
+
+	<p style="padding-left:4em;">Сообщить об успешном завершении и выйти в случае незначительных ошибок, таких как пропуск обновления кэша, когда ебилд либо не удалось использовать в качестве источника данных, либо он не был загружен сам по причине некорректного Manifest-файла.</p>
+
+
+	<p><strong>--use-local-desc-output=ULD_OUTPUT</strong></p>
+
+
+	<p style="padding-left:4em;">файл вывода данных use.local.desc (или '-' для стандартного вывода)</p>
+
+
+	<h2 id="ОПЦИИ-ОКРУЖЕНИЯ">ОПЦИИ ОКРУЖЕНИЯ<a href="#ОПЦИИ-ОКРУЖЕНИЯ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>EGENCACHE_DEFAULT_OPTS</strong></p>
+
+
+	<p style="padding-left:4em;">Если эта переменная установлена в <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5), то все опции, которые она содержит, будут добавлены в начало командной строки при каждом вызове. Временно это можно отменить использованием опции <strong>--ignore-default-opts</strong>.</p>
+
+
+	<h2 id="ОШИБКИ">ОШИБКИ<a href="#ОШИБКИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Формат кэшированных метаданных, хранящихся и доступных для получения в каталоге репозитария <em>metadata/cache/</em>, налагает серьезные ограничения - прежде всего, на механизм проверки. Последний, в настоящее время, основан на сопоставлении времени последнего изменения каждой записи в кэше с временем изменения соответствующего <a href="ebuild.html" class="wiki-page">ebuild</a> -сценария. В связи с тем, что кэш не содержит информации о состоянии еклассов, в случае, когда изменение еклассов влечет за собой изменение метаданных, этот механизм ненадежен. Кроме того, поскольку время изменения кэша должно совпадать со временем изменения ебилда, формат кэша пригоден лишь для передачи данных по протоколам, поддерживающим сохранение отметок времени (например, посредством <strong>rsync(1))</strong>. Если кэшированные данные находятся в <strong>git(1)</strong> -репозитариях, проблему возможно обойти с помощью команды <strong><a href="emerge --sync.html" class="wiki-page">emerge --sync</a></strong>: она обновит время изменения ебилдов согласно записям в кэше (это не относится лишь к тем ебилдам, которые были изменены по HEAD).</p>
+
+
+	<p>Для разрешения этих проблем в дальнейшем планируется введение расширенного формата кэша, который включит в себя дополнительные проверочные данные в виде digest-файлов как для ебилда, так и для наследуемых им еклассов. Пока этого не произошло, вам следует выставить <strong>metadata-transfer</strong> в переменной <strong>FEATURES</strong> (см. <strong><a href=".html" class="wiki-page">make.conf</a>(5)</strong>). В результате будет генерироваться промежуточный кэш (в ином формате, включающем состояние еклассов); его рабочий каталог можно настроить, прибегнув к опции <strong>--cache-dir</strong>.</p>
+
+
+	<h2 id="БАГТРЕКЕР">БАГТРЕКЕР<a href="#БАГТРЕКЕР" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Об обнаруженных ошибках сообщайте на <noindex><a class="external" href="http://bugs.gentoo.org/" ref="nofollow">http://bugs.gentoo.org/</a></noindex></p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Zac Medico &lt;<a class="email" href="mailto:zmedico@gentoo.org">zmedico@gentoo.org</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ФАЙЛЫ">ФАЙЛЫ<a href="#ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/etc/make.conf</strong></p>
+
+
+	<p style="padding-left:4em;">Содержит переменные.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">emerge</a></strong>(1), <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5), <strong><a href=".html" class="wiki-page">portage</a></strong>(5)</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Октябрь 2010</p>
+</body>
+</html>

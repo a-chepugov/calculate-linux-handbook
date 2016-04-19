@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>ekeyword</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="EKEYWORD">EKEYWORD<a href="#EKEYWORD" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+ekeyword - Gentoo: изменяет ключевые слова (KEYWORDS) пакетов 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>ekeyword { архитектура|~архитектура|-архитектура|^архитектура } ебилды</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Эта утилита позволяет легко добавлять или обновлять ключевые слова (KEYWORDS) в сете ебилдов. Аргументы в командной строке обрабатываются в порядке следования; таким образом, ключевые слова последовательно добавляются к текущему списку, и по мере этого обрабатываются ебилды.</p>
+
+
+	<p>Вы можете не указывать определенную архитектуру, а выставить "all", чтобы изменение коснулось всех текущих архитектур ебилда.</p>
+
+
+Если вы поставите в начале символ ^, ekeyword удалит указанную архитектуру. 
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В настоящее время утилита ekeyword настолько проста, что не предусматривает опций. Возможно, в дальнейшем будут добавлены справочные <strong>--help</strong> и <strong>--version</strong>, но на данный момент достаточно для получения этой информации отслеживать версию gentoolkit.</p>
+
+
+	<h2 id="ПРИМЕРЫ">ПРИМЕРЫ<a href="#ПРИМЕРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Пометить одну определенную архитектуру как стабильную:</p>
+
+
+<pre>
+ $ ekeyword alpha metalog-0.7-r1.ebuild 
+ metalog-0.7-r1.ebuild 
+   -KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~mips ~ppc ~sparc ~x86" 
+   +KEYWORDS="alpha ~amd64 ~hppa ~ia64 ~mips ~ppc ~sparc ~x86" 
+</pre>
+
+	<p>Обновляя пакет, пометить все пакеты как тестируемые:</p>
+
+
+<pre>
+ $ ekeyword ~all metalog-0.7-r2.ebuild 
+ metalog-0.7-r2.ebuild 
+   -KEYWORDS="alpha amd64 hppa ia64 mips ppc sparc x86" 
+   +KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~mips ~ppc ~sparc ~x86" 
+</pre>
+
+	<p>Указать, что пакет выдает ошибку на всех архитектурах, кроме одной:</p>
+
+
+<pre>
+ $ ekeyword ^all -* ~x86 metalog-0.7-r3.ebuild 
+ metalog-0.7-r3.ebuild 
+   -KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~mips ~ppc ~sparc ~x86" 
+   +KEYWORDS="-* ~x86" 
+</pre>
+
+	<p>Выполнить несколько операций сразу:</p>
+
+
+<pre>
+ $ ekeyword alpha metalog-0.7-r1.ebuild  
+     ~all metalog-0.7-r2.ebuild ^all -* ~x86 metalog-0.7-r3.ebuild 
+ metalog-0.7-r1.ebuild 
+   -KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~mips ~ppc ~sparc ~x86" 
+   +KEYWORDS="alpha ~amd64 ~hppa ~ia64 ~mips ~ppc ~sparc ~x86" 
+ metalog-0.7-r2.ebuild 
+   -KEYWORDS="alpha amd64 hppa ia64 mips ppc sparc x86" 
+   +KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~mips ~ppc ~sparc ~x86" 
+ metalog-0.7-r3.ebuild 
+   -KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~mips ~ppc ~sparc ~x86" 
+   +KEYWORDS="-* ~x86" 
+</pre>
+
+	<h2 id="АВТОР">АВТОР<a href="#АВТОР" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Aron Griffis &lt;<a class="email" href="mailto:agriffis@gentoo.org">agriffis@gentoo.org</a>&gt;. <br />Об обнаруженных ошибках сообщайте автору на <noindex><a class="external" href="http://bugs.gentoo.org/" ref="nofollow">http://bugs.gentoo.org/</a></noindex></li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>2009-08-30</p>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>start-stop-daemon</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="START-STOP-DAEMON">START-STOP-DAEMON<a href="#START-STOP-DAEMON" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>start-stop-daemon</strong> - обеспечение запуска и остановки демонов</p>
+
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>start-stop-daemon</strong> <strong>-S , -start</strong> <em>демон</em> [--] [<em>аргументы</em> ] <strong>start-stop-daemon -K , -stop</strong> <em>демон</em> <strong>start-stop-daemon -s , -signal</strong> <em>signal демон</em></p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Утилита <strong>start-stop-daemon</strong> обеспечивает надежный метод запуска и остановки демонов, а также передачи им сигнала. Если не используется ни опция <strong>-K , -stop</strong>, ни <strong>-s , -signal</strong>, подразумевается, что демон необходимо запустить. Если демон не запускается самостоятельно в фоновом режиме и не создает файл идентификатора процесса, это может безопасно выполнить <strong>start-stop-daemon</strong>.</p>
+
+
+	<p>Если <strong>start-stop-daemon</strong> используется для той или иной службы OpenRC, OpenRC может проверить, работает ли демон. Если нет, то служба помечается как аварийно остановленная.</p>
+
+
+	<p>Ниже приводятся опции, служащие для указания демона и способа его запуска или остановки:</p>
+
+
+	<p><strong>-x , -exec</strong> <em>демон</em></p>
+
+
+	<p style="padding-left:4em;">Запускаемый или останавливаемый <em>демон</em>. Если эта опция не указана, то будет использован первый аргумент вне опций.</p>
+
+
+	<p><strong>-p , -pidfile</strong> <em>файл идентификатора процесса</em></p>
+
+
+	<p style="padding-left:4em;">При запуске демона он за разумное время должен создать рабочий файл идентификатора процесса. При остановке будут остановлены только процессы, перечисленные в файле идентификатора.</p>
+
+
+	<p><strong>-n , -name</strong> <em>имя</em></p>
+
+
+	<p style="padding-left:4em;">Определяет демон по имени процесса, а не по файлу идентификатора или по имени исполняемого файла.</p>
+
+
+	<p><strong>-i , -interpreted</strong></p>
+
+
+	<p style="padding-left:4em;">При выборе процесса по имени необходимо убедиться, что ему соответствует подходящий интерпретатор. Как только, например, запускается демон foo, <strong>start-stop-daemon</strong> ищет процесс. Если интерпретируемый демон изменяет свое имя процесса, это не будет работать.</p>
+
+
+	<p><strong>-u , -user</strong> <em>пользователь</em> [:<em>группа</em> ]</p>
+
+
+	<p style="padding-left:4em;">Запускает демон от <em>пользователя</em> и соответственно обновляет значение $HOME или останавливает демоны, принадлежащие <em>пользователю</em>. При желании вы можете добавить и <em>группу</em>.</p>
+
+
+	<p><strong>-t , -test</strong></p>
+
+
+	<p style="padding-left:4em;">Только отображает сведения о действии/-ях, которые должны быть выполнены, ничего не делая. Возвращается то же значение, что и в случае действительно запуска и отработки команды.</p>
+
+
+	<p><strong>-v , -verbose</strong></p>
+
+
+	<p style="padding-left:4em;">Отображает сведения о действии/-ях непосредственно перед его/их выполнением.</p>
+
+
+	<p><strong>-P , -progress</strong></p>
+
+
+	<p style="padding-left:4em;">Отображает ход выполнения в консоли: одна точка обозначает секунду ожидания.</p>
+
+
+	<p>Следующие опции используются только при запуске демонов:</p>
+
+
+	<p><strong>-a , -startas</strong> <em>имя</em></p>
+
+
+	<p style="padding-left:4em;">Заменяет имя процесса демона на указанное <em>имя</em>. Это заменит лишь первый аргумент, передаваемый демону.</p>
+
+
+	<p><strong>-b , -background</strong></p>
+
+
+	<p style="padding-left:4em;">Принудительно запускает демон в фоновом режиме. Некоторые демоны не создают идентификационных файлов - их удобно запускать в фоне и использовать эту опцию в связке с <strong>-m , -make-pidfile</strong> для создания рабочего файла идентификатора.</p>
+
+
+	<p><strong>-d , -chdir</strong> <em>путь</em></p>
+
+
+	<p style="padding-left:4em;">Перед запуском демона изменяет рабочий каталог на указанный.</p>
+
+
+	<p><strong>-r , -chroot</strong> <em>путь</em></p>
+
+
+	<p style="padding-left:4em;">Перед запуском демона выполняет chroot в каталоге по указанному <em>пути</em>. Другие пути, например, путь доступа к демону, адрес нового корневого каталога root и файла идентификатора процесса, должны быть относительными к chroot.</p>
+
+
+	<p><strong>-c , -chuid</strong> <em>пользователь</em></p>
+
+
+	<p style="padding-left:4em;">Аналогично опции <strong>-u , -user</strong>.</p>
+
+
+	<p><strong>-e , -env</strong> <em>VAR=VALUE</em></p>
+
+
+	<p style="padding-left:4em;">Присваивает переменной окружения VAR значение VALUE.</p>
+
+
+	<p><strong>-g , -group</strong> <em>группа</em></p>
+
+
+	<p style="padding-left:4em;">Запускает демон в группе.</p>
+
+
+	<p><strong>-k , -umask</strong> <em>режим</em></p>
+
+
+	<p style="padding-left:4em;">Задает маску файла демона.</p>
+
+
+	<p><strong>-m , -make-pidfile</strong></p>
+
+
+	<p style="padding-left:4em;">Сохраняет идентификатор процесса демона в файле, указанном в опции <strong>-p, -pidfile</strong>. Имеет смысл только применительно к демонам, запущенным в основном режиме, которые принудительно переводятся в фоновый режим опцией <strong>--b, -background</strong>.</p>
+
+
+	<p><strong>-I , -ionice</strong> <em>класс</em> [:<em>данные</em> ]</p>
+
+
+	<p style="padding-left:4em;">Изменяет приоритет ввода-вывода для демона. Аргумент <em>класс</em> может иметь значение 0 - нет, 1 - real time (приоритетный доступ), 2 - best effort (приоритет определяется планировщиком) и 3 - idle ( доступ только тогда, когда другие процессы не требуют ввода/вывода). Аргумент <em>данные</em> может принимать значения от 0 до 7 включительно.</p>
+
+
+	<p><strong>-N , -nice</strong> <em>уровень</em></p>
+
+
+	<p style="padding-left:4em;">Изменяет приоритет запуска демона.</p>
+
+
+	<p><strong>-1 , -stdout</strong> <em>журнал</em></p>
+
+
+	<p style="padding-left:4em;">При запуске с опцией <strong>-background</strong> перенаправляет стандартный вывод процесса в журнал. В качестве аргумента необходимо указывать абсолютный путь доступа к файлу, но относительный к пути, опционально заданному опцией <strong>-r , -chroot</strong>. Журнал может быть и именованным каналом.</p>
+
+
+	<p><strong>-w , -wait</strong> <em>время</em></p>
+
+
+	<p style="padding-left:4em;">После запуска ожидать указанное <em>время</em> (в миллисекундах), затем проверить, продолжает ли демон работу. Эта опция удобна для демонов, которые проверяют конфигурацию после ветвления или устранения "гонок", когда файл идентификатора записывается после ветвления процесса.</p>
+
+
+	<p><strong>-2 , -stderr</strong> <em>журнал</em></p>
+
+
+	<p style="padding-left:4em;">Эта опция аналогична <strong>-1, -stdout</strong>, но со стандартным выводом ошибок.</p>
+
+
+	<p>Следующие опции используются только для остановки демонов:</p>
+
+
+	<p><strong>-R , -retry</strong> <em>пауза | сигнал / пауза</em></p>
+
+
+	<p>Вы можете указать либо продолжительность паузы в секундах, либо несколько пар сигнал/пауза для расписания остановки демонов. Если опция не задана, будет использовано значение по умолчанию SIGTERM/5.</p>
+
+
+	<h2 id="ОКРУЖЕНИЕ">ОКРУЖЕНИЕ<a href="#ОКРУЖЕНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>С помощью переменной_SSD_NICELEVEL_ также можно устанавливать очередь запуска демонов, но приоритет будет иметь опция в командной строке.</p>
+
+
+	<p>Переменная <em>SSD_STARTWAIT</em> аналогична опции <strong>-w, -wait</strong>, описанной выше. /etc/rc.conf, <strong>start-stop-daemon</strong> ожидает проверки, продолжает ли демон работу.</p>
+
+
+	<h2 id="ПРИМЕЧАНИЕ">ПРИМЕЧАНИЕ<a href="#ПРИМЕЧАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для синтаксического анализа опций <strong>start-stop-daemon</strong> использует <strong>getopt</strong>(3): этот инструмент позволяет принимать опцию с префиксом `--', останавливая обработку текущих опций на данном этапе. Все последующие аргументы передаются демону, который запускает соответствующие службы, и используются при обнаружении демона, который необходимо остановить или которому необходимо передать сигнал.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>chdir</strong>(2), <strong>chroot</strong>(2), <strong>getopt</strong>(3), <strong>nice</strong>(2), <strong>rc_find_pids</strong>(3)</p>
+
+
+	<h2 id="ОШИБКИ">ОШИБКИ<a href="#ОШИБКИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Не обращаясь к файлу идентификатора процесса, <strong>start-stop-daemon</strong> не может остановить интерпретируемый демон, который уже не существует.</p>
+
+
+	<h2 id="ИСТОРИЯ">ИСТОРИЯ<a href="#ИСТОРИЯ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Впервые <strong>start-stop-daemon</strong> был использован в Debian.</p>
+
+
+	<p>Настоящая реализация стала результатом полной переработки изначальной версии: процесс ищет код в библиотеке OpenRC (librc, -lrc), чтобы к нему могли обращаться другие программы.</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Roy Marples &lt;<a class="email" href="mailto:roy@marples.name">roy@marples.name</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,1140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>portage</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="PORTAGE">PORTAGE<a href="#PORTAGE" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+portage - главный инструмент Gentoo 
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В настоящее время portage использует большое количество конфигурационных файлов; со многими из них незнакомы пользователи и, во многих случаях, даже разработчики. В данном руководстве мы попытались собрать воедино все сведения о portage, которые позволили бы максимально эффективно использовать этот инструмент. Заметьте, что здесь мы описываем только те возможности, которые не имеют собственной справочной страницы.</p>
+
+
+	<p>Все файлы в каталоге make.profile могут быть тонко сконфигурированы при использовании каскадных профилей с помощью родительских профилей. Подробнее см. здесь: <noindex><a class="external" href="http://www.gentoo.org/proj/en/releng/docs/cascading-profiles.xml" ref="nofollow">http://www.gentoo.org/proj/en/releng/docs/cascading-profiles.xml</a></noindex></p>
+
+
+	<p>Примечание:</p>
+
+
+	<p style="padding-left:4em;">Данное руководство не содержит информации о том, как установить ту или иную программу; если вам нужна именно она, обратитесь к справке по <strong><a href=".html" class="wiki-page">emerge</a></strong>(1).</p>
+
+
+	<h2 id="ПАРАМЕТРЫ">ПАРАМЕТРЫ<a href="#ПАРАМЕТРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/etc/</strong></p>
+
+
+<pre style="margin-left:4.0em;">
+make.conf (5) 
+</pre>
+
+	<p><strong>/etc/make.profile/</strong> или <strong>/etc/portage/make.profile/</strong></p>
+
+
+	<p style="padding-left:4em;">значения для отдельных адресов помещаются в <strong>/etc/portage/profile/</strong> <br /><pre style="margin-left:4.0em;">
+deprecated 
+eapi 
+make.defaults 
+packages 
+packages.build 
+package.accept_keywords 
+package.keywords 
+package.mask 
+package.provided 
+package.unmask 
+package.use 
+package.use.force 
+package.use.mask 
+parent 
+profile.bashrc 
+use.force 
+use.mask 
+virtuals 
+</pre></p>
+
+
+	<p><strong>/etc/portage/</strong></p>
+
+
+<pre style="margin-left:4.0em;">
+bashrc 
+categories 
+color.map 
+license_groups 
+make.conf 
+mirrors 
+modules 
+package.accept_keywords 
+package.env 
+package.keywords 
+package.license 
+package.mask 
+package.properties 
+package.unmask 
+package.use 
+repos.conf 
+</pre>
+
+	<p><strong>/etc/portage/env/</strong></p>
+
+
+	<p style="padding-left:4em;">файлы конфигурации интерпретатора, bashrc, для отдельных пакетов</p>
+
+
+	<p><strong>/etc/portage/profile/</strong></p>
+
+
+	<p style="padding-left:4em;">переопределение <strong>/etc/make.profile/</strong> для отдельных адресов</p>
+
+
+	<p><strong>/usr/portage/metadata/</strong></p>
+
+
+<pre style="margin-left:4.0em;">
+layout.conf 
+</pre>
+
+	<p><strong>/usr/portage/profiles/</strong></p>
+
+
+<pre style="margin-left:4.0em;">
+arch.list 
+categories 
+info_pkgs 
+info_vars 
+license_groups 
+make.defaults 
+package.mask 
+package.unmask 
+package.use 
+package.use.force 
+package.use.mask 
+profiles.desc 
+repo_name 
+thirdpartymirrors 
+use.desc 
+use.force 
+use.local.desc 
+use.mask 
+</pre>
+
+	<p><strong>/usr/share/portage/config/</strong></p>
+
+
+<pre style="margin-left:4.0em;">
+make.globals 
+</pre>
+
+	<p><strong>/var/cache/edb/</strong></p>
+
+
+	<p style="padding-left:4em;">различные файлы внутреннего кэша</p>
+
+
+	<p><strong>/var/db/pkg/</strong></p>
+
+
+	<p style="padding-left:4em;">база данных для отслеживания установленных пакетов</p>
+
+
+	<p><strong>/var/lib/portage/</strong></p>
+
+
+<pre style="margin-left:4.0em;">
+config 
+world 
+world_sets 
+</pre>
+
+	<h2 id="ГЛОССАРИЙ">ГЛОССАРИЙ<a href="#ГЛОССАРИЙ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В данном руководстве вы можете столкнуться с терминами, которые вам незнакомы или специфичны для Portage. Обращайтесь к указанным ниже man-страницам для более развернутой информации.</p>
+
+
+	<p style="padding-left:4em;"><strong>Атом зависимости</strong></p>
+
+
+	<p style="padding-left:8em;">Атом имеет синтаксис следующего вида: либо <em>категория/пакет</em>, либо _оператор категория/пакет-версия. В качестве суффикса атом может иметь обозначение слота. <br />Подробнее см. <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5).</p>
+
+
+	<p style="padding-left:8em;"><strong>Синтаксис расширенного атома</strong> <br />Следующие расширения синтаксиса атома поддерживаются только в пользовательских файлах конфигурации и в аргументах таких консольных команд как <strong><a href=".html" class="wiki-page">emerge</a>(1)</strong>:</p>
+
+
+	<p style="padding-left:8em;"><strong>Ограничения репозитория</strong></p>
+
+
+	<p style="padding-left:12em;">Атомы с такими ограничениями содержат в конце, через разделитель '::', имя репозитория. Каждое имя репозитория должно соответствовать значению записи <strong>repo_name</strong> одного из репозиториев, сконфигурированных с помощью переменной <strong>PORTDIR</strong> или <strong>PORTDIR_OVERLAY</strong> (см. <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5)).</p>
+
+
+	<p style="padding-left:12em;"><em>Примеры:</em> <br /><pre style="margin-left:12.0em;">
+# пакет sed из репозитория 'gentoo' 
+sys-apps/sed::gentoo 
+# пакет kdelibs из репозитория 'kde-testing' 
+kde-base/kdelibs::kde-testing 
+# пакет empathy из репозитория 'gnome' 
+net-im/empathy::gnome 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><strong>Шаблоны с подстановочными знаками</strong></p>
+
+
+	<p style="padding-left:12em;">Атомы, содержащие подстановочные знаки, имеют синтаксис вида категория/пакет, где подстановочный знак '*' заменяет произвольное число из ряда допустимых. Разрешается использование нескольких символов '*', но они не должны стоять рядом друг с другом.</p>
+
+
+	<p style="padding-left:12em;"><em>Примеры:</em> <br /><pre style="margin-left:12.0em;">
+# любой пакет из категории 'sys-apps' 
+sys-apps/* 
+# любой пакет с именем 'zlib' из любой категории
+*/zlib 
+# любой пакет из категории, начинающейся с 'net-' 
+net-*/* 
+# любой пакет из любой категории
+*/* 
+# любой пакет из репозитория 'gentoo' 
+*/*::gentoo 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>KEYWORD</strong></p>
+
+
+	<p style="padding-left:8em;">Каждая архитектура имеет свое ключевое слово (KEYWORD). <br />Подробнее см. <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5)</p>
+
+
+	<p style="padding-left:4em;"><strong>virtual</strong></p>
+
+
+	<p style="padding-left:8em;">Атом зависимости, который принадлежит категории виртуальных пакетов. Используются в том случае, когда разрешить необходимую зависимость могут сразу несколько пакетов, но требуется лишь один. <br />Подробнее см. <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5)</p>
+
+
+	<h2 id="НЕКОТОРЫЕ-ВАЖНЫЕ-ФАЙЛЫ">НЕКОТОРЫЕ ВАЖНЫЕ ФАЙЛЫ<a href="#НЕКОТОРЫЕ-ВАЖНЫЕ-ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/etc/</strong></p>
+
+
+	<p style="padding-left:4em;"><strong>make.conf</strong></p>
+
+
+	<p style="padding-left:8em;">Глобальные редактируемые настройки, передаваемые Portage. См. <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5).</p>
+
+
+	<p><strong>/etc/make.profile/</strong> или <strong>/etc/portage/make.profile/</strong></p>
+
+
+	<p style="padding-left:4em;">Как правило, это лишь символическая ссылка на правильный профиль, хранящийся в каталоге <strong>/usr/portage/profiles/</strong>. Поскольку этот файл является частью дерева портежей, его можно легко обновить или сгенерировать заново, запустив `emerge --sync`. Он определяет профиль (обычно речь идет о параметрах, специфичных для данной архитектуры). Если вы хотите использовать свой особый профиль, вам необходимо создать свой собственный каталог <strong>/etc/make.profile/</strong> и заполнить его. Однако, если вы намерены ограничиться  переопределением некоторых настроек, используйте путь <strong>/etc/portage/profile/</strong> (он поддерживает те же типы файлов, что и <strong>/etc/make.profile/</strong>, за исключением родительских записей). НЕ РЕДАКТИРУЙТЕ настройки в <strong>/etc/make.profile/</strong>, поскольку после очередного `emerge --sync` они будут ПОТЕРЯНЫ. Если существуют два пути - и <strong>/etc/make.profile/</strong>, и <strong>/etc/portage/make.profile/</strong>, будет предпочтен <strong>/etc/make.profile/</strong>.</p>
+
+
+	<p style="padding-left:4em;">Любые файлы в этом каталоге, каталоги других профилей или высокоуровневые profiles-каталоги, имена которых начинаются с "package." или "use.", могут быть не только файлом, но и каталогом. Если это каталог, все файлы в нем будут отсортированы по имени в прямом алфавитном порядке и выведены вместе, как если бы они представляли собой один файл. Обратите внимание, что такое поведение поддерживается только в версиях portage выше 2.1.6.7, причем на данный момент оно не включено в PMS.</p>
+
+
+	<p style="padding-left:4em;"><em>Пример:</em> <br /><pre style="margin-left:4.0em;">
+${PORTDIR}/profiles/package.mask/removals 
+${PORTDIR}/profiles/package.mask/testing 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>deprecated</strong></p>
+
+
+	<p style="padding-left:8em;">Если этот файл присутствует, значит, профиль помечен как устаревший, более не поддерживаемый разработчиками Gentoo. В первой строке файла должен быть указан профиль, на который рекомендуется перейти пользователям, а ниже, возможно - инструкция, как это сделать.</p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+default-linux/x86/2005.0 
+# emerge -n '&gt;=sys-apps/portage-2.0.51' 
+# rm -f /etc/make.profile 
+# ln -s /usr/portage/profiles/default-linux/alpha/2005.0 /etc/make.profile 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>eapi</strong></p>
+
+
+	<p style="padding-left:8em;">В первой строке этого файла указывается версия <strong>EAPI</strong> для всех файлов каталога. Справка по <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5) предоставляет более развернутую информацию о <strong>EAPI</strong> и связанных с ним функциях.</p>
+
+
+	<p style="padding-left:4em;"><strong>make.defaults</strong></p>
+
+
+	<p style="padding-left:8em;">Стандартные настройки профиля для Portage.  Общий формат описан в руководстве по <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5). Файл <em>make.defaults</em> для вашего профиля определяет несколько специфических переменных:</p>
+
+
+	<p style="padding-left:8em;"><strong>ARCH</strong></p>
+
+
+	<p style="padding-left:12em;">Архитектура (x86/ppc/hppa и т.д.).</p>
+
+
+	<p style="padding-left:8em;"><strong>USERLAND = </strong><em> GNU </em></p>
+
+
+	<p style="padding-left:12em;">Поддержка BSD/cygwin и т.д.</p>
+
+
+	<p style="padding-left:8em;"><strong>ELIBC = </strong><em> glibc </em></p>
+
+
+	<p style="padding-left:12em;">Поддержка uClibc/BSD libc и т.д.</p>
+
+
+	<p style="padding-left:8em;"><strong>PROFILE_ONLY_VARIABLES = </strong><em> ARCH </em></p>
+
+
+	<p style="padding-left:12em;">Предотвращает изменение пользователем критических переменных в файлах make.conf или окружении.</p>
+
+
+	<p style="padding-left:8em;"><strong>PROFILE_ARCH</strong></p>
+
+
+	<p style="padding-left:12em;">Позволяет различать классы машин с совпадающим значением <strong>ARCH</strong>. Так, для всех компьютеров Sparc справедливо ARCH=sparc, но данная переменная должна иметь значение 'sparc32' или 'sparc64'.</p>
+
+
+	<p style="padding-left:8em;"><strong>STAGE1_USE</strong></p>
+
+
+	<p style="padding-left:12em;">Специальные USE-флаги, которые могут понадобиться при самогенерации stage2 из stage1.</p>
+
+
+	<p style="padding-left:4em;"><strong>packages</strong></p>
+
+
+	<p style="padding-left:8em;">Перечь пакетов, входящих в состав сета <em>system</em>.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- на одной строке может быть только один атом зависимости
+- пакеты, которые должны быть добавлены в сет system, начинаются с символа * 
+- атомы без символа * выводятся только если речь идет об устаревших, но по-прежнему используемых пакетах 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Примечание:</em> При использовании каскадных профилей вы можете при настройке удалять в дочерних профилях пакеты, добавленные родительским профилем - для этого атом необходимо указать с префиксом '-'.</p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# Это комментарий! 
+# загрузить версию glibc ниже 2.3 
+*&lt;sys-libs/glibc-2.3 
+# загрузить любую версию bash 
+*app-shells/bash 
+# загрузить версию readline ниже 4.2 
+*&lt;sys-libs/readline-4.2 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>packages.build</strong></p>
+
+
+	<p style="padding-left:8em;">Список пакетов (по пакету на строку), которые составляют архив stage1. Его изменение имеет смысл только для разработчиков stage.</p>
+
+
+	<p style="padding-left:4em;"><strong>package.provided</strong></p>
+
+
+	<p style="padding-left:8em;">Список пакетов (по пакету на строку), для которых portage предполагает, что они имеют источник данных. Имеет смысл при портировании на системы, отличные от Linux. В целом этот список заменяет <strong>emerge --inject</strong>.</p>
+
+
+	<p style="padding-left:8em;">Например, если вы работаете с собственной копией ядра 2.6, вы можете указать portage, что пакет 'sys-kernel/development-sources-2.6.7' уже обслуживается со стороны, так что он должен его игнорировать.</p>
+
+
+	<p style="padding-left:8em;">Portage не будет пытаться обновить пакет из данного списка, если только другой пакет явно не требует более новой его версии, чем указанная в списке. Зависимости, удовлетворяемые перечисленным в package.provided, могут вызвать удаление командой <strong>emerge --depclean</strong> установленных пакетов, удовлетворяющих соответствующие зависимости (подробнее см. в разделе <strong>ДЕЙСТВИЯ</strong> man-руководства <strong><a href=".html" class="wiki-page">emerge</a></strong>(1)).</p>
+
+
+	<p style="padding-left:8em;">В package.provided не должны помещаться виртуальные пакеты (virtual/*). В зависимости от типа такого пакета, вам может понадобиться добавить его в файл virtuals и/или добавить пакет, удовлетворяющий виртуальному, в package.provided.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- на одной строке может быть только один атом зависимости
+- операторы отношений не допускаются 
+- должна быть указана версия 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# вы занимаетесь разработкой ядра 
+sys-kernel/development-sources-2.6.7 
+
+# у вас установлена собственная копия QT 
+x11-libs/qt-3.3.0 
+
+# у вас модульная среда X, а пакетам необходима монолитная 
+x11-base/xorg-x11-6.8 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>package.use.force</strong></p>
+
+
+	<p style="padding-left:8em;">Принудительное назначение USE-флагов для отдельных пакетов.</p>
+
+
+	<p style="padding-left:8em;"><em>Примечание:</em> При использовании каскадных профилей вы можете при настройке удалять в дочерних профилях USE-флаги, добавленные родительскими профилями - для этого флаг нужно указать с префиксом '-'.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- по одному атому зависимости на строку, USE-флаги разделяются пробелом 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# принудительно установить документацию для GTK 2.x 
+=x11-libs/gtk+-2* doc 
+# принудительно убрать поддержку mysql для QT 
+x11-libs/qt -mysql 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>package.use.mask</strong></p>
+
+
+	<p style="padding-left:8em;">Маскировка USE-флагов для отдельных пакетов.</p>
+
+
+	<p style="padding-left:8em;"><em>Примечание:</em> При использовании каскадных профилей вы можете при настройке удалять в дочерних профилях USE-флаги, добавленные родительскими профилями - для этого флаг нужно указать с префиксом '-'.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- по одному атому зависимости на строку, USE-флаги разделяются пробелом
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# замаскировать документацию для GTK 2.x 
+=x11-libs/gtk+-2* doc 
+# размаскировать поддержку mysql для QT 
+x11-libs/qt -mysql 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>parent</strong></p>
+
+
+	<p style="padding-left:8em;">Содержит путь доступа к родительскому профилю. Путь может быть как абсолютным, так и относительным. К местонахождению профиля путь будет относительным. Как правило, данный файл содержит указание на родительский каталог, '..'. Используется только в каскадных профилях.</p>
+
+
+	<p style="padding-left:4em;"><strong>profile.bashrc</strong></p>
+
+
+	<p style="padding-left:8em;">При необходимости этот файл можно использовать для настройки особого окружения для ебилдов, отличного от стандартного для root. Синтаксис файла такой же, как для любого другого сценария bash.</p>
+
+
+	<p style="padding-left:4em;"><strong>use.force</strong></p>
+
+
+	<p style="padding-left:8em;">В определенных обстоятельствах некоторые USE-флаги нет смысла отключать. Здесь перечисляются принудительно выставляемые флаги.</p>
+
+
+	<p style="padding-left:8em;"><em>Примечание:</em>  При использовании каскадных профилей вы можете при настройке удалять в дочерних профилях USE-флаги, добавленные родительскими профилями - для этого флаг нужно указать с префиксом '-'.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- по одному USE-флагу на строку
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>use.mask</strong></p>
+
+
+	<p style="padding-left:8em;">Некоторые USE-флаги на отдельных архитектурах не имеют смысла (например, altivec на архитектуре, отличной от ppc, или mmx на архитектуре, отличной от x86) или не тестировались. Здесь перечисляются замаскированные флаги.</p>
+
+
+	<p style="padding-left:8em;"><em>Примечание:</em> При использовании каскадных профилей вы можете при настройке удалять в дочерних профилях USE-флаги, добавленные родительскими профилями - для этого флаг нужно указать с префиксом '-'.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- по одному USE-флагу на строку
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# замаскировать doc 
+doc 
+# размаскировать mysql 
+-mysql 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>virtuals</strong></p>
+
+
+	<p style="padding-left:8em;">Определяет, какие пакеты являются источником виртуальных по умолчанию. Например, если пакет должен отправлять почту, ему понадобится virtual/mta. Если нет пакета, предоставляющего virtual/mta (например, qmail, sendmail, postfix и т.д.), portage обращается к значению virtuals. В данном случае Gentoo стандартно использует net-mail/ssmtp (как определено в файле virtuals) - это пакет, который минимально необходим для отсылки электронных писем.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- по одному виртуальному пакету и атому зависимости на строку
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# использовать net-mail/ssmtp как почтовый агент по умолчанию 
+virtual/mta           net-mail/ssmtp 
+# использовать app-dicts/aspell-en как словарь по умолчанию
+virtual/aspell-dict   app-dicts/aspell-en 
+</pre></p>
+
+
+	<p><strong>/etc/portage/</strong></p>
+
+
+	<p style="padding-left:4em;">Любой элемент в этом каталоге, имя которого начинается с "package.", может быть не только файлом, но и каталогом. Если это каталог, все файлы, хранящиеся в нем, отсортированы по имени в прямом алфавитном порядке и сведены вместе, как если бы это был один файл.</p>
+
+
+	<p style="padding-left:4em;"><em>Пример:</em> <br /><pre style="margin-left:4.0em;">
+/etc/portage/package.accept_keywords/common 
+/etc/portage/package.accept_keywords/e17 
+/etc/portage/package.accept_keywords/kde 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>bashrc</strong></p>
+
+
+	<p style="padding-left:8em;">При необходимости этот файл может быть использован для настройки особого окружения ебилдов, отличного от стандартного окружения root.  По синтаксису файл представляет собой обычный сценарий bash.</p>
+
+
+	<p style="padding-left:8em;">В каталоге /etc/portage/env можно создавать дополнительные файлы настроек интерпретатора bashrc для отдельных пакетов.</p>
+
+
+	<p style="padding-left:4em;"><strong>categories</strong></p>
+
+
+	<p style="padding-left:8em;">Простой список существующих категорий, которые могут быть использованы в /usr/portage, PORTDIR_OVERLAY и PKGDIR (см. <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5)). Это позволяет создавать пользовательские категории.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- по одной категории на строку
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+app-hackers 
+media-other 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>color.map</strong></p>
+
+
+	<p style="padding-left:8em;">Содержит переменные для пользовательской настройки цветного вывода. См. <strong><a href=".html" class="wiki-page">color.map</a></strong>(5).</p>
+
+
+	<p style="padding-left:4em;"><strong>make.conf</strong></p>
+
+
+	<p style="padding-left:8em;">Глобальные пользовательские настройки Portage. См. <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5). Если этот файл существует, он имеет приоритет перед /etc/make.conf.</p>
+
+
+	<p style="padding-left:4em;"><strong>mirrors</strong></p>
+
+
+	<p style="padding-left:8em;">Всякий раз, сталкиваясь с URI-ссылкой вида mirror://, portage обращается в поиске серверов сюда. Если mirrors не содержит перечня зеркал, portage обратится к глобальному файлу зеркал по адресу /usr/portage/profiles/thirdpartymirrors. Вы можете также указать особый тип зеркал, "local". Обращение к таким зеркалам происходит до считывания значения переменной GENTOO_MIRRORS; они используеются даже в том случае, если для пакета установлены параметры RESTRICT="mirror" или RESTRICT="fetch".</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- сначала тип зеркала, затем список серверов 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# локальные частные зеркала моей компании
+local ftp://192.168.0.3/mirrors/gentoo http://192.168.0.4/distfiles 
+
+# если вы находитесь в Японии, предпочтительным для вас, скорее всего, будет японский сервер sourceforge
+sourceforge http://keihanna.dl.sourceforge.net/sourceforge 
+
+# если вы находитесь в Тайване, предпочтительным для вас, скорее всего, будет местный сервер gnu
+gnu ftp://ftp.nctu.edu.tw/UNIX/gnu/ 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>modules</strong></p>
+
+
+	<p style="padding-left:8em;">Этот файл позволяет переопределять кэш метаданных. На практике единственной используемой здесь переменной, которую имеет смысл менять пользователю, является portdbapi.auxdbmodule.</p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+portdbapi.auxdbmodule = portage.cache.sqlite.database 
+</pre></p>
+
+
+	<p style="padding-left:8em;">После переопределения значения portdbapi.auxdbmodule может быть необходимо перенести или регенерировать кэш метаданных. Если вы используете дерево rsync и в <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5) включено FEATURES="metadata-transfer", выполните  `emerge --metadata`. Чтобы регенерировать метаданные для репозиториев из переменной <strong>PORTDIR_OVERLAY</strong> или дерева cvs, выполните `emerge --regen` (см. <strong><a href=".html" class="wiki-page">emerge</a></strong>(1)). Если вы используете, например, модуль sqlite и хотите, чтобы все метаданные сохранялись только в этом формате (удобно для запросов), включите FEATURES="metadata-transfer" в вашем <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5).</p>
+
+
+	<p style="padding-left:4em;"><strong>package.accept_keywords</strong> и <strong>package.keywords</strong></p>
+
+
+	<p style="padding-left:8em;">Позволяют назначать ACCEPT_KEYWORDS для отдельных пакетов. Это имеет смысл, если вам необходимо несколько нестабильных пакетов на стабильной системе или наоборот. ACCEPT_KEYWORDS получает здесь аргументом один определенный пакет. Если в системе присутствуют и <strong>package.accept_keywords</strong>, и <strong>package.keywords</strong>, будут использованы оба, причем значения из <strong>package.accept_keywords</strong> будут иметь приоритет перед <strong>package.keywords</strong>. Файл <strong>package.accept_keywords</strong> призван заменить <strong>package.keywords</strong>, поскольку профили поддерживают другой формат <strong>package.keywords</strong>, который изменяет действующие значения KEYWORDS (а не ACCEPT_KEYWORDS).</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются)
+- в каждой строке - один атом зависимости и дополнительное ключевое слово
+- если в строке не указано ключевых слов, подразумевается, что используется нестабильная ветка
+
+Пример: 
+# всегда использовать нестабильные версии libgd 
+media-libs/libgd ~x86 
+# использовать только стабильные версии mplayer 
+media-video/mplayer -~x86 
+# всегда использовать нестабильные версии netcat
+net-analyzer/netcat 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Примечание:</em>  В дополнение к стандартным значениям переменной ACCEPT_KEYWORDS package.keywords поддерживает три особых маркера:</p>
+
+
+<pre style="margin-left:8.0em;">
+*  пакет отображается только в том случае, если он стабилен на любой архитектуре 
+~* пакет отображается только в том случае, если он тестируется на всех архитектурах 
+** пакет отображается во всех случаях (ключевые слова игнорируются) 
+</pre>
+
+	<p style="padding-left:8em;"><em>Дополнительное примечание:</em> Если вы видите значение <strong>-*</strong> KEYWORD, это означает, что пакет не работает ни на одной системе,  кроме перечисленных в KEYWORDS. Например, для пакета, существующего лишь как бинарный и собранного под архитектуру x86, имеем следующую запись:</p>
+
+
+	<p style="padding-left:8em;">games-fps/quake3-demo-1.11.ebuild:KEYWORDS="-* x86"</p>
+
+
+	<p style="padding-left:8em;">Если вы всё же хотите, чтобы этот пакет был доступен, используете другое ключевое слово в package.accept_keywords, например:</p>
+
+
+	<p style="padding-left:8em;">games-fps/quake3-demo x86</p>
+
+
+	<p style="padding-left:4em;"><strong>package.env</strong></p>
+
+
+	<p style="padding-left:8em;">Переменные окружения для отдельных пакетов. Каждая запись соответствует файлу окружения; все эти файлы хранятся в каталоге <strong>/etc/portage/env/</strong> и имеют тот же формат, что и <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5).</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются)
+- в одной строке - один атом зависимости и соответствующий/-е ему файл(ы) окружения 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# использовать для пакета glibc переменные окружения из файла /etc/portage/env/glibc.conf
+sys-libs/glibc glibc.conf 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>package.license</strong></p>
+
+
+	<p style="padding-left:8em;">Позволяет добавлять значения ACCEPT_LICENSE для отдельных пакетов.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются)
+- в одной строке - один атом зависимости с дополнительными лицензиями или группами лицензий для него
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>package.mask</strong></p>
+
+
+	<p style="padding-left:8em;">Список маскируемых атомов пакетов. Полезно в том случае, если не все версии требуемого пакета работают в вашей системе. Например, вам необходимы драйверы Nvidia drivers, но только версии до 1.0.4496. Нет ничего проще!</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются)
+- по одному атому зависимости на строку 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# замаскировать драйверы nvidia
+# версии 1.0.4496 и выше
+&gt;=media-video/nvidia-kernel-1.0.4496 
+&gt;=media-video/nvidia-glx-1.0.4496 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>package.properties</strong></p>
+
+
+	<p style="padding-left:8em;">Позволяет добавлять значения ACCEPT_PROPERTIES для отдельных пакетов.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются)
+- в одной строке - один атом зависимости и дополнительные свойства для него
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>package.unmask</strong></p>
+
+
+	<p style="padding-left:8em;">Аналогично описанному выше package.mask, но здесь, наоборот, перечисляются те пакеты, которые вы хотите размаскировать. Позволяет переопределить значения глобального файла package.mask (см. выше).  Обратите внимание, что это не влияет на пакеты, которые были замаскированы посредством переменной KEYWORDS.</p>
+
+
+	<p style="padding-left:4em;"><strong>package.use</strong></p>
+
+
+	<p style="padding-left:8em;">USE-флаги для отдельных пакетов. Удобно для отслеживания локальных USE-флагов, а также в случаях, когда флаги необходимо включать выборочно. Например, вы - разработчик GTK, поэтому вам необходима полная документация по данному проекту, а документация по QT не нужна. Элементарно, Ватсон.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- в одной строке - один атом зависимости и его USE-флаги, через пробел 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# подключить документацию для GTK 2.x 
+=x11-libs/gtk+-2* doc 
+# отключить поддержку mysql для QT 
+x11-libs/qt -mysql 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>repos.conf</strong></p>
+
+
+	<p style="padding-left:8em;">Содержит информацию о конфигурации <em>отдельных</em> репозиториев. Обратите внимание, что указанные здесь настройки конфигурации не относятся к таким утилитам как <strong><a href=".html" class="wiki-page">repoman</a></strong>(1) и <strong><a href=".html" class="wiki-page">egencache</a></strong>(1), поскольку выполняемые ими операции по определению <strong>не зависят</strong> от репозитория. <strong>ВНИМАНИЕ:</strong> в общем случае не рекомендуется использовать <strong>repos.conf</strong>, поскольку это повлечет за собой изменения в наследовании еклассов (прежде всего <strong>переопределение еклассов</strong>), которые, в свою очередь, в ряде случаев могут вызвать снижение производительности (см. <strong>ошибку #124041</strong>). При переопределении еклассов, дабы обойти ошибку #276264, вы должны убедиться, что ваше дерево портежей не содержит каталога metadata/cache/. Если же этот каталог существует, вам следует полностью его удалить и прописать значение переменной PORTAGE_RSYNC_EXTRA_OPTS="--exclude=/metadata/cache" в файле  make.conf, чтобы исключить metadata/cache/ из операций *<a href="emerge --sync.html" class="wiki-page">emerge --sync</a>.</p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+[DEFAULT] 
+# все репозитории будут наследовать еклассы из java-overlay и репозиториев 
+# java-experimental, причем еклассы из java-experimental 
+# будут иметь приоритет перед еклассами из java-overlay
+eclass-overrides = java-overlay java-experimental 
+
+[gentoo] 
+# отключить переопределение еклассов для ебилдов из репозитория gentoo 
+eclass-overrides = 
+# при обработке данных metadata/layout.conf из других репозиториев, вставлять 
+# 'gentoo' вместо алиасов-ссылок на репозитории 'foo' и 'bar', 
+# а алиас 'baz', содержащийся в файле layout.conf для gentoo, игнорировать
+aliases = foo bar -baz 
+
+[kde-testing] 
+# переопределять настройки metadata/layout.conf основной ветки репозитория kde-testing 
+masters = gentoo kde 
+
+[python] 
+# переопределять настройки metadata/layout.conf основной ветки репозитория python, 
+# чтобы эти настройки не наследовались из ветки и чтобы 
+# репозиторий не тянул оттуда зависимости (пользователю необходимо 
+# убедиться, что все необходимые зависимости, такие как еклассы, удовлетворены) 
+masters = 
+</pre></p>
+
+
+	<p><strong>/etc/portage/env/</strong></p>
+
+
+	<p style="padding-left:4em;">В этом каталоге могут располагаться дополнительные файлы настройки интерпретатора, bashrc, для отдельных пакетов. Имейте в виду, что, если необходимы лишь настройки переменных окружения для этих пакетов, следует использовать не bashrc, а <strong>/etc/portage/package.env</strong>.</p>
+
+
+	<p style="padding-left:4em;">Функции set_unless_changed и unset_unless_changed functions можно использовать для изменения значений данных переменных, но только в том случае, если их значения не противоречат значениям, выставленным в файле make.conf. Это удобно, когда требуется временно переопределить переменные окружения при вызове emerge. Значения переменных, которых было назначены без использования функции set_unless_changed, всегда переопределяют значения, установленные при вызове emerge.</p>
+
+
+	<p style="padding-left:4em;"><em>Синтаксис:</em> <br /><pre style="margin-left:4.0em;">
+set_unless_changed ПЕРЕМЕННАЯ=ЗНАЧЕНИЕ 
+unset_unless_changed ЗНАЧЕНИЕ 
+</pre></p>
+
+
+	<p style="padding-left:4em;">Portage обрабатывает все файлы bashrc после <strong>/etc/portage/bashrc</strong>, в следующем порядке:</p>
+
+
+	<ol style="margin-left:4em;;">
+	<li>/etc/portage/env/${CATEGORY}/${PN} </li>
+		<li>/etc/portage/env/${CATEGORY}/${PN}:${SLOT} </li>
+		<li>/etc/portage/env/${CATEGORY}/${P} </li>
+		<li>/etc/portage/env/${CATEGORY}/${PF}</li>
+	</ol>
+
+
+	<p><strong>/usr/portage/metadata/</strong></p>
+
+
+	<p style="padding-left:4em;"><strong>layout.conf</strong></p>
+
+
+	<p style="padding-left:8em;">Содержит схему репозиториев. Поддерживается атрибут masters, используемый для указания репозиториев, которые удовлетворяют зависимости еклассов и/или ебилдов. Каждому репозиторию должно соответствовать значение записи <strong>repo_name</strong> одного из репозиториев, определенного переменными <strong>PORTDIR</strong> и <strong>PORTDIR_OVERLAY</strong> (см. <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5)). Репозитории справа от <strong>masters</strong> имеют большие приоритет, чем указанные слева. Поддерживается также атрибут aliases, поведение которого аналогично этому же атрибуту из файла <strong>repos.conf</strong>. Значения <strong>layout.conf</strong> можно переопределять для отдельных репозиториев в файле <strong>/etc/portage/repos.conf</strong>. Настройки, содержащиеся в <strong>repos.conf</strong>, имеют приоритет перед значениями <strong>layout.conf</strong>, однако такие утилиты как <strong><a href=".html" class="wiki-page">repoman</a></strong>(1) и <strong><a href=".html" class="wiki-page">egencache</a></strong>(1) полностью игнорируют <strong>repos.conf</strong>, поскольку выполняемые ими операции по определению <strong>не зависят</strong> от репозитория.</p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# еклассы, предоставляемые java-overlay, имеют приоритет перед одноименными
+# еклассами, предоставляемыми gentoo 
+masters = gentoo java-overlay 
+# указать, что данный репозиторий может заменять foo-overlay 
+aliases = foo-overlay 
+# не подписывать manifest-файлы в данном репозитории 
+sign-manifests = false 
+# использовать "легкие" manifest-файлы, содержащие только записи DIST 
+thin-manifests = true 
+# указать, что в данном репозитории каждому пакету должен соответствовать manifest-файл, а если 
+# его нет или он некорректен, это будет рассматриваться как ошибка 
+use-manifests = strict 
+# указать, что для данного репозитория по умолчанию включена опция repoman --echangelog=y
+update-changelog = true 
+# указать, что данный репозиторий содержит файлы формата как md5-dict, так и pms -
+# их может генерировать egencache(1) 
+cache-formats = md5-dict pms 
+# указать, что данный репозиторий содержит профили, которые могут использовать
+# package.mask, package.provided, package.use, package.use.mask, 
+# package.use.force, use.mask и use.force как каталоги. 
+profile-formats = portage-1 
+</pre></p>
+
+
+	<p><strong>/usr/portage/profiles/</strong></p>
+
+
+	<p style="padding-left:4em;">Глобальные настройки Gentoo, контролируемые разработчиками. Переопределить их можно, используя файлы в каталоге <strong>/etc/portage/</strong>.</p>
+
+
+	<p style="padding-left:4em;"><strong>arch.list</strong></p>
+
+
+	<p style="padding-left:8em;">Список всех доступных ключевых слов KEYWORDS. Модификаторы не учитываются.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- по одному ключевому слову на строку 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+x86 
+ppc 
+sparc 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>categories</strong></p>
+
+
+	<p style="padding-left:8em;">Простой список доступных категорий, которые могут быть использованы в /usr/portage, PORTDIR_OVERLAY и PKGDIR (см. <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5)).</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- по одной категории на строку
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+app-admin 
+dev-lang 
+games-strategy 
+sys-kernel 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>info_pkgs</strong></p>
+
+
+	<p style="padding-left:8em;">Список всех пакетов, которые будут выведены по команде `emerge --info`.</p>
+
+
+	<p style="padding-left:4em;"><strong>info_vars</strong></p>
+
+
+	<p style="padding-left:8em;">Список всех переменных, которые будут выведены по команде `emerge --info`.</p>
+
+
+	<p style="padding-left:4em;"><strong>license_groups</strong></p>
+
+
+	<p style="padding-left:8em;">Содержит группы лицензий, которые могут быть определены переменной <strong>ACCEPT_LICENSE</strong> (см. <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5)). Подробнее об этом см. в GLEP 23: <em><noindex><a class="external" href="http://www.gentoo.org/proj/en/glep/glep-0023.html" ref="nofollow">http://www.gentoo.org/proj/en/glep/glep-0023.html</a></noindex></em>.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- в одной строке - одна группа с перечнем лицензий и вложенных групп
+- вложенные группы должны иметь префикс @ 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# Группа лицензий FSF-APPROVED полностью включает в себя группу GPL-COMPATIBLE и не только. 
+FSF-APPROVED @GPL-COMPATIBLE Apache-1.1 BSD-4 MPL-1.0 MPL-1.1 
+# Группа лицензий GPL-COMPATIBLE включает все лицензии, совместимые с GNU GPL. 
+GPL-COMPATIBLE Apache-2.0 BSD BSD-2 GPL-2 GPL-3 LGPL-2.1 LGPL-3 X11 ZLIB 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>package.accept_keywords</strong></p>
+
+
+	<p style="padding-left:8em;">Значения ACCEPT_KEYWORDS, используемые профилями, для отдельных пакетов. Формат и повдение этого файла аналогичны /etc/portage/package.accept_keywords, включая возможность включения в список атомов без ключевых слов, тем самым разрешая использовать нестабильные соответствия все стабильных веток, перечисленных в ACCEPT_KEYWORDS.</p>
+
+
+	<p style="padding-left:4em;"><strong>package.keywords</strong></p>
+
+
+	<p style="padding-left:8em;">Значения KEYWORDS для отдельных профилей. Полезно в случаях, когда ключевое слово для того или иного пакета должно меняться в зависимости от выбранного профиля.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются)
+- в одной строке - один атом с зависимости с дополнительными ключевыми словами для него
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# добавить для libgd стабильную ветку
+media-libs/libgd x86 
+# заменить для mplayer стабильную ветку нестабильной
+media-video/mplayer -x86 ~x86 
+# удалить для netcat все ключевые слова 
+net-analyzer/netcat -* 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>package.mask</strong></p>
+
+
+	<p style="padding-left:8em;">Содержит перечень атомов зависимости для пакетов, которые не должны устанавливаться ни в одном профиле. Имеет смысл, например, если вам необходимо добавить последние бета-версии KDE, но не допустить, чтобы кто-либо из пользователей мог до них обновиться. Удобно и для быстрой маскировки отдельных версий, если были обнаружены проблемы с безопасностью. ВСЕГДА сопровождайте записи комментарием, в котором указывались бы ПРИЧИНА, по которой пакет замаскирован, и тот, КТО его замаскировал.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- по одному атому зависимости на строку 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+# замаскировать по соображениям безопасности 
+&lt;sys-libs/zlib-1.1.4 
+# &lt;caleb@gentoo.org&gt; (10 Sep 2003) 
+# новые бета-версии kde 
+=kde-base/kde-3.2.0_beta1 
+=kde-base/kdeaccessibility-3.2.0_beta1 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>profiles.desc</strong></p>
+
+
+	<p style="padding-left:8em;">Список всех текущих профилей, предназначенных для пользователей и разработчиков. Каждый указанный здесь профиль обрабатывается утилитой repoman.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- в одной строке - один профиль, описанный в формате: _архитектура каталог состояние_, где:
+- архитектура должна фигурировать в arch.list 
+- каталог должен фигурировать в profiles.desc 
+- поддерживаются три состояния профиля: 'stable', 'dev' и 'exp' 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+alpha        default/linux/alpha/10.0    stable 
+m68k         default/linux/m68k/10.0     dev 
+x86          default/linux/x86/10.0      stable 
+x86-linux    prefix/linux/x86            exp 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>repo_name</strong></p>
+
+
+	<p style="padding-left:8em;">Первая строка файла должна определять уникальное имя репозитория. Это имя может содержать любые символы из набора [A-Za-z0-9_-], причем дефис не может стоять в начале имени.</p>
+
+
+	<p style="padding-left:4em;"><strong>thirdpartymirrors</strong></p>
+
+
+	<p style="padding-left:8em;">Управляет обработкой URI вида mirror://, представляющих собой доступные для загрузки зеркала. Предотвращает перегрузку какого-либо одного сервера.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- в строке - тип сервера и перечень хостов 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+sourceforge http://aleron.dl.sourceforge.net/sourceforge http://unc.dl.sourceforge.net/sourceforge 
+
+gentoo http://distro.ibiblio.org/pub/linux/distributions/gentoo/distfiles/ ftp://ftp.gtlib.cc.gatech.edu/pub/gentoo/distfiles 
+
+kernel http://www.kernel.org/pub http://www.us.kernel.org/pub 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>use.desc</strong></p>
+
+
+	<p style="padding-left:8em;">Здесь должны быть перечислены все глобальные USE-флаги с их описанием.</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- синтаксис строки: USE-флаг - описание
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+3dfx - Adds support for 3dfx video cards 
+acl - Adds support for Access Control Lists 
+doc - Adds extra documentation 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>use.local.desc</strong></p>
+
+
+	<p style="padding-left:8em;">Здесь перечисляются все локальные USE-флаги с описанием и указанием пакетов, для которых они установлены. Этот файл генерируется автоматически на основе файлов метаданных metadata.xml, включаемых во все пакеты. Подробнее см. в GLEP 56: <em><noindex><a class="external" href="http://www.gentoo.org/proj/en/glep/glep-0056.html" ref="nofollow">http://www.gentoo.org/proj/en/glep/glep-0056.html</a></noindex></em>.</p>
+
+
+<pre style="margin-left:8.0em;">
+Формат: 
+- комментарии начинаются с символа # (внутритекстовые комментарии не допускаются) 
+- синтаксис строки: пакет:USE-флаг - описание 
+
+Пример: 
+app-editors/nano:justify - Toggles the justify option 
+dev-libs/DirectFB:fusion - Adds Multi Application support 
+games-emulation/xmess:net - Adds network support 
+</pre>
+
+	<p><strong>/usr/share/portage/config/</strong></p>
+
+
+	<p style="padding-left:4em;"><strong>make.globals</strong></p>
+
+
+	<p style="padding-left:8em;">Глобальные настройки по умолчанию для Portage. Они беруется непосредственно из пакета portage. Настройки, выставленные пользователем в <strong>make.conf</strong> или <strong>package.env</strong>, переопределяют их. Формат подробно описан в <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5).</p>
+
+
+	<p><strong>/var/cache/edb/</strong></p>
+
+
+	<p style="padding-left:4em;">Этот каталог используется для хранения файлов внутреннего кэша portage. Имена и назначение этих файлов специально не документируются, дабы сэкономить ресурсы. Если вы не ведете разработку portage, вас, скорее всего, не касается описанное ниже.</p>
+
+
+	<p style="padding-left:4em;">Содержимое данного каталога может быть полностью удалено без какого-либо ущерба безопасности. Тем не менее убедительно рекомендуем не делать этого, поскольку повторное его генерирование может занять много времени.</p>
+
+
+	<p><strong>/var/db/pkg/</strong></p>
+
+
+	<p style="padding-left:4em;">Информация обо всех установленных пакетах хранится здесь. Portage определяет, установлен ли тот или иной пакет, путем обращения к этому каталогу.</p>
+
+
+	<p style="padding-left:4em;">Его структура в целом дублирует структуру дерева портежей: для каждой категории установленных пакетов предусмотрен подкаталог, а для каждой установленной версии пакета - вложенный в него каталог.</p>
+
+
+	<p style="padding-left:4em;">Каждый каталог пакета содержит различные файлы, описывающие установленные элементы пакета; здесь же хранится информация времени сборки (чтобы пакет можено было удалить, не обращаясь к дереву портежей).</p>
+
+
+	<p style="padding-left:4em;">Мы не описываем здесь точное содержимое и формат файлов, поскольку они могут в любой момент изменены. Впрочем, как правило, обычно каждой значимой переменной окружения (например, CFLAGS) соответствует один файл в данном каталоге. Обычно присутствует файл CONTENTS, содержащий адреса и хэши всех объектов, установленных пакетом в вашу систему.</p>
+
+
+	<p><strong>/var/lib/portage/</strong></p>
+
+
+	<p style="padding-left:4em;"><strong>config</strong></p>
+
+
+	<p style="padding-left:8em;">Содержит хэши, позволяющие определить,  изменялись ли после установки файлы в каталогах, для которых используется система защиты конфигурационных файлов. Файлы, которые не были изменены, будут автоматически удалены из дерева.</p>
+
+
+	<p style="padding-left:4em;"><strong>world</strong></p>
+
+
+	<p style="padding-left:8em;">Всякий раз, когда вы устанавливаете какой-либо пакет, его имя вносится в этот файл. При вызове `emerge world -up` из world-файла считывается список пакетов. Обратите внимание, что пакеты, установленные как зависимости, не вносятся в world. Например, если вы введете в терминале `emerge mod_wsgi`, а apache у вас еще не установлен, в world-файл будет внесен пакет "www-apache/mod_wsgi", но не "www-servers/apache". Подробнее см. <strong><a href=".html" class="wiki-page">emerge</a></strong>(1).</p>
+
+
+	<p style="padding-left:8em;"><em>Формат:</em> <br /><pre style="margin-left:8.0em;">
+- по одному атому зависимости на строку 
+</pre></p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+games-misc/fortune-mod-gentoo-dev 
+dev-libs/uclibc 
+app-cdr/cdemu 
+</pre></p>
+
+
+	<p style="padding-left:4em;"><strong>world_sets</strong></p>
+
+
+	<p style="padding-left:8em;">Аналогичен world-файлу, но вместо атомов пакетов содержит сеты пакетов (всегда начинаются с символа @).</p>
+
+
+	<p style="padding-left:8em;"><em>Пример:</em> <br /><pre style="margin-left:8.0em;">
+@kde 
+</pre></p>
+
+
+	<h2 id="БАГТРЕКЕР">БАГТРЕКЕР<a href="#БАГТРЕКЕР" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Об обнаруженных ошибках сообщайте на <noindex><a class="external" href="http://bugs.gentoo.org/" ref="nofollow">http://bugs.gentoo.org/</a></noindex></p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Marius Mauch &lt;<a class="email" href="mailto:genone@gentoo.org">genone@gentoo.org</a>&gt;</li>
+		<li>Mike Frysinger &lt;<a class="email" href="mailto:vapier@gentoo.org">vapier@gentoo.org</a>&gt;</li>
+		<li>Drake Wyrm &lt;<a class="email" href="mailto:wyrm@haell.com">wyrm@haell.com</a>&gt;</li>
+		<li>Arfrever Frehtes Taifersar Arahesis &lt;<a class="email" href="mailto:arfrever@gentoo.org">arfrever@gentoo.org</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">emerge</a></strong>(1), <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1), <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5), <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5), <strong><a href=".html" class="wiki-page">color.map</a></strong>(5)</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Октябрь 2011</p>
+</body>
+</html>

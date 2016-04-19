@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>software raid</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Программный-Raid">Программный Raid<a href="#Программный-Raid" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Руководство по созданию программного Raid5 массива.</p>
+
+
+	<h2 id="Создание-raid5-массива">Создание raid5 массива<a href="#Создание-raid5-массива" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/sdb1 /dev/sdd1 /dev/sde1
+</pre>
+
+	<h2 id="Добавление-устройства">Добавление устройства<a href="#Добавление-устройства" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+mdadm /dev/md0 -a /dev/sdc1
+</pre>
+
+	<h2 id="Подключение-добавленного-устройства-к-raid5-массиву">Подключение добавленного устройства к raid5 массиву<a href="#Подключение-добавленного-устройства-к-raid5-массиву" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+mdadm -G /dev/md0 -n4
+</pre>
+
+	<h2 id="Просмотр-состояния-raid5-массива">Просмотр состояния raid5 массива<a href="#Просмотр-состояния-raid5-массива" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+mdadm -Q --detail /dev/md0
+</pre>
+
+	<h2 id="Форматирование-raid5-массива-XFS">Форматирование raid5 массива (XFS)<a href="#Форматирование-raid5-массива-XFS" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+mkfs.xfs /dev/md0
+</pre>
+
+	<h2 id="Монтирование-raid5-массива">Монтирование raid5 массива<a href="#Монтирование-raid5-массива" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+mount /dev/md0 /mnt/floppy
+</pre>
+
+	<h2 id="Расширение-файловой-системы-XFS-при-увеличении-размера-массива">Расширение файловой системы XFS при увеличении размера массива<a href="#Расширение-файловой-системы-XFS-при-увеличении-размера-массива" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+xfs_growfs /dev/md0
+</pre>
+
+	<h2 id="Остановка-raid5-массива">Остановка raid5 массива<a href="#Остановка-raid5-массива" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+mdadm -S /dev/md0
+</pre>
+
+	<h2 id="Поиск-raid5-дисков-и-их-подключение-после-остановки">Поиск raid5 дисков и их подключение после остановки<a href="#Поиск-raid5-дисков-и-их-подключение-после-остановки" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+mdadm --assemble --scan
+</pre>
+
+	<h2 id="Включение-raid5-массива-при-загрузке-системы">Включение raid5 массива при загрузке системы<a href="#Включение-raid5-массива-при-загрузке-системы" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Генерация-mdadmconf">Генерация mdadm.conf<a href="#Генерация-mdadmconf" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Должно существовать устройство <code>/dev/md0</code>.<br /><pre>
+mdadm --detail --scan &gt; /etc/mdadm.conf
+</pre></p>
+
+
+	<h3 id="Включения-модуля-в-автозагрузку">Включения модуля в автозагрузку<a href="#Включения-модуля-в-автозагрузку" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Добавляем в <code>/etc/conf.d/modules</code>:<br /><pre>
+modules="raid5" 
+</pre></p>
+
+
+	<h3 id="Автозапуск-mdraid">Автозапуск mdraid<a href="#Автозапуск-mdraid" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+rc-update add mdraid boot
+</pre>
+</body>
+</html>

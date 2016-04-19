@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>euse</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="EUSE">EUSE<a href="#EUSE" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+euse - Gentoo: редактор USE-флагов из командной строки 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>euse</strong> <em>&lt;опция&gt; [подопция] [флаги]</em></p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Утилита <em>euse</em> предназначена для настройки (включения/отключения) USE-флагов в /etc/make.conf без прямого редактирования этого файла. Она используется также для получения подробных сведений о USE-флагах: описание, состояние (включен/отключен), тип флага (глобальный/локальный) и т.д.</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>-E, --enable</strong></p>
+
+
+	<p style="padding-left:4em;">Включить USE-флаг(и) в файле make.conf. В качестве параметров принимает один или более USE-флагов, через пробел.</p>
+
+
+	<p><strong>-D, --disable</strong></p>
+
+
+	<p style="padding-left:4em;">Отключить USE-флаг(и) в файле make.conf. Помещает символ '-' перед именем флага и добавляет его к значению USE, указанному в make.conf. В качестве параметров принимает один или более USE-флагов, через пробел.</p>
+
+
+	<p><strong>-P, --prune</strong></p>
+
+
+	<p style="padding-left:4em;">Удаляет USE-флаг(и) из файла make.conf. Удаляет все положительные и отрицательные ссылки на заданные USE-флаги из make.conf.</p>
+
+
+	<p><strong>-i, --info</strong></p>
+
+
+	<p style="padding-left:4em;">Выводит подробную информацию о USE-флаге/-ах. Если аргументов не задано, будут отображены сведения по всем флагам. Если заданы один или более аргументов (через пробел), выводимая информация будет относится только к данным флагам.</p>
+
+
+	<p><strong>-I, --info-installed</strong></p>
+
+
+	<p style="padding-left:4em;">Аналогично --info за исключением того, что будут отображены и установленные на момент выполнения команды пакеты, использующие данный флаг.</p>
+
+
+	<p style="padding-left:4em;">Формат вывода таков: <br /><strong>[- cD ]</strong><em> alpha - indicates that architecture ...</em> <br /><strong>[-   ]</strong><em> moznocompose (net-www/mozilla):</em> <br />Disable building of mozilla's web page composer</p>
+
+
+	<p>Расшифровка индикаторов в первом столбце:</p>
+
+
+	<p style="padding-left:4em;">is_active</p>
+
+
+	<p style="padding-left:8em;">+, если portage считает флаг активным, иначе - </p>
+
+
+	<p style="padding-left:4em;">is_in_env</p>
+
+
+	<p style="padding-left:8em;">E, если флаг включен в окружении, e если флаг отключен в окружении, ничего, если окружение не определяет флаг.</p>
+
+
+	<p style="padding-left:4em;">is_in_make_conf</p>
+
+
+	<p style="padding-left:8em;">C, если флаг включен в make.conf, c, если флаг отключен в make.conf, ничего, если make.conf не определяет флаг.</p>
+
+
+	<p style="padding-left:4em;">is_in_make_defaults</p>
+
+
+	<p style="padding-left:8em;">D, если флаг включен в make.defaults, d, если флаг отключен в make.defaults, ничего, если make.defaults не определяет флаг.</p>
+
+
+	<p style="padding-left:4em;">is_in_make_globals</p>
+
+
+	<p style="padding-left:8em;">G, если флаг включен в make.globals, g, если флаг отключен в make.globals, ничего, если make.globals не определяет флаг.<br />За литерой следует имя флага, для локальных флагов - название пакета и, наконец - описания (для локальных флагов - на новой строке).</p>
+
+
+	<p style="padding-left:4em;"><strong>-a, --active</strong></p>
+
+
+	<p style="padding-left:8em;">Отображает все активные USE-флаги и где они активируются (см. описание  <strong>--info</strong>).</p>
+
+
+	<p style="padding-left:4em;"><strong>-h, --help</strong></p>
+
+
+	<p style="padding-left:8em;">Отображает страницу справки, в которой перечислены все доступные ключи с их кратким описанием.</p>
+
+
+	<p style="padding-left:4em;"><strong>-v, --version</strong></p>
+
+
+	<p style="padding-left:8em;">Отображает информацию о версии.</p>
+
+
+	<h2 id="ФАЙЛЫ">ФАЙЛЫ<a href="#ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>/etc/make.conf <br />/etc/make.profile/make.defaults <br />/etc/make.globals <br />$PORTDIR/profiles/use.desc <br />$PORTDIR/profiles/use.local.desc</p>
+
+
+	<h2 id="АВТОР">АВТОР<a href="#АВТОР" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Arun Bhanu &lt;<a class="email" href="mailto:codebear@gentoo.org">codebear@gentoo.org</a>&gt; (оригинальная версия)</li>
+		<li>Marius Mauch &lt;<a class="email" href="mailto:genone@gentoo.org">genone@gentoo.org</a>&gt; (обновление для новой версии euse)</li>
+		<li>Jared Hancock (в значительной степени переписана поддержка package.use)</li>
+	</ul>
+
+
+	<h2 id="ОШИБКИ">ОШИБКИ<a href="#ОШИБКИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В настоящее время euse не обрабатывает USE-флаги, которые были включены или отключены через use.defaults, use.mask или package.use. Он не вполне корректно распознает и флаг -*.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>ufed(8),</strong></p>
+
+
+	<p>Сценарий <em>/usr/bin/euse</em>.</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>2004-10-17</p>
+</body>
+</html>

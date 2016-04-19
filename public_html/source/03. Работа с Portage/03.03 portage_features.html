@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>portage features</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Возможности-Portage">Возможности Portage<a href="#Возможности-Portage" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Возможности-Portage">Возможности Portage</a></li>
+<li class="heading2"><a href="#Возможности-Portage">Возможности Portage</a></li>
+<li class="heading2"><a href="#Распределенная-компиляция">Распределенная компиляция</a></li>
+<li class="heading3"><a href="#Использование-distcc">Использование distcc</a></li>
+<li class="heading3"><a href="#Установка-distcc">Установка distcc</a></li>
+<li class="heading3"><a href="#Подключение-поддержки-Portage">Подключение поддержки Portage</a></li>
+<li class="heading2"><a href="#Кэширование-компиляции">Кэширование компиляции</a></li>
+<li class="heading3"><a href="#О-средстве-ccache">О средстве ccache</a></li>
+<li class="heading3"><a href="#Установка-ccache">Установка ccache</a></li>
+<li class="heading3"><a href="#Подключение-поддержки-Portage">Подключение поддержки Portage</a></li>
+<li class="heading3"><a href="#Использование-ccache-для-компиляции-Си-не-в-Portage">Использование ccache для компиляции Си не в Portage</a></li>
+<li class="heading2"><a href="#Поддержка-двоичных-пакетов">Поддержка двоичных пакетов</a></li>
+<li class="heading3"><a href="#Создание-готовых-заранее-собранных-пакетов">Создание готовых (заранее собранных) пакетов</a></li>
+<li class="heading3"><a href="#Установка-двоичных-пакетов">Установка двоичных пакетов</a></li>
+</ul>
+
+
+	<h2 id="Возможности-Portage">Возможности Portage<a href="#Возможности-Portage" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В Portage есть несколько дополнительных возможностей. Многие из этих возможностей полагаются на определенные программы, повышающие производительность, надежность, безопасность и т.п.</p>
+
+
+	<p>Для включения и выключения определенных возможностей Portage нужно редактировать в файле <code>/etc/make.conf</code> переменную <span class="bluecode" >FEATURES</span>, в которой перечислены ключевые слова, разделенные пробелами, обозначающие различные возможности. Иногда для использования соответствующих возможностей потребуется установка дополнительных утилит.</p>
+
+
+	<p>Здесь перечислены не все возможности, поддерживаемые Portage. Полный перечень представлен на странице справки <a href="/etc/make.conf.html" class="wiki-page">/etc/make.conf</a>.</p>
+
+
+	<p>Чтобы узнать, какие возможности включены по умолчанию, запустите <span class="bluecode" >emerge --info</span> и найдите переменную <code>FEATURES</code> (или отфильтруйте ее с помощью grep):</p>
+
+
+	<pre><code>emerge --info | grep FEATURES</code></pre>
+
+
+	<h2 id="Распределенная-компиляция">Распределенная компиляция<a href="#Распределенная-компиляция" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Использование-distcc">Использование distcc<a href="#Использование-distcc" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><span class="bluecode" >distcc</span> - программа, распределяющая компиляцию по нескольким, не обязательно одинаковым, машинам в сети. Клиент distcc посылает всю необходимую информацию на доступные серверы distcc (на которых выполняется <span class="bluecode" >distccd</span>), чтобы они могли компилировать для клиента части исходного кода. Чистый выигрыш - более быстрая компиляция.</p>
+
+
+	<h3 id="Установка-distcc">Установка distcc<a href="#Установка-distcc" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Distcc поставляется с графическим монитором (средством контроля), позволяющим отслеживать задачи, которые ваш компьютер отсылает на компиляцию. Если вы используете Gnome, тогда добавьте "gnome" к переменной USE. А если вы не пользуетесь Gnome, но при этом хотите пользоваться монитором, добавьте "gtk" к переменной USE.</p>
+
+
+	<p>Установка distcc:</p>
+
+
+	<pre><code>emerge distcc</code></pre>
+
+
+	<h3 id="Подключение-поддержки-Portage">Подключение поддержки Portage<a href="#Подключение-поддержки-Portage" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Добавьте <span class="bluecode" >distcc</span> к переменной <code>FEATURES</code> в файле <code>/etc/make.conf</code>. Затем отредактируйте переменную <code>MAKEOPTS</code>, как вам нравится. Известная рекомендация - указывать директиву "-jX", где X - число центральных процессоров, на которых работает <code>distccd</code> (включая текущий компьютер) плюс один; у вас могут получиться лучшие результаты и с другими значениями.</p>
+
+
+	<p>Теперь запустите <span class="bluecode" >distcc-config</span> и введите список доступных серверов distcc. Для простоты примера, предположим, что доступные серверы DistCC - 192.168.1.102 (текущий компьютер), 192.168.1.103 и 192.168.1.104 (два «удаленных» компьютера):</p>
+
+
+	<pre><code>distcc-config --set-hosts "192.168.1.102 192.168.1.103 192.168.1.104"</code></pre>
+
+
+	<p>Не забудьте также запустить демон <span class="bluecode" >distccd</span>:</p>
+
+
+	<pre><code>rc-update add distccd default<br />/etc/init.d/distccd start</code></pre>
+
+
+	<h2 id="Кэширование-компиляции">Кэширование компиляции<a href="#Кэширование-компиляции" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="О-средстве-ccache">О средстве ccache<a href="#О-средстве-ccache" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><span class="bluecode" >ccache</span> - это быстрый кэш компилятора. Когда вы компилируете программу, он кэширует промежуточные результаты так, что всякий раз, когда вы перекомпилируете ту же самую программу, время компиляции значительно сокращается. В типичных случаях общее время компиляции может сокращаться в 5-10 раз.</p>
+
+
+	<p>Более подробно про ccache можно узнать на <noindex><a href="http://ccache.samba.org" rel="nofollow" target="_blank" class="external">сайте проекта</a></noindex>.</p>
+
+
+	<h3 id="Установка-ccache">Установка ccache<a href="#Установка-ccache" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для установки <span class="bluecode" >ccache</span>, выполните <span class="bluecode" >emerge ccache</span>:</p>
+
+
+	<pre><code>emerge ccache</code></pre>
+
+
+	<h3 id="Подключение-поддержки-Portage">Подключение поддержки Portage<a href="#Подключение-поддержки-Portage" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Откройте <code>/etc/make.conf</code> и добавьте <span class="bluecode" >ccache</span> к переменной <code>FEATURES</code>. Затем добавьте новую переменную по имени <code>CCACHE_SIZE</code> (размер кэша), и установите её равной "2G":</p>
+
+
+	<pre><code>CCACHE_SIZE="2G"</code></pre>
+
+
+	<p>Для проверки работоспособности ccache, запросите статистику ccache. </p>
+
+
+	<pre><code>ccache -s</code></pre>
+
+
+	<p>Из-за того, что Portage использует другой домашний каталог ccache, вам также потребуется установить переменную <span class="bluecode" >CCACHE_DIR</span>:</p>
+
+
+	<pre><code>CCACHE_DIR="/var/tmp/ccache"</code></pre>
+
+
+	<p>Домашний каталог ccache по умолчанию - <code>/var/tmp/ccache</code>; изменить это назначение можно, определив переменную <span class="bluecode" >CCACHE_DIR</span> в <code>/etc/make.conf</code>.</p>
+
+
+	<p>Однако, при запуске <span class="bluecode" >ccache</span> используется каталог по умолчанию, <code>${HOME}/.ccache</code>, вот почему при запросе статистики (Portage) ccache требуется определять переменную <span class="bluecode" >CCACHE_DIR</span>.</p>
+
+
+	<h3 id="Использование-ccache-для-компиляции-Си-не-в-Portage">Использование ccache для компиляции Си не в Portage<a href="#Использование-ccache-для-компиляции-Си-не-в-Portage" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Если вы хотите использовать <code>ccache</code> для компиляций не в Portage, добавьте <code>/usr/lib/ccache/bin</code> в начало вашей переменной PATH (перед <code>/usr/bin</code>). Это можно сделать, отредактировав <code>/etc/env.d/00basic</code>, который является первым файлом среды, где определяется переменная <span class="bluecode" >PATH</span>:</p>
+
+
+	<pre><code>PATH="/usr/lib/ccache/bin:/opt/bin"</code></pre>
+
+
+	<h2 id="Поддержка-двоичных-пакетов">Поддержка двоичных пакетов<a href="#Поддержка-двоичных-пакетов" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Создание-готовых-заранее-собранных-пакетов">Создание готовых (заранее собранных) пакетов<a href="#Создание-готовых-заранее-собранных-пакетов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Portage поддерживает установку заранее собранных готовых пакетов. Несмотря на то, что для большинства дистрибутивов Calculate Linux есть поддержка заранее собранных пакетов, их количество ограничено составом пакетов дистрибутива. Вам также может понадобится подготовить пакеты с необходимыми вам <a href="USE-флагами.html" class="wiki-page">USE-флагами</a>.</p>
+
+
+	<p>Чтобы создать двоичный пакет, можно использовать <span class="bluecode" >quickpkg</span>, если пакет уже установлен в вашей системе, или <span class="bluecode" >emerge</span> с параметрами <span class="bluecode" >--buildpkg</span> или <span class="bluecode" >--buildpkgonly</span>.</p>
+
+
+	<p>Если вы хотите, чтобы Portage создавал двоичные пакеты из каждого пакета, который вы будете устанавливать, в <code>/etc/make.conf</code> добавьте <span class="bluecode" >buildpkg</span> к переменной <code>FEATURES</code>.</p>
+
+
+	<h3 id="Установка-двоичных-пакетов">Установка двоичных пакетов<a href="#Установка-двоичных-пакетов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Дистрибутивы <a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a> (KDE и XFCE) и <a href="Calculate Directory Server.html" class="wiki-page">Calculate Directory Server</a> используют бинарное хранилище обновлений содержащее пакеты, входящие в образ дистрибутива. Каждый из перечисленных дистрибутивов имеет как обычный профиль, так и бинарный, используемый по умолчанию. В бинарном профиле доступна только одна стабильная версия для каждого двоичного пакета.</p>
+
+
+	<p>Обратите внимание, перед установкой двоичного пакета из хранилища нужно выполнить обновление оверлея <code>Calculate</code> <span class="bluecode" >layman -s calculate</span>.</p>
+
+
+	<p>Помимо маскировки, профиль устанавливает переменной <code>FEATURES</code> значение <span class="bluecode" >getbinpkg</span>, отдавая приоритет установке бинарных пакетов.</p>
+
+
+	<p>Путь к хранилищу указан в переменной <code>PORTAGE_BINHOST</code> в профиле дистрибутива. Для примера, в файле <code>/etc/make.conf</code> приведены пути к альтернативным хранилищам.</p>
+
+
+	<p>Вы можете устанавливать двоичные пакеты используя и обычный профиль. Для этого указывайте в команде emerge параметр <span class="bluecode" >-g</span> (или <span class="bluecode" >--getbinpkg</span>) вместе с параметром <span class="bluecode" >-k</span> (или <span class="bluecode" >--usepkg</span>). Первый указывает emerge загрузить двоичный пакет c сервера, определенного раньше, а второй сообщает emerge, что до загрузки исходных кодов и их компиляции сначала нужно попытаться установить этот двоичный пакет.</p>
+
+
+	<p>Например, чтобы установить <span class="bluecode" >gnumeric</span> из двоичных пакетов:</p>
+
+
+	<pre><code>emerge -kg gnumeric</code></pre>
+
+
+	<p>Подробную информацию о параметрах установки двоичных пакетов можно найти на странице <a href="справки emerge.html" class="wiki-page">справки emerge</a>.</p>
+</body>
+</html>

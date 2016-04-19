@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>environment variables</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Переменные-среды">Переменные среды<a href="#Переменные-среды" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Переменные-среды">Переменные среды</a></li>
+<li class="heading2"><a href="#Переменные-среды">Переменные среды</a></li>
+<li class="heading3"><a href="#Что-это-такое">Что это такое?</a></li>
+<li class="heading3"><a href="#Важные-примеры">Важные примеры</a></li>
+<li class="heading2"><a href="#Глобальное-определение-переменных">Глобальное определение переменных</a></li>
+<li class="heading3"><a href="#Каталог-etcenvd">Каталог /etc/env.d</a></li>
+<li class="heading3"><a href="#Сценарий-env-update">Сценарий env-update</a></li>
+<li class="heading2"><a href="#Локальное-определение-переменных">Локальное определение переменных</a></li>
+<li class="heading3"><a href="#Пользовательские-переменные">Пользовательские переменные</a></li>
+<li class="heading3"><a href="#Сеансовые-переменные">Сеансовые переменные</a></li>
+</ul>
+
+
+	<h2 id="Переменные-среды">Переменные среды<a href="#Переменные-среды" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Что-это-такое">Что это такое?<a href="#Что-это-такое" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Переменная среды — это именованный объект, который содержит информацию, используемую одним или несколькими приложениями. Многие пользователи (особенно новички в Linux) находят этот подход несколько странным или неуправляемым. Но это впечатление ошибочно: используя переменные среды, можно очень легко изменить настройку разнообразных программ.</p>
+
+
+	<h3 id="Важные-примеры">Важные примеры<a href="#Важные-примеры" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>В следующей таблице описывается ряд переменных, используемых в системе Linux. Примеры их значений приведены далее.</p>
+
+
+	<table>
+		<tr>
+			<td><strong>Переменная</strong></td>
+			<td><strong>Описание</strong></td>
+		</tr>
+		<tr>
+			<td>PATH</td>
+			<td>В этой переменной содержится список каталогов, разделенных двоеточиями, в которых система ищет исполняемые файлы. Если вы вводите имя исполняемого файла например <span class="bluecode" >ls</span>, <span class="bluecode" >rc-update</span> или <span class="bluecode" >emerge</span>), который не находится ни в одной из перечисленных здесь каталогов, этот файл не запустится (если, конечно, вы не указали полный путь, например <code>/bin/ls</code>).</td>
+		</tr>
+		<tr>
+			<td>ROOTPATH</td>
+			<td>У этой переменной такое же значение, что и у <span class="bluecode" >PATH</span>, но в ней перечисляются только те каталоги, которые нужно просматривать при вводе команды пользователем с правами root.</td>
+		</tr>
+		<tr>
+			<td>LDPATH</td>
+			<td>В этой переменной содержится список каталогов, разделенных двоеточиями, в которых динамический компоновщик ищет библиотеки.</td>
+		</tr>
+		<tr>
+			<td>MANPATH</td>
+			<td>В этой переменной содержится список каталогов, разделенных двоеточиями, в которых команда <span class="bluecode" >man</span> ищет страницы справки.</td>
+		</tr>
+		<tr>
+			<td>INFODIR</td>
+			<td>В этой переменной содержится список каталогов, разделенных двоеточиями, в которых команда <span class="bluecode" >info</span> ищет info-страницы.</td>
+		</tr>
+		<tr>
+			<td>PAGER</td>
+			<td>В этой переменной содержится путь к программе, позволяющей постранично просматривать содержимое файлов, например <span class="bluecode" >less</span> или <span class="bluecode" >more</span>.</td>
+		</tr>
+		<tr>
+			<td>EDITOR</td>
+			<td>В этой переменной содержится путь к программе, используемой для изменения файлов, например <span class="bluecode" >vi</span> или <span class="bluecode" >nano</span>.</td>
+		</tr>
+		<tr>
+			<td>KDEDIRS</td>
+			<td>В этой переменной содержится список каталогов, разделенных двоеточиями, в которых находятся ресурсы KDE.</td>
+		</tr>
+		<tr>
+			<td>CLASSPATH</td>
+			<td>В этой переменной содержится список каталогов, разделенных двоеточиями, в которых находятся классы Java.</td>
+		</tr>
+		<tr>
+			<td>CONFIG_PROTECT</td>
+			<td>В этой переменной содержится список каталогов, защищаемых Portage при обновлении, разделенных <em>пробелами</em>.</td>
+		</tr>
+		<tr>
+			<td>CONFIG_PROTECT_MASK</td>
+			<td>В этой переменной содержится список каталогов, исключаемых из защиты Portage при обновлении, разделенных <em>пробелами</em>.</td>
+		</tr>
+	</table>
+
+
+
+
+	<p>Ниже представлен пример определения всех этих переменных:<br /><pre>
+PATH="/bin:/usr/bin:/usr/local/bin:/opt/bin:/usr/games/bin" 
+ROOTPATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" 
+LDPATH="/lib:/usr/lib:/usr/local/lib:/usr/lib/gcc-lib/i686-pc-linux-gnu/3.2.3" 
+MANPATH="/usr/share/man:/usr/local/share/man" 
+INFODIR="/usr/share/info:/usr/local/share/info" 
+PAGER="/usr/bin/less" 
+EDITOR="/usr/bin/vim" 
+KDEDIRS="/usr" 
+CLASSPATH="/opt/blackdown-jre-1.4.1/lib/rt.jar:." 
+CONFIG_PROTECT="/usr/X11R6/lib/X11/xkb /opt/tomcat/conf \
+                /usr/kde/3.1/share/config /usr/share/texmf/tex/generic/config/ \
+                /usr/share/texmf/tex/platex/config/ /usr/share/config" 
+CONFIG_PROTECT_MASK="/etc/gconf" 
+</pre></p>
+
+
+	<h2 id="Глобальное-определение-переменных">Глобальное определение переменных<a href="#Глобальное-определение-переменных" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Каталог-etcenvd">Каталог /etc/env.d<a href="#Каталог-etcenvd" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для того, чтобы определить эти переменные централизованно, в Calculate существует каталог <code>/etc/env.d</code>. В нём находится ряд файлов, например, <code>00basic</code>, <code>05gcc</code> и так далее, в которых определяются переменные, необходимые программам, указанным в названии файлов.</p>
+
+
+	<p>Например, при установке <span class="bluecode" >gcc</span> ebuild создает файл <code>/etc/env.d/05gcc</code>, содержащий следующие определения переменных:<br /><pre>
+PATH="/usr/i686-pc-linux-gnu/gcc-bin/3.2" 
+ROOTPATH="/usr/i686-pc-linux-gnu/gcc-bin/3.2" 
+MANPATH="/usr/share/gcc-data/i686-pc-linux-gnu/3.2/man" 
+INFOPATH="/usr/share/gcc-data/i686-pc-linux-gnu/3.2/info" 
+CC="gcc" 
+CXX="g++" 
+LDPATH="/usr/lib/gcc-lib/i686-pc-linux-gnu/3.2.3" 
+</pre></p>
+
+
+	<p>В других дистрибутивах вам предлагается изменять или добавлять определения переменных среды в <code>/etc/profile</code> или где-нибудь еще. Calculate, с другой стороны, облегчает вам поддержку и управление переменными среды, избавляя от необходимости уделять внимание многочисленным файлам, содержащим определения переменных.</p>
+
+
+	<p>Например, когда обновляется <span class="bluecode" >gcc</span>, также без малейшего участия пользователя обновляется и <code>/etc/env.d/05gcc</code>.</p>
+
+
+	<p>От этого выигрывает не только Portage, но и вы, пользователь. Иногда от вас может потребоваться глобальная установка какой-нибудь переменной. Возьмем, к примеру, переменную <span class="bluecode" >http_proxy</span>. Вместо того, чтобы возиться с <code>/etc/profile</code>, теперь можно просто создать файл (<code>/etc/env.d/99local</code>) и добавить нужные определения туда:</p>
+
+
+	<pre><code>http_proxy="proxy.server.com:8080"</code></pre>
+
+
+	<p>Используя один и тот же файл для всех своих переменных, вы можете быстро увидеть все определенные вами переменные вместе.</p>
+
+
+	<h3 id="Сценарий-env-update">Сценарий env-update<a href="#Сценарий-env-update" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Переменная <span class="bluecode" >PATH</span> определяется в нескольких файлах в <code>/etc/env.d</code>. Нет, нет это не ошибка: при запуске <span class="bluecode" >env-update</span> различные определения объединяются перед обновлением переменных среды, позволяя пакетам (или пользователям) добавлять собственные значения переменных, не влияя на уже существующие.</p>
+
+
+	<p>Сценарий <span class="bluecode" >env-update</span> объединяет значения переменных из файлов, находящихся в <code>/etc/env.d</code>, в алфавитном порядке. Имена файлов должны начинаться с двух десятичных цифр. Порядок обновления, используемый <span class="bluecode" >env-update</span>:<br /><pre>
+          00basic        99kde-env       99local
+      +-------------+----------------+-------------+
+PATH="/bin:/usr/bin:/usr/kde/3.2/bin:/usr/local/bin" 
+</pre></p>
+
+
+	<p>Объединение выполняется не всегда, а только для следующих переменных: <span class="bluecode" >KDEDIRS</span>, <span class="bluecode" >PATH</span>, <span class="bluecode" >CLASSPATH</span>, <span class="bluecode" >LDPATH</span>, <span class="bluecode" >MANPATH</span>, <span class="bluecode" >INFODIR</span>, <span class="bluecode" >INFOPATH</span>, <span class="bluecode" >ROOTPATH</span>, <span class="bluecode" >CONFIG_PROTECT</span>, <span class="bluecode" >CONFIG_PROTECT_MASK</span>, <span class="bluecode" >PRELINK_PATH</span> и <span class="bluecode" >PRELINK_PATH_MASK</span>. Для всех остальных переменных используется значение, определенное в последнем из файлов (по алфавиту в каталоге <code>/etc/env.d</code>).</p>
+
+
+	<p>При запуске сценария env-update создаются все переменные среды, и помещаются в <code>/etc/profile.env</code> (используемый файлом <code>/etc/profile</code>). Кроме того, на основе значения <span class="bluecode" >LDPATH</span> создается <code>/etc/ld.so.conf</code>. После этого запускается <span class="bluecode" >ldconfig</span>, чтобы вновь создать файла <code>/etc/ld.so.cache</code>, используемый динамическим компоновщиком.</p>
+
+
+	<p>Если вы хотите, чтобы результаты работы env-update вступили в силу немедленно, для обновления среды выполните следующую команду:</p>
+
+
+	<pre><code>env-update &#38;&#38; source /etc/profile</code></pre>
+
+
+	<p>Примечание: Эта команда обновляет переменные только в текущем терминале, в новых консолях и их потомках. То есть, если вы работаете в X11, потребуется или набирать <span class="bluecode" >source /etc/profile</span> в каждом открываемом терминале, или перезапустить X, чтобы все новые терминалы обращались к новым переменным. Если вы используете диспетчер входа в систему, станьте пользователем с правами root и наберите <span class="bluecode" >/etc/init.d/xdm restart</span>. Если нет, вам придется выйти и снова войти в систему, чтобы X порождала потомков, использующих новые значения переменных.</p>
+
+
+	<h2 id="Локальное-определение-переменных">Локальное определение переменных<a href="#Локальное-определение-переменных" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Пользовательские-переменные">Пользовательские переменные<a href="#Пользовательские-переменные" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Далеко не всегда нужно определять переменные глобально. Например, вам может понадобиться добавить <code>/home/my_user/bin</code> и текущий рабочий каталог (где вы находитесь) к переменной <span class="bluecode" >PATH</span>, но при этом не нужно, чтобы это добавление появилось и в переменной <span class="bluecode" >PATH</span> у всех остальных пользователей. Если вы хотите определить переменную среды локально, используйте <code>~/.bashrc</code> или <code>~/.bash_profile</code>. Пример расширения PATH в ~/.bashrc для локальных нужд:</p>
+
+
+	<pre><code>#(двоеточие без последующего указания каталога означает текущий рабочий каталог)<br />PATH="${PATH}:/home/my_user/bin:"</code></pre>
+
+
+	<p>Обновление вашей переменной <span class="bluecode" >PATH</span> произойдет, когда вы выйдете и снова войдете в систему.</p>
+
+
+	<h3 id="Сеансовые-переменные">Сеансовые переменные<a href="#Сеансовые-переменные" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Иногда нужны еще более жесткие ограничения. Вам может потребоваться возможность запуска исполняемых файлов из специально созданного временного каталога без указания полного пути к ним, и без изменения файла <code>~/.bashrc</code> ради нескольких минут.</p>
+
+
+	<p>В этом случае можно просто определить переменную <span class="bluecode" >PATH</span> для текущего сеанса командой <span class="bluecode" >export</span>. Переменной будет присвоено временное значение до тех пор, пока вы не завершите сеанс. Пример определения сеансовой переменной среды:</p>
+
+
+	<pre><code>export PATH="${PATH}:/home/my_user/tmp/usr/bin"</code></pre>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>connecting to directory server</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Подключение-к-серверу-каталогов">Подключение к серверу каталогов<a href="#Подключение-к-серверу-каталогов" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Наибольший интерес пакет <em>calculate-client</em> представляет при наличии сервера директорий. В этом случае вы можете хранить все настройки централизованно. Для взаимодействия с сервером на последнем должен быть установлен пакет <em>calculate-server</em>. Вы можете воспользоваться сервером <a href="Calculate Directory Server.html" class="wiki-page">Calculate Directory Server</a>, в состав которого входит пакет <em>calculate-server</em>.</p>
+
+
+	<p>Сеанс пользователя в этом случае настраивается с учетом работающих на сервере приложений. Для доступа к настройкам рабочую станцию нужно ввести в домен.</p>
+
+
+	<p><em>Мы применяем терминологию, похожую на Windows NT, т.к. во многом принцип действия схож. Вы можете подключать к серверу как Windows машины, так и Linux. Обе системы получают доступ к общим ресурсам сервера, сетевым службам, а также хранят на нем свои настройки - окружения рабочих столов пользователей.</em></p>
+
+
+	<p><strong>Для ввода в домен потребуется выполнить следующие действия:</strong></p>
+
+
+	<ol>
+	<li>Выполните настройки <em>samba</em> на сервере по <a href="описанию.html" class="wiki-page">описанию</a>.</li>
+		<li>Установите пароль пользователя <em>client</em> на сервере, выполнив:<br /><pre>
+cl-passwd --smb client samba
+</pre></li>
+		<li>Введите компьютер в домен. Для этого регистрируемся на клиентской машине как <em>root</em> и выполняем:<br /><pre>
+cl-client HOST
+</pre><br />Потребуется ввод пароля пользователя <em>client</em>. Вместо сетевого имени сервера (в примере HOST, проверьте доступность, выполнив <em>ping HOST</em>) можно указать его IP адрес.</li>
+	</ol>
+
+
+	<p>Введенный пароль кэшируется на клиентской системе в файле <code>/var/calculate/calculate.env</code>:<br /><pre>
+[client]
+cl_remote_host = HOST
+cl_remote_pw = password
+</pre></p>
+
+
+<strong>При успешном входе в домен программа выполнит следующие действия:</strong>
+	<ul>
+	<li>Подмонтирует сетевой ресурс <code>/var/calculate/remote</code>.</li>
+		<li>Подключит пользователей сервера директорий, настроив файлы <code>/etc/pam.d/system-auth</code>, <code>/etc/nsswitch.conf</code> и др.</li>
+		<li>Подготовит <code>/home</code>, монтируя поверх локальную директорию <code>/var/calculate/client-home</code>, для исключения конфликтов с локальными пользователями.</li>
+		<li>Пропишет себя в автозагрузку, чтобы при загрузке выполнять проверку доступности сервера и настройку системы.</li>
+	</ul>
+</body>
+</html>

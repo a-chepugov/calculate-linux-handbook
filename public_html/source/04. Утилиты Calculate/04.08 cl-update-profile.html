@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>cl-update-profile</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Смена-профиля-системы-cl-update-profile">Смена профиля системы cl-update-profile<a href="#Смена-профиля-системы-cl-update-profile" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Описание-утилиты">Описание утилиты<a href="#Описание-утилиты" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><span class="bluecode" >cl-update-profile</span> - утилита предназначена для смены репозитория и профиля системы.</p>
+
+
+	<p>В общем виде утилита используется следующим образом:</p>
+
+
+<pre>
+cl-update-profile [--url CL_UPDATE_PROFILE_REP] [-s [ON/OFF]] [-f] [PROFILE]
+</pre>
+
+	<h2 id="Описание-опций">Описание опций<a href="#Описание-опций" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Установить репозиторий профиля</p>
+
+
+<pre>
+--url CL_UPDATE_PROFILE_REP
+</pre>
+
+	<p>Репозиторий указывается следующим образом (используется либо вместе с именем профиля, либо с опцией list):</p>
+
+
+<pre>
+cl-update-profile --url=git://git.calculate.ru/calculate/distros.git list
+</pre>
+
+	<p>Команда выведет список профилей данного репозитория:</p>
+
+
+<pre>
+Профиль системы:
+  [CLD]   distros:CLD/amd64
+  [CLDX]  distros:CLDX/amd64
+  [CLS]   distros:CLS/amd64
+  [CMC]   distros:CMC/amd64
+  [CDS]   distros:CDS/amd64
+  [CSS]   distros:CSS/amd64
+</pre>
+
+	<p>Для установки профиля аналогично предыдущей команде, но используя имя профиля:<br /><pre>
+cl-update-profile --url=git://git.calculate.ru/calculate/distros.git distros:CLDX/amd64
+</pre></p>
+
+
+	<p>Вывод команды:<br /><pre>
+Репозиторий
+ * Название репозитория: distros
+Профиль
+ * Профиль системы: distros:CLDX/amd64
+ * Название дистрибутива: Calculate Linux Desktop 15 Xfce
+ * Используемые репозитории: 
++---------+--------------------------------------------+
+|Название |URL                                         |
++---------+--------------------------------------------+
+|distros  |git://git.calculate.ru/calculate/distros.git|
+|calculate|git://git.calculate.ru/calculate/overlay.git|
+|portage  |git://git.calculate.ru/calculate/portage.git|
++---------+--------------------------------------------+
+ * Список пакетов системы: Обновить
+ * Пропустить настройку системы: нет
+
+Запустить процесс? (Yes/No): yes
+Синхронизация репозиториев
+ * Синхронизация Distros репозитория ...                                  [ ok ]
+ * Синхронизация Calculate репозитория ...                                [ ok ]
+ * Синхронизация Portage репозитория ...                                  [ ok ]
+ * Синхронизация завершена
+Настройка профиля
+ * Переключение на CLDX профиль ...                                       [ ok ]
+ * Обновление профиля завершено успешно
+</pre></p>
+
+
+	<p>Для сервисов github и bitbucket поддерживается укороченный формат. Пример с использование стороннего пользовательского репозитория:</p>
+
+
+<pre>
+cl-update-profile --url=github:lautre76 list
+</pre>
+
+	<p>Синхронизировать или нет репозитории:</p>
+
+
+<pre>
+-s [ON/OFF], --sync [ON/OFF]
+</pre>
+
+	<p>Не задавать вопросы во время процесса:</p>
+
+
+<pre>
+-f, --force
+</pre>
+
+	<p>Подробно о создании своего профиля и использовании утилиты можно прочитать в <a href="http://www.calculate-linux.ru/blogs/ru/488/show" class="external">блоге</a>.</p>
+</body>
+</html>

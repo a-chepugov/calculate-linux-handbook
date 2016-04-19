@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>rc-status</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="RC-STATUS">RC-STATUS<a href="#RC-STATUS" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>rc-status</strong> - отображение информации об уровнях запуска</p>
+
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>rc-status</strong> [<strong>-aclsuC</strong> ] [<em>уровень запуска</em> ]</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Утилита <strong>rc-status</strong> собирает и отображает информацию о состоянии служб на разных уровнях запуска. По умолчанию выводятся сведения о текущем уровне запуска и всех неназначенных службах, которые не остановлены, но при необходимости можно легко запросить и любой другой уровень.</p>
+
+
+	<p>Доступны следующие опции:</p>
+
+
+	<p><strong>-a , -all</strong></p>
+
+
+	<p style="padding-left:4em;">Отображать все уровни запуска и назначенные им службы.</p>
+
+
+	<p><strong>-c , -crashed</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести полный перечень аварийно завершенных служб.</p>
+
+
+	<p><strong>-l , -list</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести полный перечень определенных в системе уровней запуска.</p>
+
+
+	<p><strong>-r , -runlevel</strong></p>
+
+
+	<p style="padding-left:4em;">Сообщить название текущего уровня запуска.</p>
+
+
+	<p><strong>-s , -servicelist</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести список всех служб.</p>
+
+
+	<p><strong>-u , -unused</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести перечень служб, не назначенных ни одному уровню запуска.</p>
+
+
+	<p><strong>-C , -nocolor</strong></p>
+
+
+	<p style="padding-left:4em;">Отключить цветной вывод.</p>
+
+
+	<p><em>уровень запуска</em></p>
+
+
+	<p style="padding-left:4em;">Выводить сведения только об указанном в аргументе <em>уровне запуска</em>.</p>
+
+
+	<h2 id="ВОЗВРАЩАЕМОЕ-ЗНАЧЕНИЕ">ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ<a href="#ВОЗВРАЩАЕМОЕ-ЗНАЧЕНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>rc-status</strong> возвращает 0, за исключением тех случаев, когда при проверке аварийно завершенных служб не найдено ни одной.</p>
+
+
+	<h2 id="ПРИМЕЧАНИЯ-О-РЕАЛИЗАЦИИ">ПРИМЕЧАНИЯ О РЕАЛИЗАЦИИ<a href="#ПРИМЕЧАНИЯ-О-РЕАЛИЗАЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Если доступно дерево зависимостей, <strong>rc-status</strong> пытается вывести перечень служб на каждом уровне запуска в порядке текущих разрешенных зависимостей.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">rc</a></strong>(8), <strong><a href=".html" class="wiki-page">rc-update</a></strong>(8)</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Roy Marples &lt;<a class="email" href="mailto:roy@marples.name">roy@marples.name</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+</body>
+</html>

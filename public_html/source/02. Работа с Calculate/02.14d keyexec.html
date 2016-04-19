@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>keyexec</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="keyexec">keyexec<a href="#keyexec" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Описание">Описание<a href="#Описание" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><code>keyexec</code> предназначен для доступа терминального клиента к удаленному рабочему столу Windows. Программа работает через rdesktop-клиент.</p>
+
+
+	<p>При запуске программа будет передавать в <code>rdesktop</code> введенный пользователем при авторизации пароль: таким образом, использование Windows-приложений в линуксе будет происходить без дополнительных сложностей для пользователя.</p>
+
+
+	<p>За хранение паролей отвечает <em>служба хранения ключей</em> ядра Linux. Более подробно это описано <noindex><a href="http://www.ibm.com/developerworks/ru/library/l-key-retention/index.html" rel="nofollow" target="_blank" class="external">здесь</a></noindex>.</p>
+
+
+	<p>Для работы программы необходимо наличие модуля <a href=".html" class="wiki-page">pam_keystore</a> в авторизации PAM, который сохраняет пароль пользователя в ключах ядра.</p>
+
+
+	<h2 id="Формат-запуска">Формат запуска<a href="#Формат-запуска" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+keyexec rdesktop[0-9] &lt;параметры&gt;
+</pre>
+
+	<h2 id="Примеры">Примеры<a href="#Примеры" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Запуск рабочего стола Windows-сервера с IP 192.168.0.1:</p>
+
+
+<pre>
+keyexec rdesktop4 "-p - 192.168.0.1" 
+</pre>
+
+	<p>Запуск рабочего стола Windows-сервера на 4-м рабочем столе, учетная запись берется из домена "calculate":</p>
+
+
+<pre>
+keyexec rdesktop4 "-d calculate -p - 192.168.0.1" 
+</pre>
+
+	<p>Запуск Adobe Photoshop в экране размером 1280x999, с оптимизацией передаваемого трафика:</p>
+
+
+<pre>
+keyexec rdesktop "-s 'C:\Program Files\Adobe\Adobe Photoshop CS3\photoshop.exe' -d calculate -5 -a 16 -g 1280x999 -p - -T 'Adobe Photoshop CS3' -S standard -zNDKE 192.168.0.1" 
+</pre>
+</body>
+</html>

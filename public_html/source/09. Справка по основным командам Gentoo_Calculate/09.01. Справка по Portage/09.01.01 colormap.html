@@ -1,0 +1,382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>colormap</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="COLORMAP">COLOR.MAP<a href="#COLORMAP" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+color.map - пользовательские настройки цвета в Portage 
+
+	<h2 id="ПАРАМЕТРЫ">ПАРАМЕТРЫ<a href="#ПАРАМЕТРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/etc/portage/color.map</strong></p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Указанный файл содержит переменные, определяющие классы цвета, которые использует Portage. Проверяя настройки цвета, Portage в первую очередь обращается к нему. Если тот или иной класс цвета не определен в /etc/portage/color.map, Portage использует внутренние значения, принятые по умолчанию.</p>
+
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>ПЕРЕМЕННАЯ</strong> = <em>[атрибуты или коды ansi, через пробел]</em></p>
+
+
+	<p><strong>АТРИБУТ</strong> = <em>[атрибуты или коды ansi, через пробел]</em></p>
+
+
+	<h2 id="ПЕРЕМЕННЫЕ">ПЕРЕМЕННЫЕ<a href="#ПЕРЕМЕННЫЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>NORMAL</strong> = <em>"normal"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для некоторых слов, встречающихся в контекстах, отличных от перечисленных ниже.</p>
+
+
+	<p><strong>BAD</strong> = <em>"red"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для некоторых слов, встречающихся в отрицательном контексте.</p>
+
+
+	<p><strong>BRACKET</strong> = <em>"blue"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для скобок.</p>
+
+
+	<p><strong>GOOD</strong> = <em>"green"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для некоторых слов, встречающихся в положительном контексте.</p>
+
+
+	<p><strong>HILITE</strong> = <em>"teal"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для выделения слов.</p>
+
+
+	<p><strong>INFORM</strong> = <em>"darkgreen"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для значений.</p>
+
+
+	<p><strong>MERGE_LIST_PROGRESS</strong> = <em>"yellow"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для чисел, отображающих ход установки.</p>
+
+
+	<p><strong>PKG_BLOCKER</strong> = <em>"red"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для пакетов, создающих неразрешенный конфликт.</p>
+
+
+	<p><strong>PKG_BLOCKER_SATISFIED</strong> = <em>"darkblue"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для пакетов, создававших конфликт, который затем был разрешен.</p>
+
+
+	<p><strong>PKG_MERGE</strong> = <em>"darkgreen"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для пакетов, которые будут установлены.</p>
+
+
+	<p><strong>PKG_MERGE_SYSTEM</strong> = <em>"darkgreen"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для system-пакетов, которые будут установлены.</p>
+
+
+	<p><strong>PKG_MERGE_WORLD</strong> = <em>"green"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для world-пакетов, которые будут установлены.</p>
+
+
+	<p><strong>PKG_BINARY_MERGE</strong> = <em>"purple"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для пакетов, которые будут установлены в бинарной версии.</p>
+
+
+	<p><strong>PKG_BINARY_MERGE_SYSTEM</strong> = <em>"purple"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для system-пакетов, которые будут установлены в бинарной версии.</p>
+
+
+	<p><strong>PKG_BINARY_MERGE_WORLD</strong> = <em>"fuchsia"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для world-пакетов, которые будут установлены в бинарной версии.</p>
+
+
+	<p><strong>PKG_NOMERGE</strong> = <em>"darkblue"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для имен пакетов, которые не будут установлены.</p>
+
+
+	<p><strong>PKG_NOMERGE_SYSTEM</strong> = <em>"darkblue"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для имен system-пакетов, которые не будут установлены.</p>
+
+
+	<p><strong>PKG_NOMERGE_WORLD</strong> = <em>"blue"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для имен world-пакетов, которые не будут установлены.</p>
+
+
+	<p><strong>PKG_UNINSTALL</strong> = <em>"red"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для имен пакетов, которые должны быть удалены для разрешения конфликтов.</p>
+
+
+	<p><strong>PROMPT_CHOICE_DEFAULT</strong> = <em>"green"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для  предлагаемого на выбор значения по умолчанию.</p>
+
+
+	<p><strong>PROMPT_CHOICE_OTHER</strong> = <em>"red"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для предлагаемого на выбор значения не по умолчанию.</p>
+
+
+	<p><strong>SECURITY_WARN</strong> = <em>"red"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для предупреждений о безопасности.</p>
+
+
+	<p><strong>UNMERGE_WARN</strong> = <em>"red"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для предупреждений об удалении пакета.</p>
+
+
+	<p><strong>WARN</strong> = <em>"yellow"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет цвет, используемый для предупреждений.</p>
+
+
+	<h2 id="ДОПУСТИМЫЕ-АТРИБУТЫ">ДОПУСТИМЫЕ АТРИБУТЫ<a href="#ДОПУСТИМЫЕ-АТРИБУТЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>Цвет текста</strong></p>
+
+
+	<p style="padding-left:4em;"><strong>black</strong> - черный</p>
+
+
+	<p style="padding-left:4em;"><strong>darkgray</strong> - темно-серый</p>
+
+
+	<p style="padding-left:4em;"><strong>darkred</strong> - темно-красный</p>
+
+
+	<p style="padding-left:4em;"><strong>red</strong> - красный</p>
+
+
+	<p style="padding-left:4em;"><strong>darkgreen</strong> - темно-зеленый</p>
+
+
+	<p style="padding-left:4em;"><strong>green</strong> - зеленый</p>
+
+
+	<p style="padding-left:4em;"><strong>brown</strong> - коричневый</p>
+
+
+	<p style="padding-left:4em;"><strong>yellow</strong> - желтый</p>
+
+
+	<p style="padding-left:4em;"><strong>darkyellow</strong> - светло-коричневый</p>
+
+
+	<p style="padding-left:4em;"><strong>darkblue</strong> - темно-синий</p>
+
+
+	<p style="padding-left:4em;"><strong>blue</strong> - синий</p>
+
+
+	<p style="padding-left:4em;"><strong>purple</strong> - фиолетовый</p>
+
+
+	<p style="padding-left:4em;"><strong>fuchsia</strong> - лиловый</p>
+
+
+	<p style="padding-left:4em;"><strong>teal</strong> - серо-зеленый</p>
+
+
+	<p style="padding-left:4em;"><strong>turquoise</strong> = <strong>darkteal</strong> - бирюзовый</p>
+
+
+	<p style="padding-left:4em;"><strong>lightgray</strong> - светло-серый</p>
+
+
+	<p style="padding-left:4em;"><strong>white</strong> - белый</p>
+
+
+	<p><strong>Цвет фона</strong></p>
+
+
+	<p style="padding-left:4em;"><strong>bg_black</strong> - черный фон</p>
+
+
+	<p style="padding-left:4em;"><strong>bg_darkred</strong> - темно-красный фон</p>
+
+
+	<p style="padding-left:4em;"><strong>bg_darkgreen</strong> - темно-зеленый фон</p>
+
+
+	<p style="padding-left:4em;"><strong>bg_brown</strong> = <strong>bg_darkyellow</strong> - коричневый фон</p>
+
+
+	<p style="padding-left:4em;"><strong>bg_darkblue</strong> - темно-синий фон</p>
+
+
+	<p style="padding-left:4em;"><strong>bg_purple</strong> - фиолетовый фон</p>
+
+
+	<p style="padding-left:4em;"><strong>bg_teal</strong> - серо-зеленый фон</p>
+
+
+	<p style="padding-left:4em;"><strong>bg_lightgray</strong> - светло-серый фон</p>
+
+
+	<p><strong>Другие атрибуты</strong></p>
+
+
+	<p style="padding-left:4em;"><strong>normal</strong> - обычный</p>
+
+
+	<p style="padding-left:4em;"><strong>no-attr</strong> - без атрибутов</p>
+
+
+	<p style="padding-left:4em;"><strong>reset</strong> - переопределить</p>
+
+
+	<p style="padding-left:4em;"><strong>bold</strong> - жирный</p>
+
+
+	<p style="padding-left:4em;"><strong>faint</strong> - бледный</p>
+
+
+	<p style="padding-left:4em;"><strong>standout</strong> - стандартный вывод</p>
+
+
+	<p style="padding-left:4em;"><strong>no-standout</strong> - не использовать стандартный вывод</p>
+
+
+	<p style="padding-left:4em;"><strong>underline</strong> - с подчеркиванием</p>
+
+
+	<p style="padding-left:4em;"><strong>no-underline</strong> - без подчеркивания</p>
+
+
+	<p style="padding-left:4em;"><strong>blink</strong> - мигающий</p>
+
+
+	<p style="padding-left:4em;"><strong>no-blink</strong> - без мигания</p>
+
+
+	<p style="padding-left:4em;"><strong>overline</strong> - с надчеркиванием</p>
+
+
+	<p style="padding-left:4em;"><strong>no-overline</strong> - без надчеркивания</p>
+
+
+	<p style="padding-left:4em;"><strong>reverse</strong> - негатив</p>
+
+
+	<p style="padding-left:4em;"><strong>no-reverse</strong> - не отражать цвет</p>
+
+
+	<p style="padding-left:4em;"><strong>invisible</strong> - невидимый</p>
+
+
+	<h2 id="БАГТРЕКЕР">БАГТРЕКЕР<a href="#БАГТРЕКЕР" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Об обнаруженных ошибках сообщайте на <noindex><a class="external" href="http://bugs.gentoo.org/" ref="nofollow">http://bugs.gentoo.org/</a></noindex></p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Arfrever Frehtes Taifersar Arahesis &lt;<a class="email" href="mailto:Arfrever.FTA@gmail.com">Arfrever.FTA@gmail.com</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ФАЙЛЫ">ФАЙЛЫ<a href="#ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/etc/portage/color.map</strong></p>
+
+
+	<p style="padding-left:4em;">Содержит переменные, используемые для пользовательской настройки цветного вывода.</p>
+
+
+	<p><strong>/etc/make.conf</strong></p>
+
+
+	<p style="padding-left:4em;">Содержит другие переменные.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>console_codes</strong>(4), <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5), <strong><a href=".html" class="wiki-page">portage</a></strong>(5), <strong><a href=".html" class="wiki-page">emerge</a></strong>(1), <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1), <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5)</p>
+
+
+	<p>Модуль Python <em>/usr/lib/portage/pym/portage/output.py</em>.</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Март 2010</p>
+</body>
+</html>

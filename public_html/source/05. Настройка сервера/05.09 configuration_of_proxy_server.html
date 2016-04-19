@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>configuration of proxy server</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-Proxy-сервера">Настройка Proxy сервера<a href="#Настройка-Proxy-сервера" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Настройка Proxy сервера производится в несколько этапов:</p>
+
+
+	<h2 id="Установка-Proxy-сервиса-в-систему">Установка Proxy сервиса в систему<a href="#Установка-Proxy-сервиса-в-систему" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Поддержка proxy сервиса появилась в пакете <em>Calculate-server</em> в версии <em>2.0.13</em>. В качестве сервера используется наиболее распространенный proxy сервер <em>Squid</em>.</p>
+
+
+	<p>Перед установкой, убедитесь что у вас в системе установлен сервис LDAP, если он не был установлен, выполните установку командой:<br /><pre>
+cl-setup ldap
+</pre></p>
+
+
+	<p>Установка <em>proxy</em> сервиса производится командой<br /><pre>
+cl-setup proxy
+</pre></p>
+
+
+	<p>В этом случае сервис будет установлен с параметрами по умолчанию: имя хоста proxy сервиса - имя хоста машины, порт для соединения - 8080.</p>
+
+
+	<p>Установка сервиса с установкой доверительных сетей:<br /><pre>
+cl-setup -a proxy
+</pre></p>
+
+
+При установке сервиса будут созданы базовые группы:
+	<ul>
+	<li><em>http</em> - доступный порт 80</li>
+		<li><em>ftp</em> - доступный порт 21</li>
+		<li><em>https</em> - доступный порт 443</li>
+		<li><em>gopher</em> - доступный порт 70</li>
+		<li><em>wais</em> - доступный порт 210</li>
+		<li><em>unregistered</em> - диапазон доступных портов 1025-65535</li>
+		<li><em>http-mgmt</em> - доступный порт 280</li>
+		<li><em>gss-http</em> - доступный порт 488</li>
+		<li><em>filemaker</em> - доступный порт 591</li>
+		<li><em>multiling</em> - доступный порт 777</li>
+		<li><em>swat</em> - доступный порт 901</li>
+	</ul>
+
+
+	<p>Интервал обновления кэша изменений в правах доступа пользователей по умолчанию составляет 5 минут.</p>
+
+
+	<h2 id="Управление-учетными-записями">Управление учетными записями<a href="#Управление-учетными-записями" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Добавление-учетной-записи">Добавление учетной записи<a href="#Добавление-учетной-записи" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Добавление учетной записи пользователя proxy сервиса осуществляется командой <em>cl-useradd</em><br /><pre>
+# добавим пользователя _ivan_ с полным именем в комментарии
+cl-useradd -p -c "Ivanov Ivan" ivan proxy
+</pre></p>
+
+
+	<h3 id="Смена-пароля">Смена пароля<a href="#Смена-пароля" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Смена пароля учетной записи осуществляется командой <em>cl-passwd</em>, пример:<br /><pre>
+cl-passwd ivan proxy
+</pre></p>
+
+
+	<h3 id="Удалениеблокировка-учетной-записи">Удаление/блокировка учетной записи<a href="#Удалениеблокировка-учетной-записи" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Удаление учетной записи осуществляется командой <em>cl-userdel</em>, пример<br /><pre>
+cl-userdel ivan proxy
+</pre></p>
+
+
+	<p>Блокировка учетной записи производится командой <em>cl-usermod -L</em>, пример<br /><pre>
+cl-usermod -L ivan proxy
+</pre></p>
+
+
+	<p>Разблокировать учетную запись можно командой <em>cl-usermod -U</em>, пример<br /><pre>
+cl-usermod -U ivan proxy
+</pre></p>
+
+
+	<h2 id="Группы">Группы<a href="#Группы" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><em>Группа</em> - набор учетных записей для применения правил доступа.<br />У группы есть параметр определяющий диапазон сетевых портов.<br />Пользователю разрешен доступ к ресурсу только в том случае, если доступ к порту, по которому происходит обращение, описывается одной из групп пользователя.</p>
+
+
+	<h3 id="Управление-группами">Управление группами<a href="#Управление-группами" class="wiki-anchor">&para;</a></h3>
+
+
+	<h4>Создание группы</h4>
+
+
+	<p>Создание группы proxy сервиса осуществляется командой <em>cl-groupadd</em>, пример создания группы "adsl":<br /><pre>
+cl-groupadd -p 80,83,2000-3000 adsl proxy
+</pre></p>
+
+
+	<p>Пользователи добавленные в эту группу будут иметь доступ к сетевому порту 80 и 83, а также к диапазону сетевых портов 2000-3000, по которым может работать определенных сервис. Условно мы его называли "adsl".</p>
+
+
+	<h4>Удаление группы</h4>
+
+
+	<p>Удалить группу из сервиса можно командой <em>cl-groupdel</em>, пример:<br /><pre>
+cl-groupdel adsl proxy
+</pre></p>
+
+
+	<h4>Переименование группы</h4>
+
+
+	<p>Переименовать существующую группу сервиса можно командой <em>cl-groupmod</em>, пример смены имени группы "adsl" на "adsl2":<br /><pre>
+cl-groupmod -n adsl2 adsl proxy
+</pre></p>
+
+
+	<h4>Изменение состава группы</h4>
+
+
+	<p>Изменить описания групп можно при помощи команд ''cl-groupmod'' и ''cl-usermod''. Примеры:</p>
+
+
+	<p>Добавим пользователя ivan в группу 'http' (откроем пользователю доступ к сайтам)<br /><pre>
+cl-usermod -G http ivan proxy
+</pre></p>
+
+
+	<p>Удалим пользователя ivan из группы 'http' (закроем доступ к сайтам)<br /><pre>
+cl-groupmod -d ivan http proxy
+</pre></p>
+
+
+	<p>Добавим пользователей ivan и guest в группу http<br /><pre>
+cl-groupmod -a ivan,guest http proxy
+</pre></p>
+
+
+	<p>Для того чтобы дать пользователю доступ к ftp, он должен иметь доступ к порту 21 и порту proxy сервера (по умолчанию 8080).<br /><pre>
+# Дать пользователю guest доступ к ftp
+cl-usermod -G ftp,unregistered guest proxy
+</pre></p>
+</body>
+</html>

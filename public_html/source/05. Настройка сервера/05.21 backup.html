@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>backup</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Резервное-копирование">Резервное копирование<a href="#Резервное-копирование" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Для надежности, обязательно используйте регулярное резервное копирование данных, даже если вы используете <a href="raid-массив.html" class="wiki-page">raid-массив</a>.</p>
+
+
+	<h2 id="Резервное-копирование-настроек">Резервное копирование настроек<a href="#Резервное-копирование-настроек" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Сохранение резервной копии учётных записей пользователей, а также настроек серверов, выполненных при помощи утилит <a href="Calculate 2.html" class="wiki-page new">Calculate 2</a>, выполняется командой:<br /><pre>
+cl-backup
+</pre></p>
+
+
+	<p>Вы можете настроить ежедневное сохранение резервной копии, создав в директории <em>/etc/cron.daily/</em> файл со следующим содержимым:<br /><pre>
+#!/bin/bash
+cl-backup
+</pre><br />Не забудьте присвоить файлу права на выполнение.</p>
+
+
+	<h2 id="Резервное-копирование-данных">Резервное копирование данных<a href="#Резервное-копирование-данных" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Рассмотрим случай, когда для хранения данных на сервере используются три жестких диска, подмонтированных следующим образом:<br /><pre>
+#cat /etc/fstab
+...
+/dev/sda5       /var/calculate  xfs        noatime 0 0
+/dev/sdb1       /var/calculate/server-data xfs noatime 0 0
+/dev/sdc1       /var/calculate/server-data/samba/share xfs noatime 0 0
+...
+</pre></p>
+
+
+	<p>В примере мы используем резервное копирование файлов на другой сервер, выполняющий функции хранилища копии данных. Backup-сервер также располагает жесткими дисками не меньшей ёмкости. Соответственно копировать информацию нужно будет с каждого диска по отдельности.</p>
+
+
+	<p>Большую часть времени Backup-сервер выключен и включается только во время копирования данных. Для настройки функции пробуждения сервера, воспользуйтесь следующим <a href="описанием.html" class="wiki-page new">описанием</a>.</p>
+
+
+	<p>Пример скрипта синхронизации данных пользователей с Backup-сервером.<br /><pre>
+#!/bin/bash
+
+#backup-сервер
+BACKUP_IP=192.168.0.250
+BACKUP_MAC=01:14:7b:10:3a:6a
+
+#разбудим Backup-сервер
+wol $BACKUP_MAC
+
+#ждем 5 минут пока проснется
+sleep 300
+
+#синхронизируем данные с трех разделов
+rsync -e ssh --progress -aAzuhvSx --compress-level=9 --delete-after /var/calculate/ root@$BACKUP_IP:/mnt/backup1
+rsync -e ssh --progress -aAzuhvSx --compress-level=9 --delete-after /var/calculate/server-data/ root@$BACKUP_IP:/mnt/backup2
+rsync -e ssh --progress -aAzuhvSx --compress-level=9 --delete-after /var/calculate/server-data/samba/share/ root@$BACKUP_IP:/mnt/backup3
+
+#выключим до следующего пробуждения
+ssh -o 'StrictHostKeyChecking=no' root@$BACKUP_IP halt
+</pre></p>
+
+
+	<p>В приведенном примере копируются три раздела <em>/var/calculate</em>, <em>/var/calculate/server-data</em> и <em>/var/calculate/server-data/samba/share</em> с параметром "x", что позволяет при копировании не выходить за пределы монтированного раздела.</p>
+
+
+Приведем пример наиболее популярных ключей команды <em>rsync</em>.
+	<ul>
+	<li>a - включает -rlptgoD</li>
+		<li>A - переносить права ACL</li>
+		<li>e — заменяет протокол с rsh на ssh</li>
+		<li>progress — вывод хода процесса работы на терминал</li>
+		<li>l — пересоздание symlinks, это значит, что символические ссылки будут так же переноситься</li>
+		<li>z — использовать сжатие</li>
+		<li>u — update, обновление, он будет пропускать файлы которые новей, чем на удалённом сервере</li>
+		<li>o — установить владельца конечного файла таким же, как и у исходного</li>
+		<li>g — установить группу конечного файла таким же, как и у исходного</li>
+		<li>t — передача времени модификации и его обновление на удаленной системе. Этот ключ должен быть установлен для точной синхронизации</li>
+		<li>h — вывод информации на терминал в удобном для чтения (human-readable) виде</li>
+		<li>v — verbose, вывод сообщений в терминал</li>
+		<li>p - сохранять права доступа</li>
+		<li>r — рекурсивный режим</li>
+		<li>S - корректно обрабатывать разреженные (sparse) файлы.</li>
+		<li>x - не выходить за пределы ФС (например при копировании /)</li>
+		<li>n — отладочный режим</li>
+		<li>compress-level — уровень сжатия</li>
+		<li>delete-after — удалять файлы, которые не были найдены на удалённом сервере, "-after" означает, что удалить их нужно, только после окончания синхронизации. Так-же есть <em>delete-before, delete-during, delete-excluded</em> и просто <em>delete</em></li>
+	</ul>
+
+
+	<h3 id="Открытый-ключ">Открытый ключ<a href="#Открытый-ключ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>В приведенном примере файлы передаются посредством <em>ssh</em>, соответственно перед каждой передачей будет запрашиваться пароль <em>root</em>. Вы можете создать открытый ключ и скопировать его на Backup-сервер, в этом случае пароль запрашиваться не будет.</p>
+
+
+	<p>Для этого создайте на сервере <em>rsa</em> ключ, выполнив:<br /><pre>
+ssh-keygen
+</pre></p>
+
+
+	<p>Скопируйте ключ пользователю root Backup-сервера<br /><pre>
+ssh-copy-id -i /root/.ssh/id_rsa.pub BACKUP_IP
+</pre></p>
+
+
+	<h3 id="Отладочный-режим">Отладочный режим<a href="#Отладочный-режим" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Перед тем как запустить скрипт на рабочей машине, опробуйте всё в отладочном режиме, для этого используется ключ “-n”. В этом случае, rsync не будет менять или удалять файлы, но покажет весь ход работы.</p>
+
+
+	<h3 id="Исключение-файлов">Исключение файлов<a href="#Исключение-файлов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Rsync может как исключать, так и включать файлы по заданному шаблону. Например "—exclude *.run" исключит все файлы с расширением <em>run</em>.</p>
+</body>
+</html>

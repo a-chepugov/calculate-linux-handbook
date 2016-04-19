@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>migrating users to cds</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Перенос-учётных-записей-пользователей-в-Calculate-Directory-Server">Перенос учётных записей пользователей в Calculate Directory Server<a href="#Перенос-учётных-записей-пользователей-в-Calculate-Directory-Server" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Рассмотрим более подробно все шаги по переносу пользователей в <a href="Calculate Directory Server.html" class="wiki-page">Calculate Directory Server</a>.</p>
+
+
+	<h2 id="Настройка-серверов">Настройка серверов<a href="#Настройка-серверов" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Перед настройкой обновите пакет calculate-server до последней версии:<br /><pre>
+emerge calculate-server
+</pre></p>
+
+
+	<h3 id="Настройка-сервисов">Настройка сервисов<a href="#Настройка-сервисов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Перед настройкой сервисов проверьте, что у вас поднята сеть. Для настройки проводной сети воспользуйтесь следующим <a href="руководством.html" class="wiki-page">руководством</a>.</p>
+
+
+	<p>В приведённом примере мы настроим и запустим все поддерживаемые сервисы:<br /><pre>
+cl-setup ldap
+cl-setup unix
+cl-setup samba
+cl-setup mail
+cl-setup jabber
+</pre></p>
+
+
+	<p>Обратите внимание: при настройке вы можете указывать дополнительные параметры. Перед запуском вызовите справку по каждой команде:<br /><pre>
+cl-setup --help
+cl-setup --help-jabber
+</pre></p>
+
+
+	<h3 id="Зададим-пароль-для-входа-в-домен-Linux--и-Windows-клиентов">Зададим пароль для входа в домен Linux- и Windows-клиентов<a href="#Зададим-пароль-для-входа-в-домен-Linux--и-Windows-клиентов" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+cl-passwd --smb client samba
+cl-passwd --smb admin samba
+</pre>
+
+	<h3 id="Настроим-использование-distfiles-клиентами-домена">Настроим использование distfiles клиентами домена<a href="#Настроим-использование-distfiles-клиентами-домена" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Создайте каталог <code>/var/calculate/remote/distfiles</code> если его нет</p>
+
+
+<pre>mkdir -p /var/calculate/remote/distfiles</pre>
+
+	<p>затем выполните команды</p>
+
+
+<pre>
+cl-groupadd --gid 250 -f portage unix
+cl-usermod -a portage client unix
+chmod 0775 /var/calculate/remote
+chmod -R 2775 /var/calculate/remote/distfiles
+chown -R root:portage /var/calculate/remote/distfiles
+</pre>
+
+	<h2 id="Настройка-Samba">Настройка Samba<a href="#Настройка-Samba" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Создадим-базовые-системные-группы">Создадим базовые системные группы<a href="#Создадим-базовые-системные-группы" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Базовые системные группы могут понадобиться в том случае, если вы захотите ограничить доступ пользователей к определенным ресурсам компьютера. В этом случае системные Unix-группы должны быть продублированы в LDAP-сервере. При необходимости эту операцию можно выполнить позднее.<br /><pre>
+cl-groupadd -f -g 7 lp unix
+cl-groupadd -f -g 10 wheel unix
+cl-groupadd -f -g 18 audio unix
+cl-groupadd -f -g 27 video unix
+cl-groupadd -f -g 35 games unix
+cl-groupadd -f -g 440 plugdev unix
+cl-groupadd -f -g 441 scanner unix
+cl-groupadd -f -g 442 vboxusers unix
+</pre></p>
+
+
+	<p>Более подробно о назначение каждой группы вы можете прочитать <a href="http://www.calculate-linux.ru/main/ru/create_system_users" class="external">здесь</a>.</p>
+
+
+	<h3 id="Добавим-группы-пользователей">Добавим группы пользователей<a href="#Добавим-группы-пользователей" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Как минимум у пользователей должна быть одна группа. Тем не менее, если вы впоследствии захотите разграничить доступ к данным пользователям различных отделов, группы - наиболее удобный способ организовать распределенный доступ.</p>
+
+
+	<p>В качестве примера взяты 5 групп:<br /><pre>
+cl-groupadd boss samba
+cl-groupadd job samba
+cl-groupadd it samba
+cl-groupadd logist samba
+cl-groupadd manager samba
+</pre></p>
+
+
+	<h2 id="Настройка-Jabber">Настройка Jabber<a href="#Настройка-Jabber" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Вы можете организовать свой Jabber-сервер. В свете недавних событий с ограничением использования ICQ сторонними клиентами это неплохой способ избавиться от зависимости от одной компании. Jabber-сервер может с успехом использоваться и внутри вашей локальной сети для эффективного взаимодействия сотрудников. С целью предотвращения злоупотреблений рабочим временем на сервере предусмотрено логирование сообщений.</p>
+
+
+	<h3 id="Добавим-группы-пользователей">Добавим группы пользователей<a href="#Добавим-группы-пользователей" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Создав группы, пользователи автоматически будут размещены в них в вашем Jabber клиенте, что, безусловно, облегчит использование, а также будет служить отправной точкой знакомства со структурой компанией для новых сотрудников.<br /><pre>
+cl-groupadd "Директор" jabber
+cl-groupadd "Кадры" jabber
+cl-groupadd "Программист" jabber
+cl-groupadd "Логист" jabber
+cl-groupadd "Менеджер" jabber
+</pre></p>
+
+
+	<h2 id="Добавим-пользователей">Добавим пользователей<a href="#Добавим-пользователей" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Ниже приведен простой <em>bash</em> скрипт для добавления пользователей. Отредактируйте его, закомментировав неиспользуемые сервисы. Обратите внимание, что используемые в скрипте группы <em>manager, audio, lp, plugdev, scanner</em> и <em>video</em> должны быть предварительно созданы как описано выше.</p>
+
+
+<pre>
+#!/bin/bash
+
+login="ipetrov" 
+fullname="Петров Иван" 
+group="manager" 
+groupJabber="Менеджер" 
+mail="ip@calculate-linux.org,ip@mail.office.calculate-linux.org" 
+
+echo "&gt;&gt;&gt;Настроим Samba" 
+/usr/bin/cl-useradd -p -c "$fullname" -g $group -G audio,lp,plugdev,scanner,video $login samba
+
+echo "&gt;&gt;&gt;Настроим Mail" 
+/usr/bin/cl-useradd -c "$fullname" -p -e $mail $login mail
+
+echo "&gt;&gt;&gt;Настроим Jabber" 
+/usr/bin/cl-useradd -c "$fullname" -p $login jabber
+/usr/bin/cl-usermod -g "$groupJabber" $login jabber
+</pre>
+
+	<p>В приведенном примере мы создаем два почтовых адреса, т.к. сервер находится в локальной сети и не является основным почтовым сервером.</p>
+</body>
+</html>

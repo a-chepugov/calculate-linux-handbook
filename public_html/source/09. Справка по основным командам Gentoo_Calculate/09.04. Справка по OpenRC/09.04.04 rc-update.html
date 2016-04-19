@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>rc-update</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="RC-UPDATE">RC-UPDATE<a href="#RC-UPDATE" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>rc-update</strong> - добавление/удаление служб на том или ином уровне запуска</p>
+
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>rc-update</strong> [<strong>-s , -stack</strong> ] <em>add служба</em> [<em>уровень запуска</em> ... ] <strong>rc-update</strong> [<strong>-s , -stack</strong> ] <em>delete служба</em> [<em>уровень запуска</em> ... ] <strong>rc-update</strong> [<strong>-u , -update</strong> ] [<strong>-v , -verbose</strong> ] <em>show</em> [<em>уровень запуска</em> ... ]</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>OpenRC использует именованные уровни запуска. <strong>rc-update</strong> позволяет быстро добавлять и удалять службы на различных уровнях запуска, не прибегая к редактированию конфигурационных файлов или работе с каталогом символических ссылок. Все службы должны располагаться в каталогах /etc/init.d или /usr/local/etc/init.d. Они должны также соответствовать стандарту сценариев запуска OpenRC.</p>
+
+
+	<p><em>add служба</em></p>
+
+
+	<p style="padding-left:4em;">Добавляет службу на указанный аргументом <em>уровень запуска</em> или, если команда дана без аргумента, на текущий уровень. Службы, добавляемые на уровень запуска boot, должны присутствовать в каталоге /etc/init.d.</p>
+
+
+	<p><em>delete служба</em></p>
+
+
+	<p style="padding-left:4em;">Удаляет службу с указанного аргументом <em>уровня запуска</em> или, если команда дана без аргумента, с текущего уровня.</p>
+
+
+	<p><em>show</em></p>
+
+
+	<p style="padding-left:4em;">Отображает все включенные службы и уровни запуска, которым они принадлежат. Если вы передаете этой команде аргумент, то в вывод будут включены только службы, которые запускаются на указанном уровне/-ях запуска.</p>
+
+
+	<p><strong>-v , -verbose</strong></p>
+
+
+	<p style="padding-left:4em;">Выводит все службы.</p>
+
+
+	<p><strong>-u , -update</strong></p>
+
+
+	<p style="padding-left:4em;">Принудительно обновляет кэш дерева зависимостей. Это может потребоваться при сбое часов (системные часы отстают от времени файла в каталоге /etc).</p>
+
+
+	<p>Если вам необходимо добавить или удалить службу на определенном уровне запуска, используйте опцию <strong>-s , -stack</strong>. Это делает возможным наследование уровней запуска.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">rc</a></strong>(8), <strong><a href=".html" class="wiki-page">rc-status</a></strong>(8)</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Roy Marples &lt;<a class="email" href="mailto:roy@marples.name">roy@marples.name</a>&gt; </li>
+		<li>Сгенерировано kio_man, KDE, версия 4.7.2 (4.7.2)</li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>using ldap for user accounts</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Использование-LDAP-сервера-для-хранения-учетных-записей">Использование LDAP сервера для хранения учетных записей<a href="#Использование-LDAP-сервера-для-хранения-учетных-записей" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Введение">Введение<a href="#Введение" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В Unix системе вся информация о пользователях хранится в файле <em>/etc/passwd</em>. Это текстовый файл, право на чтение которого имеют все пользователи, а на запись только суперпользователь. Пароли пользователей хранятся в файле <em>/etc/shadow</em> в зашифрованном виде, закрытом для чтения и записи. Информация о группах хранится в файле <em>/etc/group</em>.</p>
+
+
+	<p>У этого способа хранения есть ряд ограничений, из которых можно выделить сложность переноса пользователей, ограниченность в атрибутах, производительность и т.п. Однако при помощи <em>PAM (Pluggable Authentication Module)</em>, вы можете с легкостью интегрировать в системы UNIX различные технологии аутентификации, в т.ч. <em>LDAP (Lightweight directory Access Protocol)</em>.</p>
+
+
+	<h2 id="Настройка-Unix-сервера">Настройка Unix сервера<a href="#Настройка-Unix-сервера" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Выполнить настройки сервера вы можете воспользовавшись программой <em>cl-setup</em>, входящей в пакет <em>calculate-server</em>. Для этого выполните с правами суперпользователя:<br /><pre>
+cl-setup unix
+</pre></p>
+
+
+	<p>После выполнения этой операции, имена учетных записей пользователей, хранящиеся в базе <em>LDAP</em> сервера и имеющие системные <em>ID</em>, будут видны в системе.</p>
+
+
+	<h2 id="Добавление-и-удаление-пользователей">Добавление и удаление пользователей<a href="#Добавление-и-удаление-пользователей" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Обратите внимание, что после настройки LDAP сервера в качестве хранилища учётных записей Unix пользователей, следует использовать альтернативные команды по управлению пользователями.</p>
+
+
+	<p>Вместо команд: <em>useradd (adduser), userdel, usermod, passwd, groupadd, groupdel, groupmod</em>, следует использовать альтернативные: <em>cl-useradd, cl-userdel, cl-usermod, cl-passwd, cl-groupadd, cl-groupdel, cl-groupmod</em>. Синтаксис этих команд будет во многом совпадать с оригинальными.</p>
+
+
+	<p>Пример добавления пользователя test:<br /><pre>
+cl-useradd test unix
+</pre></p>
+
+
+	<p>Пример изменения пароля пользователя test:<br /><pre>
+cl-passwd test unix
+</pre></p>
+
+
+	<p>Обратите внимание на опцию <em>unix</em>, добавляемую в конце команды.</p>
+</body>
+</html>

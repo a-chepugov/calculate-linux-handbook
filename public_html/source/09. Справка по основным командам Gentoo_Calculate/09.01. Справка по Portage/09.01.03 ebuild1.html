@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>ebuild1</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="EBUILD">EBUILD<a href="#EBUILD" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>ebuild</strong> - низкоуровневый интерфейс системы портежей</p>
+
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>ebuild</strong> <em>файл</em> <em>команда</em> <em>[команда]</em> ...</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Программа ebuild представляет собой прямой интерфейс системы Portage. Она обеспечивает возможность непосредственного взаимодействия с ебилдом при помощи специальных подкоманд или групп команд, выполняемых в контексте данного ебилда, и функций. Утилита ebuild принимает в качестве аргументов ebuild-сценарий и одну или более команд, подвергает сценарий синтаксическому анализу и выполняет указанные команды. Имеются отдельные команды для загрузки исходных файлов, их распаковки, компиляции, установки объектных файлов во временный каталог image, установки образа в локальную файловую систему, создания архива пакета из образа и т.д.</p>
+
+
+	<h2 id="ФАЙЛ">ФАЙЛ<a href="#ФАЙЛ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Должен быть рабочим ebuild-сценарием. Подробнее см. в руководстве по <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5).</p>
+
+
+	<h2 id="КОМАНДЫ">КОМАНДЫ<a href="#КОМАНДЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>По умолчанию portage выполняет все функции по порядку вплоть до указанной. Наприме, если вы дадите команду <strong>compile</strong>, то вызовете тем самым и предшествующие ей функции (такие как <strong>setup</strong> и <strong>unpack</strong>). Если вы хотите, чтобы запускалась только одна команда, вам следует добавить опцию <em>noauto</em> в значение переменной окружения <strong>FEATURES</strong>. Подробнее см. в справке по <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5).</p>
+
+
+	<p><strong>help</strong></p>
+
+
+	<p style="padding-left:4em;">Выводит справочную информацию о программе в сжатом изложении, а также целый ряд сведений о пакете.</p>
+
+
+	<p><strong>setup</strong></p>
+
+
+	<p style="padding-left:4em;">Запускает все действия по настройке данного пакета, в том числе специфические системные тесты.</p>
+
+
+	<p><strong>clean</strong></p>
+
+
+	<p style="padding-left:4em;">Очищает временный каталог сборки, созданный Portage специально для этого ебилда. Временный каталог build обычно содержит извлеченный из архива исходный код, а также, возможно, так называемый установочный образ (все файлы, которые будут установлены в локальную файловую систему или сохранены в пакете). Расположение каталога сборки определяется значением переменной PORTAGE_TMPDIR. Чтобы узнать ее текущее значение, выполните <em>emerge --info</em>. О том, как переопределить эту переменную, см. в справке по <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5).</p>
+
+
+	<p style="padding-left:4em;">Примечание: Portage удаляет практически все данные, оставшиеся после успешной установки пакета, за исключением тех случаев, когда в переменной FEATURES явно указано noclean. Если вы добавите noclean в значение FEATURES, очень скоро большой объем дискового пространства будет занят ненужными файлами. Не рекомендуется пользоваться этим режимом постоянно, а лишь в том случае, если исходники пакетов потребуются вам после установки. Впрочем, возможно и ручное удаление этих файлов: для этого следует выполнить <em>rm -rf /var/tmp/portage</em>.</p>
+
+
+	<p><strong>fetch</strong></p>
+
+
+	<p style="padding-left:4em;">Проверяет, все ли источники данных, фигурирующие в SRC_URI, доступны в каталоге DISTDIR (подробнее см. в <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5)) и имеют верную контрольную сумму. Если исходные коды недоступны, будет предпринята попытка загрузить их с серверов, адреса которых указаны в SRC_URI. Если для того или иного файла имеется несколько адресов загрузки, Portage проверит каждый из них и выберет тот сервер, который ближе. (Точность этого выбора на данный момент не гарантируется.) В первую очередь всегда обрабатываются зеркала Gentoo Linux, содержащиеся в переменной GENTOO_MIRRORS. Если по какой-либо причине md5-дайджест текущих или только что загруженных исходных кодов не совпадает с дайджестом в files/digest-[пакет]-[версия-ревизия], выводится предупреждение, и ебилд завершает работу с кодом ошибки 1.</p>
+
+
+	<p><strong>digest</strong></p>
+
+
+	<p style="padding-left:4em;">В настоящее время - эквивалент команды <em>manifest</em>.</p>
+
+
+	<p><strong>manifest</strong></p>
+
+
+	<p style="padding-left:4em;">Обновляет Manifest-файл пакета. В результате создаются контрольные суммы для всех файлов, обнаруженных в одном каталоге с обрабатываемым ебилдом, а также содержимое вложенных каталогов подкаталога files. При этом контрольные суммы генерируются и для всех файлов, перечисленных в SRC_URI для каждого ебилда. Подробнее о поведении данной команды, см. в разделе о смысле значения <em>assume-digests</em> переменной <strong>FEATURES</strong> справочного руководства по <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5). Если вы не хотите, чтобы дайджесты принимались неявно, см. опцию <strong>--force</strong>.</p>
+
+
+	<p><strong>unpack</strong></p>
+
+
+	<p style="padding-left:4em;">Извлекает исходные коды в подкаталог каталога <em>build</em> (BUILD_PREFIX), вызывая функцию <em>src_unpack()</em> внутри файла ебилда. Если параметры функции src_unpack() не были указаны, для распаковки всех файлов, перечисленных в SRC_URI, будет использована стандартная src_unpack(). Как правило, исходники распаковываются в каталог${BUILD_PREFIX}/[пакет]-[версия-ревизия]/work.  Обращаться к нему можно с помощью переменной ${WORKDIR}.</p>
+
+
+	<p style="padding-left:4em;">Создавая ебилд самостоятельно, убедитесь, что переменная S (каталог исходных файлов), определенная в начале ebuild-сценария, указывает на каталог, в котором действительно содержатся распакованные исходные коды. По умолчанию он определяется как ${WORKDIR}/${P}, поэтому, как правило, ничего не требуется исправлять. Функция src_unpack() также отвечает за наложение патчей перед компиляцией пакетов.</p>
+
+
+	<p><strong>prepare</strong></p>
+
+
+	<p style="padding-left:4em;">Подготавливает извлеченные из архива исходные коды, вызывая функцию <em>src_prepare()</em>, параметры запуска которой определены в ebuild-файле. При запуске src_prepare() текущим рабочим каталогом становится ${S}. Данная функция поддерживается начиная с <strong>EAPI 2</strong>.</p>
+
+
+	<p><strong>configure</strong></p>
+
+
+	<p style="padding-left:4em;">Производит конфигурирование распакованных исходных кодов, вызывая функцию <em>src_configure()</em>, параметры запуска которой определены в ebuild-файле. При запуске src_configure() текущим рабочим каталогом становится ${S}. Данная функция поддерживается начиная с <strong>EAPI 2</strong>.</p>
+
+
+	<p><strong>compile</strong></p>
+
+
+	<p style="padding-left:4em;">Компилирует распакованные исходные коды, вызывая функцию <em>src_compile()</em>, параметры запуска которой определены в ebuild-файле. При запуске src_compile() текущим рабочим каталогом становится ${S}. По завершении работы src_compile() исходные коды должны быть полностью скомпилированы.</p>
+
+
+	<p><strong>test</strong></p>
+
+
+	<p style="padding-left:4em;">Выполняет специальные тесты для отдельных пакетов, проверяя сборку.</p>
+
+
+	<p><strong>preinst</strong></p>
+
+
+	<p style="padding-left:4em;">Выполняет специальные действия для отдельных пакетов, которые требуется произвести до установки пакета в текущую файловую систему.</p>
+
+
+	<p><strong>install</strong></p>
+
+
+	<p style="padding-left:4em;">Устанавливает пакет во временный каталог <em>install</em>, вызывая функцию <em>src_install()</em>. По завершении каталог установки в (${BUILD_PREFIX}/[пакет]-[версия-ревизия]/image) будет содержать все файлы, которые должны быть либо установлены в текущую файловую систему, либо включены в бинарный пакет.</p>
+
+
+	<p><strong>postinst</strong></p>
+
+
+	<p style="padding-left:4em;">Выполняет специальные действия для отдельных пакетов, которые требуется произвести после установки пакета в текущую файловую систему. Как правило, при этом выводятся полезные сообщения.</p>
+
+
+	<p><strong>qmerge</strong></p>
+
+
+	<p style="padding-left:4em;">Эта функция устанавливает все файлы в каталог <em>install</em> в текущей файловой системе.  Это производится следующим образом: сначала запускается функция <em>pkg_preinst()</em> (если указана). Затем все файлы устанавливаются в файловую систему, а их дайджесты контрольной суммы записываются в <em>/var/db/pkg/${CATEGORY}/${PN}-${PVR}/CONTENTS</em>. Наконец, по завершении установки всех файлов выполняется функция <em>pkg_postinst()</em> (если указана).</p>
+
+
+	<p><strong>merge</strong></p>
+
+
+	<p style="padding-left:4em;">Обычно для установки ебилда, необходимо последовательно выполнить следующие действия: <em>fetch</em>, <em>unpack</em>, <em>compile</em>, <em>install</em> и <em>qmerge</em>. Если вам нужно только установить ебилд, вы можете использовать данную команду: она сама выполнит все перечисленные операции и остановится в процессе выполнения только в том случае, если какая-либо функция отрабатывает с ошибкой.</p>
+
+
+	<p><strong>unmerge</strong></p>
+
+
+	<p style="padding-left:4em;">Эта команда сначала вызывает функцию <em>pkg_prerm()</em> (если та указана). Затем она удаляет все файлы из текущих файловых систем, файл содержимого пакета для которых имеет неверные контрольную сумму и время изменения. Все пустые каталоги удаляются вместе с вложенными. Наконец, команда запускает функцию <em>pkg_postrm()</em> (если та указана). Можно сначала установить новую версию пакета, а затем удалить прежнюю - собственно, именно в этом заключается рекомендуемый метод обновления.</p>
+
+
+	<p><strong>prerm</strong></p>
+
+
+	<p style="padding-left:4em;">Запускает для определенного пакета действия, которые необходимо выполнить до удаления пакета из файловой системы. См. также <em>unmerge</em>.</p>
+
+
+	<p><strong>postrm</strong></p>
+
+
+	<p style="padding-left:4em;">Запускает для определенного пакета действия, которые необходимо выполнить после удаления пакета из файловой системы. См. также <em>unmerge</em>.</p>
+
+
+	<p><strong>config</strong></p>
+
+
+	<p style="padding-left:4em;">Запускает для определенного пакета действия, которые необходимо выполнить до начала установки. Как правило, это настройка конфигурационных файлов или другие настроечные действия, назначаемые пользователем.</p>
+
+
+	<p><strong>package</strong></p>
+
+
+	<p style="padding-left:4em;">Эта команда очень напоминает <em>merge</em>, за исключением того, что после загрузки, распаковки, компиляции и установки создается .tbz2-архив бинарного пакета, который затем сохраняется в каталоге <strong>PKGDIR</strong> (см. <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5)).</p>
+
+
+	<p><strong>rpm</strong></p>
+
+
+	<p style="padding-left:4em;">Собирает RPM-пакет RedHat из файлов во временном каталоге <em>install</em>. На данный момент сведения о зависимостях ебилда не включаются в RPM.</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>--debug</strong></p>
+
+
+	<p style="padding-left:4em;">Запустить bash с опцией -x option, в результате чего стандартный вывод будет включать подробную отладочную информацию.</p>
+
+
+	<p><strong>--color &lt; y | n &gt;</strong></p>
+
+
+	<p style="padding-left:4em;">Включить или отключить цветное отображение. Эта опция переопределяет значение переменной <em>NOCOLOR</em> (см. <strong>make.conf</strong>(5)) и может быть использована для принудительного назначения цвета в том случае, если стандартный вывод - не терминал (по умолчанию цвет включен только в том случае, если стандартный вывод - терминал).</p>
+
+
+	<p><strong>--force</strong></p>
+
+
+	<p style="padding-left:4em;">При использовании в связке с командой digest или manifest данная опция принудительно генерирует новые дайджесты для всех файлов исходного кода, относящихся к данному ебилду. Если в каталоге ${DISTDIR} требуемых исходников нет, они будут автоматически загружены.</p>
+
+
+	<p><strong>--ignore-default-opts</strong></p>
+
+
+	<p style="padding-left:4em;">Не использовать переменную окружения <em>EBUILD_DEFAULT_OPTS</em>.</p>
+
+
+	<p><strong>--skip-manifest</strong></p>
+
+
+	<p style="padding-left:4em;">Пропустить проверку Manifest-файлов.</p>
+
+
+	<h2 id="БАГТРЕКЕР">БАГТРЕКЕР<a href="#БАГТРЕКЕР" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Об обнаруженных ошибках сообщайте на <noindex><a class="external" href="http://bugs.gentoo.org/" ref="nofollow">http://bugs.gentoo.org/</a></noindex></p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Achim Gottinger &lt;<a class="email" href="mailto:achim@gentoo.org">achim@gentoo.org</a>&gt; </li>
+		<li>Daniel Robbins &lt;<a class="email" href="mailto:drobbins@gentoo.org">drobbins@gentoo.org</a>&gt; </li>
+		<li>Nicholas Jones &lt;<a class="email" href="mailto:carpaski@gentoo.org">carpaski@gentoo.org</a>&gt; </li>
+		<li>Mike Frysinger &lt;<a class="email" href="mailto:vapier@gentoo.org">vapier@gentoo.org</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ФАЙЛЫ">ФАЙЛЫ<a href="#ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/etc/make.conf</strong></p>
+
+
+	<p style="padding-left:4em;">Содержит переменные сборки, имеющие приоритет перед значениями, указанными в файле make.globals.</p>
+
+
+	<p><strong>/etc/portage/color.map</strong></p>
+
+
+	<p style="padding-left:4em;">Содержит переменные, позволяющие назначать пользовательские настройки цветного вывода.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">emerge</a></strong> <strong>(1),</strong> <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong> <strong>(5),</strong> <strong><a href=".html" class="wiki-page">make.conf</a></strong> <strong>(5),</strong> <strong><a href=".html" class="wiki-page">color.map</a></strong> <strong>(5)</strong></p>
+
+
+	<p>Сценарий <em>/usr/sbin/ebuild.sh</em>.</p>
+
+
+	<p>Вспомогательные приложения в каталоге <em>/usr/lib/portage/bin</em>.</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Февраль 2011</p>
+</body>
+</html>

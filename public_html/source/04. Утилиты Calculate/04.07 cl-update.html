@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>cl-update</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Обновление-системы-cl-update">Обновление системы cl-update<a href="#Обновление-системы-cl-update" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Обновление-системы-cl-update">Обновление системы cl-update</a></li>
+<li class="heading2"><a href="#Описание-функциональных-возможностей">Описание функциональных возможностей</a></li>
+<li class="heading2"><a href="#Описание-опций-утилиты">Описание опций утилиты</a></li>
+<li class="heading3"><a href="#Ключи-для-управления-синхронизацией-и-кэшами">Ключи для управления синхронизацией и кэшами</a></li>
+<li class="heading3"><a href="#Ключи-применения-шаблонов-ревизий">Ключи применения шаблонов, ревизий</a></li>
+<li class="heading3"><a href="#Другие-ключи">Другие ключи</a></li>
+</ul>
+
+
+	<p><span class="bluecode" >cl-update</span> - утилита, выполняющая обновление системы со всеми необходимыми сопутствующими действиями.</p>
+
+
+	<h2 id="Описание-функциональных-возможностей">Описание функциональных возможностей<a href="#Описание-функциональных-возможностей" class="wiki-anchor">&para;</a></h2>
+
+
+Порядок обновления в общем случае следующий:
+	<ol>
+	<li>Синхронизация репозиториев дистрибутива</li>
+		<li>Если репозитории были обновлены, то выполняются действия <em>egencache</em> и <em>eix-update</em></li>
+		<li>Обновление ревизии и обновление мира</li>
+		<li>Обновление системы</li>
+		<li>Обновление Python/Perl с пересборкой поврежденных пакетов при необходимости</li>
+		<li>Удаление ненужных пакетов</li>
+		<li>Пересборка модулей ядра при необходимости</li>
+		<li>Пересборка прочих поврежденных пакетов при необходимости</li>
+		<li>Пересборка пакетов для Xorg-сервера, если в этом есть необходимость</li>
+		<li>Выполнение <em>dispatch-conf</em></li>
+	</ol>
+
+
+	<h2 id="Описание-опций-утилиты">Описание опций утилиты<a href="#Описание-опций-утилиты" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>При запуске <span class="bluecode" >cl-update</span> без параметров обновление будет происходить по общей схеме, но можно изменить поведение утилиты, используя ключи.</p>
+
+
+	<h3 id="Ключи-для-управления-синхронизацией-и-кэшами">Ключи для управления синхронизацией и кэшами<a href="#Ключи-для-управления-синхронизацией-и-кэшами" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+-r REPOSITORIES, --repositories REPOSITORIES
+</pre>
+
+	<p>Задает синхронизируемые репозитории дистрибутива (все по умолчанию) ('list' для отображения возможных значений). При указании опции позволяет синхронизировать лишь выбранный репозиторий.</p>
+
+
+<pre>
+--branch BRANCHES
+</pre>
+
+	<p>Устанавливает ветки для репозиториев (REPOSITORY:BRANCH). Позволяет переключать между master/develop/update ветками репозиториев.</p>
+
+
+<pre>
+--force-egencache
+</pre>
+
+	<p>Принудительно обновляет кэш оверлеев.</p>
+
+
+<pre>
+--skip-egencache
+</pre>
+
+	<p>Пропускает обновление кэша оверлеев.</p>
+
+
+<pre>
+--auto-egencache
+</pre>
+
+	<p>Обновляет кэш оверлеев в том случае, если тот устарел (действие по умолчанию).</p>
+
+
+<pre>
+--force-eix-update
+</pre>
+
+	<p>Принудительно обновляет кэш eix.</p>
+
+
+<pre>
+--skip-eix-update
+</pre>
+
+	<p>Пропускает обновление кэша eix.</p>
+
+
+<pre>
+--auto-eix-update
+</pre>
+
+	<p>Обновляет кэш eix, если он устарел (поведение по умолчанию).</p>
+
+
+<pre>
+-o [ON/OFF], --update-other [ON/OFF]
+</pre>
+
+	<p>Выполняет обновление сторонних оверлеев (не являющихся репозиториями дистрибутива). По умолчанию выключено. Для того, чтобы изменить действие по умолчанию, надо изменить значение переменной cl_update_other_set секции update; для этого можно выполнить следующую команду:<br /><span class="bluecode" >cl-core-variables --set update.cl_update_other_set=on</span></p>
+
+
+<pre>
+-s [ON/OFF], --sync-only [ON/OFF]
+</pre>
+
+	<p>Не обновлять пакеты. Выполняет синхронизацию и применяет ревизии.</p>
+
+
+	<h3 id="Ключи-применения-шаблонов-ревизий">Ключи применения шаблонов, ревизий<a href="#Ключи-применения-шаблонов-ревизий" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+--rebuild-world [ON/OFF]
+</pre>
+
+	<p>Переформирует world-файл согласно шаблонам дистрибутива на world-файл по умолчанию для данного профиля.</p>
+
+
+<pre>
+--update-rev [ON/OFF]
+</pre>
+
+	<p>Обновляет ревизию дистрибутива до текущей в шаблонах.</p>
+
+
+<pre>
+-T TEMPLATES, --templates TEMPLATES
+</pre>
+
+	<p>Выбор местонахождения шаблонов calculate,distros,local,remote,clt ('list' для отображения возможных значений)</p>
+
+
+<pre>
+--usenew-conf
+</pre>
+
+	<p>Использовать новые конфигурационные файлы.</p>
+
+
+<pre>
+--skip-conf
+</pre>
+
+	<p>Пропустить обновление конфигурационных файлов.</p>
+
+
+<pre>
+--dispatch-conf
+</pre>
+
+	<p>Обновить конфигурационные файлы вручную (по умолчанию).</p>
+
+
+	<h3 id="Другие-ключи">Другие ключи<a href="#Другие-ключи" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+-p [ON/OFF], --pretend [ON/OFF]
+</pre>
+
+	<p>Вместо действительного обновления пакетов, только отобразить, что будет установлено.</p>
+
+
+<pre>
+--wait-another-update [ON/OFF]
+</pre>
+
+	<p>Ждать завершения выполнения другого запущенного cl-update. По умолчанию включено.</p>
+
+
+<pre>
+--schedule [ON/OFF]
+</pre>
+
+	<p>Учитывать график автопроверки обновлений. Если временной интервал с последней проверки ещё не прошел, то обновление выполняться не будет.</p>
+
+
+<pre>
+-v [ON/OFF], --verbose [ON/OFF]
+</pre>
+
+	<p>Включает подробный вывод.</p>
+
+
+<pre>
+-f, --force
+</pre>
+
+	<p>Не задавать вопросы во время процесса.</p>
+</body>
+</html>

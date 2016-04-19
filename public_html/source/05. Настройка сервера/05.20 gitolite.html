@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>gitolite</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Gitolite-git-настройка">Gitolite + git настройка<a href="#Gitolite-git-настройка" class="wiki-anchor">&para;</a></h1>
+
+
+	<p><strong>Gitolite</strong> — удобное средство, позволяющее управлять <a href="Git.html" class="wiki-page">Git</a> репозиториями, используя один пользовательский аккаунт, управляя доступом пользователей к репозиториям на основе ssh-ключей, в отличии от <noindex><a href="/main/ru/gitosis">gitosis</a></noindex> позволяет более гибко настраивать доступ к репозиториям.</p>
+
+
+	<p>Gitolite управляет несколькими репозиториями под одной учетной записью пользователя, с использованием SSH ключей для идентификации пользователей. Конечным пользователям не нужны учетные записи на сервере, они будут входить через один общий аккаунт, который не позволит им запускать произвольные команды.</p>
+
+
+	<h2 id="Установка-gitolite">Установка gitolite<a href="#Установка-gitolite" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Если пакет замаскирован, размаскируйте его.<br /><pre>
+emerge dev-vcs/gitolite
+</pre></p>
+
+
+	<p>После установки будет создан пользователь git (пароль отсутствует, домашняя директория /var/lib/gitolite/)</p>
+
+
+	<h2 id="Настройка-gitolite">Настройка gitolite<a href="#Настройка-gitolite" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Создаем-ключ-для-root">Создаем ключ для root<a href="#Создаем-ключ-для-root" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+su
+ssh-keygen -t rsa
+</pre>
+
+	<p>Будут созданы два файла:<br /><pre>
+/root/.ssh/id_rsa.pub 
+/root/.ssh/id_rsa
+</pre></p>
+
+
+	<p>Публичный и закрытый rsa ключи</p>
+
+
+	<h3 id="Создаем-репозиторий-с-настройками">Создаем репозиторий с настройками<a href="#Создаем-репозиторий-с-настройками" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Копируем открытый ключ<br /><pre>
+cp /root/.ssh/id_rsa.pub /tmp/id_rsa.pub
+</pre></p>
+
+
+	<p>Инициируем gitolite<br /><pre>
+su git
+cd
+gitolite setup -pk /tmp/id_rsa.pub
+</pre></p>
+
+
+	<p>Удаляем из /tmp открытый ключ <br /><pre>
+rm /tmp/id_rsa.pub
+</pre></p>
+
+
+	<p>Если планируется использовать git-web, для того чтобы, репозиторий с настройками был не виден в web изменим права на директорию<br /><pre>
+chmod 700 /var/lib/gitolite/repositories/gitolite-admin.git
+</pre></p>
+
+
+	<h3 id="Настраиваем-репозиторий-для-пользователя">Настраиваем репозиторий для пользователя<a href="#Настраиваем-репозиторий-для-пользователя" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Переходим в /tmp<br /><pre>
+cd /tmp
+</pre></p>
+
+
+	<p>Клонируем директорию с настройками<br /><pre>
+git clone git@имя_сервера:gitolite-admin.git
+</pre></p>
+
+
+	<p>Переходим в директорию с настройками<br /><pre>
+cd gitolite-admin
+</pre></p>
+
+
+	<p>Копируем пользовательский открытый ключ в директорию /tmp/gitolite-admin/keydir<br /><pre>
+scp root@имя_клиентского_компьютера:/home/имя_пользователя/.ssh/id_rsa.pub ./keydir/имя_пользователя@имя_клиентского_компьютера.pub
+</pre></p>
+
+
+	<p>Настраиваем новый репозиторий для пользователя имя_пользователя<br /><pre>
+vi conf/gitolite.conf
+</pre></p>
+
+
+<pre>
+repo     gitolite-admin
+         RW+     =     id_rsa
+
+repo     project1
+         RW+     =     testuser@remotehost
+</pre>
+
+Права могут быть указаны следующим образом:
+	<ul>
+	<li><code>R</code> - только чтение</li>
+		<li><code>RW</code> - чтение добавление коммитов, запрещен rewind (push --force)</li>
+		<li><code>RW+</code> - полный доступ</li>
+		<li><code>RWC</code> - возможность создавать ветку</li>
+		<li><code>RWD</code> - возможность удалять ветку</li>
+		<li><code>-</code> запретить запись</li>
+	</ul>
+
+
+объекты доступа могут быть:
+	<ul>
+	<li><code>master</code>@ - ветки</li>
+		<li><code>ref/tags</code> - теги (версии)</li>
+		<li><code>NAME/имя_файла</code> - имена файлов/каталогов</li>
+	</ul>
+
+
+	<p>Для создания группы используется следующий синтаксис<br /><pre>
+@groupname = user1 user2 user3
+</pre></p>
+
+
+	<p>Также этот синтаксис используется для группировки веток<br /><pre>
+@importantbranches = master$ developer$ test$
+
+repo testing
+    RW @importantbranches = @groupname
+    -  @importantbranches = @groupname
+    RW+                   = @groupname
+</pre></p>
+
+
+	<p>Делаем commit для настроек<br /><pre>
+git commit -am "Granted full access for testuser@remotehost to project1" 
+</pre></p>
+
+
+	<p>Записываем репозиторий с настройками<br /><pre>
+git push origin master
+</pre></p>
+
+
+	<h3 id="Создаем-новый-репозиторий">Создаем новый репозиторий<a href="#Создаем-новый-репозиторий" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>В отличии от gitosis в gitolite можно предварительно не создавать репозиторий через --bare init, достаточно добавить его в конфигурационный файл.</p>
+
+
+	<p>Этот репозиторий будет доступен пользователю на его компьютере через ssh<br /><pre>
+git clone ssh://git@имя_сервера/project1.git
+</pre></p>
+
+
+	<p>без ввода пароля (по открытому ключу)</p>
+
+
+	<h2 id="Проверка-sshd">Проверка sshd<a href="#Проверка-sshd" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Демон sshd должен быть запущен.</p>
+
+
+	<p>Должен быть разрешен доступ по ssh пользователю git файл <code>/etc/ssh/sshd_config</code></p>
+
+
+<pre>
+AllowUsers git
+</pre>
+
+	<h2 id="Настройка-git-daemon">Настройка git-daemon<a href="#Настройка-git-daemon" class="wiki-anchor">&para;</a></h2>
+
+
+<pre>
+vi /etc/conf.d/git-daemon
+
+GITDAEMON_OPTS="--syslog --port=9418 --base-path=/var/lib/gitolite/repositories/ --export-all" 
+GIT_USER="apache" 
+</pre>
+
+	<p>Если будут проблемы при перезапуске меняем номер порта --port=9418 на другой номер перезапускаем демона git, меняем обратно перезапускаем демона git.<br /><pre>
+/etc/init.d/git-daemon restart
+</pre></p>
+
+
+	<h3 id="Проблема-перезапуска-git-daemon">Проблема перезапуска git-daemon<a href="#Проблема-перезапуска-git-daemon" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>При перезапуске демона может возникнуть проблема повторного открытия порта, в /var/log/message она записывает как<br /><pre>
+git-daemon[pid]: unable to allocate any listen sockets on host (null) port 9418
+</pre></p>
+
+
+	<p>Чтобы ее избежать необходимо добавить в GITDAEMON_OPTS параметр --reuseaddr</p>
+
+
+	<h3 id="Настройка-прав-на-файлы-репозиториев">Настройка прав на файлы репозиториев<a href="#Настройка-прав-на-файлы-репозиториев" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>При сохранение файлов репозиториев gitolite присваивает их пользователю и группе <code>git</code>. Права же устанавливаются <br /> согласно параметру <code>UMASK</code> в файл <code>/var/lib/gitolite/.gitolite.rc</code>. Это может быть важно, если git-daemon запускается не под пользователем <code>git</code>.</p>
+
+
+	<h2 id="Создание-пользовательского-ключа">Создание пользовательского ключа<a href="#Создание-пользовательского-ключа" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В сеансе пользователя, на пользовательском компьютере.<br /><pre>
+ssh-keygen -t rsa
+</pre></p>
+
+
+	<p>В пользоваетельской директории .ssh будут созданы два ключа<br /><pre>
+id_rsa
+id_rsa.pub
+</pre></p>
+
+
+	<p>закрытый и публичный (pub)</p>
+
+
+	<p>Если публичный ключ записан в директорию keys репозитория настроек gitolite на сервере, а также в файле conf/gitolite.conf настроены права к репозиториям то пользователь получит доступ к репозиториям на сервере.</p>
+
+
+	<h2 id="Примеры-прав-доступа-к-репозиториям">Примеры прав доступа к репозиториям<a href="#Примеры-прав-доступа-к-репозиториям" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Разрешить группе <code>developers</code> производить любые действия с репозиторием кроме модификации ветки <code>master</code></p>
+
+
+<pre>
+repo myrep
+    -    master$ = @developers
+    RW+          = @developers
+</pre>
+
+	<p>Запретить rewind для ветки <code>master</code>, (в целом это правило означает что группа @developer может добавлять коммиты и только в ветку master).</p>
+
+
+<pre>
+repo myrep
+     RW  master$ = @developers
+</pre>
+
+	<p>Разрешить группе <code>developers</code> выполнять любые действия с репозиторием, кроме создание тегов, теги может создавать только <code>maindeveloper</code>.</p>
+
+
+<pre>
+repo myrep
+     RW+ refs/tags = maindeveloper
+     -   refs/tags = @developers
+     RW            = developers
+</pre>
+</body>
+</html>

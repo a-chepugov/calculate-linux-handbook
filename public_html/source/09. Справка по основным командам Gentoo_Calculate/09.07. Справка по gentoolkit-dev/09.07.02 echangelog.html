@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>echangelog</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="echangelog">echangelog<a href="#echangelog" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+echangelog - Gentoo: обновляет чейнджлоги (ChangeLogs) портежей 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>echangelog [ <em>текст</em> ]</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Эта утилита позволяет легко создавать и обновлять чейнджлоги (ChangeLogs) портежей в Gentoo. Она проверяет текущий каталог (предполагается, что это каталог пакета - например, /usr/portage/app-editors/vim), выявляет, какие файлы были изменены или добавлены, и по результатам проверки помещает запись в чейнджлог. Если <em>текст</em> в аргументе командной строки отсутствует, echangelog запросит его у пользователя.</p>
+
+
+	<p>Чтобы echangelog мог создать отчет об изменениях, они должны быть произведены до вызова утилиты. Например, вам следует предварительно выполнить cvs add применительно к вашим файлам, в противном случае echangelog не будет знать, что они являются частью обновления.</p>
+
+
+	<p>Если размер вашего текста превышает 80 символов в ширину, он будет автоматически переразбит на строки для удобства обращения к чейнджлогу. Если вам нужно специальное форматирование, то вы можете либо (1) запустить echangelog без текста в командной строке, убедившись, что ваша запись не слишком велика, либо (2) редактировать чейнджлог вручную. Если вы предпочитаете второй способ, мы рекомендуем вам использовать синтаксис вида "echangelog <em>что-нибудь</em>", чтобы избежать ошибок в заголовках, затем вручную произвести правку файла и заменить фрагмент <em>что-нибудь</em> на текст, который вам нужен в чейнджлоге.</p>
+
+
+	<p>Помимо обновления самого чейнджлога, echangelog автоматически обновляет дату выпуска всех устаревших ебилдов. Эти обновления включаются в перечень изменений, выводимый утилитой echangelog по завершении работы.</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В настоящее время утилита echangelog настолько проста, что не предусматривает опций. Возможно, в дальнейшем будут добавлены справочные <strong>--help</strong> и <strong>--version</strong>, но на данный момент достаточно для получения этой информации отслеживать версию gentoolkit.</p>
+
+
+	<h2 id="ПРИМЕРЫ">ПРИМЕРЫ<a href="#ПРИМЕРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Создать чейндждлог для совершенно нового пакета. Заголовок анализируется skel.ebuild.</p>
+
+
+<pre>
+ $ cvs add metalog-0.1.ebuild 
+ cvs server: use \*(Aqcvs commit\*(Aq to add this file permanently 
+</pre>
+
+<pre>
+ $ echangelog \*(AqNew ebuild, thanks to Harvey McGillicuddy\*(Aq 
+ --- ChangeLog   1969-12-31 19:00:00.000000000 -0500 
+ +++ ChangeLog.new       2003-02-23 14:04:06.000000000 -0500 
+ @@ -0,0 +1,9 @@ 
+ +# ChangeLog for app-admin/metalog 
+ +# Copyright 2000-2003 Gentoo Technologies, Inc.; Distributed under the GPL v2 
+ +# $Header$ 
+ + 
+ +*metalog-0.1 (23 Feb 2003) 
+ + 
+ +  23 Feb 2003; Aron Griffis &lt;agriffis@gentoo.org&gt; metalog-0.1.ebuild : 
+ +  New ebuild, thanks to Harvey McGillicuddy 
+ + 
+</pre>
+
+	<p>Обновить до ревизии. Обратите внимание, что предварительно вам необходимо выполнить "cvs add" - в противном случае echangelog не увидит новый файл.</p>
+
+
+<pre>
+ $ cvs add metalog-0.1-r1.ebuild 
+ cvs server: use \*(Aqcvs commit\*(Aq to add this file permanently 
+</pre>
+
+<pre>
+ $ echangelog \*(AqBump revision to fix bug #999\*(Aq 
+ --- ChangeLog   2003-02-23 14:04:06.000000000 -0500 
+ +++ ChangeLog.new       2003-02-23 14:07:48.000000000 -0500 
+ @@ -2,6 +2,11 @@ 
+  # Copyright 2000-2003 Gentoo Technologies, Inc.; Distributed under the GPL v2 
+  # $Header$ 
+</pre>
+
+<pre>
+ +*metalog-0.1-r1 (23 Feb 2003) 
+ + 
+ +  23 Feb 2003; Aron Griffis &lt;agriffis@gentoo.org&gt; metalog-0.1-r1.ebuild : 
+ +  Bump revision to fix bug #999 
+ + 
+  *metalog-0.1 (23 Feb 2003) 
+</pre>
+
+<pre>
+    23 Feb 2003; Aron Griffis &lt;agriffis@gentoo.org&gt; metalog-0.1.ebuild : 
+</pre>
+
+	<p>Если вам нужна запись в несколько строк, опустите текст в аргументе командной строки.</p>
+
+
+<pre>
+ $ echangelog 
+ Please type the log entry, finish with ctrl-d 
+ Bump revision to fix bug #999.  Necessary to bump the revision because 
+ the problem appears at run-time, not compile-time.  This should also 
+ give users the updated default configuration file. 
+ --- ChangeLog   2003-02-23 14:09:12.000000000 -0500 
+ +++ ChangeLog.new       2003-02-23 14:12:43.000000000 -0500 
+ @@ -2,6 +2,13 @@ 
+  # Copyright 2000-2003 Gentoo Technologies, Inc.; Distributed under the GPL v2 
+  # $Header$ 
+</pre>
+
+<pre>
+ +*metalog-0.1-r1 (23 Feb 2003) 
+ + 
+ +  23 Feb 2003; Aron Griffis &lt;agriffis@gentoo.org&gt; metalog-0.1-r1.ebuild : 
+ +  Bump revision to fix bug #999.  Necessary to bump the revision because 
+ +  the problem appears at run-time, not compile-time.  This should also 
+ +  give users the updated default configuration file. 
+ + 
+  *metalog-0.1 (23 Feb 2003) 
+</pre>
+
+<pre>
+    23 Feb 2003; Aron Griffis &lt;agriffis@gentoo.org&gt; metalog-0.1.ebuild : 
+</pre>
+
+	<h2 id="ПЕРЕМЕННЫЕ-ОКРУЖЕНИЯ">ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ<a href="#ПЕРЕМЕННЫЕ-ОКРУЖЕНИЯ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>ECHANGELOG_USER</p>
+
+
+	<p style="padding-left:4em;">Если echangelog не может определить ваше имя пользователя, чтобы сделать запись, вам нужно задать значение переменной ECHANGELOG_USER.  Например, экспортировать ECHANGELOG_USER="Aron Griffis &lt;<a class="email" href="mailto:agriffis@gentoo.org">agriffis@gentoo.org</a>&gt;"</p>
+
+
+	<h2 id="ПРИМЕЧАНИЯ">ПРИМЕЧАНИЯ<a href="#ПРИМЕЧАНИЯ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В последних (на момент составления этого руководства) версиях echangelog помещает все новые записи в начало файла, а не ищет в нем соответствующую строку версии. Это связано с тем, что разработчики Gentoo придерживались разных мнений о новом формате чейнджлогов. Разумеется, использование двух разных форматов не может не вызвать проблемы.</p>
+
+
+	<p>Это означает, между прочим, что приведенные выше примеры несколько устарели, поскольку были скопированы из давнишней переписки. Тем не менее мы уверены, что они еще смогут быть вам полезны ;-)</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Aron Griffis &lt;<a class="email" href="mailto:agriffis@gentoo.org">agriffis@gentoo.org</a>&gt;.  <br />Об обнаруженных ошибках сообщайте автору на <noindex><a class="external" href="http://bugs.gentoo.org/" ref="nofollow">http://bugs.gentoo.org/</a></noindex></li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>2009-04-28</p>
+</body>
+</html>

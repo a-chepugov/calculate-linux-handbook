@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>rc</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="RC">RC<a href="#RC" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>rc</strong> - останавливает и запускает службы на определенном уровне запуска</p>
+
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>rc</strong> [<strong>-o , -override</strong> ] [<em>уровень запуска</em> ]</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>rc</strong> останавливает все службы, не принадлежащие уровню запуска, а затем запускает службы данного уровня и уровней, добавленных с помощью <strong>rc-update</strong>, но еще не включенных. Если уровень запуска не указан, будет использован текущий.</p>
+
+
+	<p>Существует ряд особых уровней запуска, о которых вы должны знать:</p>
+
+
+	<p><em>sysinit</em></p>
+
+
+	<p style="padding-left:4em;">Подключает такие системные каталоги как /dev, /proc и, возможно, /sys для Linux-систем. Кроме того, монтирует /lib/rc/init.d как электронный диск с использованием файловой системы tmpfs, когда она доступна, при условии, что корневой каталог / не монтируется при запуске с параметром rw. Информация о состоянии запущенных <strong>rc</strong> служб располагается в каталоге /lib/rc/init.d. <strong>sysinit</strong> всегда инициируется при включении машины и не должен быть инициирован повторно.</p>
+
+
+	<p><em>boot</em></p>
+
+
+	<p style="padding-left:4em;">Как правило, на уровень запуска boot добавляются лишь те службы, которые связаны с монтированием файловых систем, первоначальной настройкой подключаемых устройств и входом в систему. При горячем подключении на уровень boot добавляются соответствующие службы. Все службы на уровнях запуска boot и sysinit автоматически прописываются на все остальные уровни, кроме перечисленных здесь.</p>
+
+
+	<p><em>single</em></p>
+
+
+	<p style="padding-left:4em;">Останавливает все службы, кроме находящихся на уровне запуска sysinit.</p>
+
+
+	<p><em>reboot</em></p>
+
+
+	<p style="padding-left:4em;">Переключает на уровень запуска shutdown, а затем перезагружает машину.</p>
+
+
+	<p><em>shutdown</em></p>
+
+
+	<p style="padding-left:4em;">Переключает на уровень запуска shutdown, а затем останавливает машину.</p>
+
+
+	<p>Вы не должны вызывать перечисленные уровни запуска самостоятельно. Вместо этого используйте init(8) и shutdown(8) - именно они отвечают за вызов этих особых уровней.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">rc-status</a></strong>(8), <strong><a href=".html" class="wiki-page">rc-update</a></strong>(8), <strong>init</strong>(8), <strong>shutdown</strong>(8)</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Roy Marples &lt;<a class="email" href="mailto:roy@marples.name">roy@marples.name</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+</body>
+</html>

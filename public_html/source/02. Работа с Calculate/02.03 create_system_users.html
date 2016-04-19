@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>create system users</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Создание-учётных-записей">Создание учётных записей<a href="#Создание-учётных-записей" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Пользователи-системы">Пользователи системы<a href="#Пользователи-системы" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>После установки <a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a> в системе присутствует пользователь guest. Используйте учетную запись пользователя guest для знакомства с системой.</p>
+
+
+	<p>Пароль гостевого пользователя можно изменить в любой момент с помощью команды <code>passwd</code>. Удаленный доступ к компьютеру (по протоколу ssh) разрешен только для пользователя root.</p>
+
+
+	<p>Процесс смены паролей при установке системы на несколько компьютеров можно автоматизировать. Для этого установите систему на первый компьютер, измените пароли командой <code>passwd</code>, после чего сохраните файл <code>/etc/shadow</code> в своем шаблоне.</p>
+
+
+	<h2 id="Добавление-пользователя">Добавление пользователя<a href="#Добавление-пользователя" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Linux неплохо справляется с контролем над действиями пользователя. Например, можно ограничить доступ к CD/DVD-приводу, звуковой карте, сканеру и даже компьютерным играм. Для наделения пользователя необходимыми полномочиями добавьте его в соответствующие системные группы.</p>
+
+
+	<p>Чтобы не подвергать систему риску, пользователю root запрещено работать в графическом окружении. Поэтому вам временно придется переключиться в консоль, нажав на клавиатуре <span class="bluecode" >Ctrl+Alt+F1</span>. На приглашение ввести логин введите <code>root</code>, затем пароль. Далее выполните следующие команды:</p>
+
+
+<pre>
+/usr/sbin/useradd --create-home --groups users,wheel,audio,cdrom,video,cdrw,usb,plugdev,games,lp,scanner,uucp &lt;логин&gt;
+/bin/passwd &lt;логин&gt;
+</pre>
+
+	<p>В качестве логина вы можете использовать любое слово, состоящее из латинских букв и цифр.</p>
+
+
+	<p><em>При создании пользователя не следует создавать ему домашнюю директорию. В этом случае при первом входе в систему она создается автоматически с учетом настроенного шаблона пользователя.</em></p>
+
+
+В приведенном примере создается пользователь с правами доступа к нескольким группам:
+	<ul>
+	<li><em>users</em> - доступ к менеджеру сети;</li>
+		<li><em>wheel</em> - возможность получить привилегии суперпользователя, используя команду <code>su</code>;</li>
+		<li><em>audio</em> - предоставляет доступ к звуковой карте;</li>
+		<li><em>cdrom</em> - доступ к CD/DVD-приводу;</li>
+		<li><em>video</em> - доступ к TV-тюнеру;</li>
+		<li><em>cdrw</em> - запись на CD/DVD-диски;</li>
+		<li><em>usb</em> - доступ к mp3-плеерам, флеш-накопителям, доступ к USB в VirtualBox;</li>
+		<li><em>plugdev</em> - монтирование USB-устройств;</li>
+		<li><em>games</em> - доступ к играм;</li>
+		<li><em>scanner</em> - доступ к сканеру;</li>
+		<li><em>lp</em> - доступ к принтеру или сканеру, встроенному в МФУ;</li>
+		<li><em>uucp</em> - доступ к модему.</li>
+	</ul>
+
+
+	<p>Для возврата к графическому приглашению ввода пароля выйдите из сеанса, выполнив команду <code>exit</code> (либо нажав <span class="bluecode" >Ctrl+D</span>), после чего нажмите <span class="bluecode" >Alt+F7</span>.</p>
+
+
+	<h2 id="Изменение-прав-доступа">Изменение прав доступа<a href="#Изменение-прав-доступа" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для того, чтобы добавить созданного пользователя в группу, воспользуйтесь командой <code>gpasswd</code>. Пример добавления пользователя в группу <em>games</em>:<br /><pre>
+gpasswd -a &lt;логин&gt; games
+</pre></p>
+
+
+	<p>Можно также напрямую редактировать файл <code>/etc/group</code>.</p>
+
+
+	<h2 id="Перенос-пользователей">Перенос пользователей<a href="#Перенос-пользователей" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>При установке либо переустановке Calculate Linux Desktop из работающей Linux-системы все пользователи с их правами доступа будут перенесены в новую систему. Потребуется только повторно присвоить им пароли, используя команду <code>passwd</code>, по  описанной выше схеме.</p>
+</body>
+</html>

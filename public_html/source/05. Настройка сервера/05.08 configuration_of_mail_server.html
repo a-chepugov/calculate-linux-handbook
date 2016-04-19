@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>configuration of mail server</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-почтового-сервера">Настройка почтового сервера<a href="#Настройка-почтового-сервера" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Установка-почтового-сервиса-в-систему">Установка почтового сервиса в систему<a href="#Установка-почтового-сервиса-в-систему" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Почтовый сервис mail требует, чтобы в системе были установлены сервисы LDAP и Unix, поэтому если они еще не были установлены установите их командой:<br /><pre>
+cl-setup ldap
+cl-setup unix
+</pre></p>
+
+
+	<p>Установка почтового сервиса производится командой:<br /><pre>
+# установка сервиса с параметрами по умолчанию
+cl-setup mail
+</pre></p>
+
+
+	<p>Для указания имени почтового хоста, отличного от используемого по умолчанию, служит параметр "--host":<br /><pre>
+# mymail.mydomain.com почтовый хост (не указывайте одно короткое имя, например: mymail)
+cl-setup --host mymail.mydomain.com mail
+</pre></p>
+
+
+	<p>Использование протокола pop3 и/или imap управляется через параметр "--type":<br /><pre>
+# устанавливает сервис с поддержкой двух протоколов pop3 и imap с шифрованием TLS
+cl-setup --type imap,pop3 mail
+# устанавливает сервис с поддержкой только pop3 и шифрованием TLS
+cl-setup --type pop3 mail
+</pre></p>
+
+
+	<p>Шифрование (или отмена его использования) указывается параметром "--crypt":<br /><pre>
+# будет использовано шифрование TLS, и по умолчанию будет использоваться только IMAP
+cl-setup --crypt tls mail 
+# без шифрования, по умолчанию используется только IMAP
+cl-setup --crypt none mail
+</pre></p>
+
+
+	<p>Если необходимо указать используемые протоколы и шифрование, выполним команду с параметрами следующего вида:<br /><pre>
+# без шифрования, поддержка imap и pop3
+cl-setup --crypt none --type imap,pop3 mail
+</pre></p>
+
+
+	<p>После выполнения команды <em>cl-setup</em>, с требуемым набором параметров - почтовый сервис конфигурируется и запускается. Результат можно проверить, посмотрев открытые порты:<br /><pre>
+&gt; netstat -tln
+...
+tcp        0      0 *:imaps                 *:*                     LISTEN     
+tcp        0      0 *:pop3s                 *:*                     LISTEN     
+tcp        0      0 *:smtp                  *:*                     LISTEN     
+...
+</pre></p>
+
+
+	<p>Для предотвращения спама для системных почтовых пользователей <em>/etc/mail/aliases</em> не создается почтовая директория.</p>
+
+
+	<p>Для того чтобы получать письма посланные на адреса указанные в <em>/etc/mail/aliases</em> выполните следующие команды:<br /><pre>
+mkdir /var/calculate/server-data/mail/nobody
+chown nobody:nobody /var/calculate/server-data/mail/nobody
+chmod 0700 /var/calculate/server-data/mail/nobody
+</pre></p>
+
+
+	<p>Письма для системных почтовых пользователей будут находится в <em>/var/calculate/server-data/mail/nobody</em></p>
+
+
+	<h2 id="Учетные-записи">Учетные записи<a href="#Учетные-записи" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><em>Учётная запись</em> - это запись,которая содержит сведения, необходимые для идентификации пользователя при подключении к системе, информацию для авторизации и учёта. В данном случае для подключения к почтовому сервису или почтовому ящику.<br /><em>Почтовый ящик</em> - логически выделенная часть дискового пространства, предназначенная для хранения электронных почтовых сообщений, которая обозначается электронным почтовым адресом. Почтовый ящик может иметь несколько почтовых адресов, называемых синонимами почтового адреса (псевдонимами почтового адреса).</p>
+
+
+	<h3 id="Управление-учетными-записями">Управление учетными записями<a href="#Управление-учетными-записями" class="wiki-anchor">&para;</a></h3>
+
+
+	<h4>Добавление учетных записей</h4>
+
+
+	<p>Добавление учетной записи пользователя почтового сервиса производится командой <em>cl-useradd</em>:<br /><pre>
+cl-useradd -p -e &lt;почтовый псевдоним один или несколько через запятую&gt; &lt;учетная запись&gt; mail
+</pre></p>
+
+
+<pre>
+# добавляем пользователя guest с псевдонимом для почты guestmail@mymail.mydomain.com
+cl-useradd -p -e guestmail@mymail.mydomain.com guest mail
+</pre>
+
+	<h4>Смена пароля</h4>
+
+
+	<p>Для смены пароля учетной записи почтового сервиса используется команда <em>cl-passwd</em>:<br /><pre>
+cl-passwd guest mail
+</pre></p>
+
+
+	<h4>Удаление учетных записей</h4>
+
+
+	<p>Удаление учетной записи пользователя почтового сервиса производится командой <em>cl-userdel</em><br /><pre>
+cl-userdel guest mail
+</pre></p>
+
+
+	<h2 id="Почтовые-группы">Почтовые группы<a href="#Почтовые-группы" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><em>Почтовая группа</em> — набор почтовых адресов, использующийся для рассылок почты нескольким корреспондентам. Письмо, отправленное на адрес группы, рассылается для всех почтовых учетных записей, входящим в эту группу.</p>
+
+
+	<h3 id="Управление-почтовыми-группами">Управление почтовыми группами<a href="#Управление-почтовыми-группами" class="wiki-anchor">&para;</a></h3>
+
+
+	<h4>Добавление почтовой группы</h4>
+
+
+	<p>Добавление почтовой группы производится командой <em>cl-groupadd</em><br /><pre>
+# добавить почтовую группу guestgroup с альтернативным почтовым адресом gg@mydomain.com
+cl-groupadd -e gg@mydomain.com guestgroup mail
+</pre></p>
+
+
+	<h4>Удаление почтовой группы</h4>
+
+
+	<p>Удаление почтовой группы производится командой <em>cl-groupdel</em>:<br /><pre>
+# удалить почтовую группу guestgroup
+cl-groupdel guestgroup mail
+</pre></p>
+
+
+	<h4>Добавление и удаление почтовых учетных записей в группу</h4>
+
+
+Добавление и удаление учетных записей производится двумя способами:
+	<ul>
+	<li>с использованием команды <em>cl-usermod</em><br /><pre>
+# добавить пользователя guest в группы guesttest и guestgroup
+cl-usermod -a guesttest,guestgroup guest mail
+
+# заменить пользователю guest группы на guesttest
+cl-usermod -G guesttest guest mail
+</pre></li>
+	</ul>
+
+
+	<ul>
+	<li>с использованием команды <em>cl-groupmod</em><br /><pre>
+# удалить пользователей guest1 и guest2 из группы guesttest
+cl-groupmod -d guest1,guest2 guesttest mail
+
+# добавить пользователей guest1 и guest2 в группу guesttest
+cl-groupmod -a guest1,guest2 guesttest mail
+</pre></li>
+	</ul>
+
+
+	<h2 id="Проверка-работы-сервера">Проверка работы сервера<a href="#Проверка-работы-сервера" class="wiki-anchor">&para;</a></h2>
+
+
+Проверить работоспособность сервера можно при помощи программы telnet, при этом сервер должен быть сконфигурирован без шифрования ("--crypt none"). <em>В конечном рабочем варианте, для безопасности, шифрование следует оставить включенным.</em>
+	<ol>
+	<li>устанавливаем сервис<br /><pre>
+cl-setup --type imap,pop3 --crypt none mail
+</pre></li>
+		<li>добавляем пользователя guest<br /><pre>
+cl-useradd -p -e guest@mymail.mydomain.org guest mail
+</pre></li>
+		<li>вводим пароль</li>
+		<li>запускаем telnet<br /><pre>
+&gt; telnet
+</pre></li>
+		<li>подключаемся к smtp<br /><pre>
+&gt; open localhost 25
+Trying 127.0.0.1...
+Connected to mymail.mydomain.org.
+Escape character is '^]'.
+220 mymail.mydomain.org ESMTP
+&gt; EHLO "mymail" 
+250-mymail.mydomain.org
+250-PIPELINING
+250-SIZE 100000000
+250-ETRN
+250-ENHANCEDSTATUSCODES
+250-8BITMIME
+250 DSN
+&gt; MAIL FROM:&lt;noname@mailer.org&gt;
+250 2.1.0 Ok
+&gt; RCPT TO:&lt;guest@mymail.mydomain.org&gt;
+250 2.1.5 Ok
+&gt; DATA
+354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;
+&gt; Hello
+&gt; .
+250 2.0.0 Ok: queued as D42932B91
+&gt; QUIT
+221 2.0.0 Bye
+Connection closed by foreign host.
+</pre></li>
+		<li>теперь запускаем telnet и подключаемся по pop3<br /><pre>
+&gt; telnet
+&gt; open localhost 110
+Trying 127.0.0.1...
+Connected to mymail.mydomain.org.
+Escape character is '^]'.
++OK Dovecot ready.
+&gt; USER guest
++OK
+&gt; PASS 111
++OK "Аутентифицироваться удалось" 
+&gt; LIST
++OK 1 messages:  "На сервере есть одно сообщение" 
+1 529
+.
+QUIT
++OK Logging out.
+Connection closed by foreign host.
+</pre></li>
+	</ol>
+</body>
+</html>

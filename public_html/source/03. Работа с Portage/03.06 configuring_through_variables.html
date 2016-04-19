@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>configuring through variables</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-с-помощью-переменных">Настройка с помощью переменных<a href="#Настройка-с-помощью-переменных" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Настройка-с-помощью-переменных">Настройка с помощью переменных</a></li>
+<li class="heading2"><a href="#Настройка-Portage">Настройка Portage</a></li>
+<li class="heading2"><a href="#Параметры-сборки">Параметры сборки</a></li>
+<li class="heading3"><a href="#Параметры-конфигурирования-и-компиляции">Параметры конфигурирования и компиляции</a></li>
+<li class="heading3"><a href="#Параметры-установки">Параметры установки</a></li>
+<li class="heading2"><a href="#Защита-конфигурационных-файлов">Защита конфигурационных файлов</a></li>
+<li class="heading3"><a href="#Места-защищаемые-Portage">Места, защищаемые Portage</a></li>
+<li class="heading3"><a href="#Исключение-каталогов">Исключение каталогов</a></li>
+<li class="heading2"><a href="#Параметры-скачивания">Параметры скачивания</a></li>
+<li class="heading3"><a href="#Расположение-сервера">Расположение сервера</a></li>
+<li class="heading3"><a href="#Команды-для-извлечения">Команды для извлечения</a></li>
+<li class="heading3"><a href="#Настройки-rsync">Настройки rsync</a></li>
+<li class="heading2"><a href="#Настройка-Gentoo">Настройка Gentoo</a></li>
+<li class="heading3"><a href="#Выбор-ветви">Выбор ветви</a></li>
+<li class="heading3"><a href="#Возможности-Portage">Возможности Portage</a></li>
+<li class="heading2"><a href="#Поведение-Portage">Поведение Portage</a></li>
+<li class="heading3"><a href="#Распределение-ресурсов">Распределение ресурсов</a></li>
+<li class="heading3"><a href="#Настройки-вывода">Настройки вывода</a></li>
+</ul>
+
+
+	<h2 id="Настройка-Portage">Настройка Portage<a href="#Настройка-Portage" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Как отмечалось ранее, Portage настраивается с помощью множества переменных, которые задаются в файле <a href="/etc/make.conf.html" class="wiki-page">/etc/make.conf</a>.</p>
+
+
+	<h2 id="Параметры-сборки">Параметры сборки<a href="#Параметры-сборки" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Параметры-конфигурирования-и-компиляции">Параметры конфигурирования и компиляции<a href="#Параметры-конфигурирования-и-компиляции" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Когда Portage собирает приложения, компилятору и сценарию конфигурации передаются значения следующих переменных:</p>
+
+
+	<ul>
+	<li><code>CFLAGS</code> и <code>CXXFLAGS</code> определяют желаемые флаги компилятора для C и C++</li>
+		<li><code>CHOST</code> определяет информацию об используемой платформе для сценария конфигурации приложения</li>
+		<li><code>MAKEOPTS</code> передается команде <span class="bluecode" >make</span> и обычно применяется для установки степени распараллеливания компиляции. Более подробная информация о параметрах команды make находится на странице справки по make.</li>
+	</ul>
+
+
+	<p>Переменная USE также используется при конфигурировании и компиляции, но о ней уже много и подробно говорилось в предыдущих главах.</p>
+
+
+	<h3 id="Параметры-установки">Параметры установки<a href="#Параметры-установки" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Когда Portage устанавливает (merge) новую версию программного продукта, файлы более старых версий удаляются из системы. Portage дает пользователю 5-ти секундную задержку перед стиранием старых версий. Эти 5 секунд задаются переменной <code>CLEAN_DELAY</code>.</p>
+
+
+	<h2 id="Защита-конфигурационных-файлов">Защита конфигурационных файлов<a href="#Защита-конфигурационных-файлов" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Места-защищаемые-Portage">Места, защищаемые Portage<a href="#Места-защищаемые-Portage" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Portage записывает файлы, предоставляемые новой версией программы, поверх старых, если только эти файлы не расположены в защищенном месте. Защищенные каталоги определяются переменной <code>CONFIG_PROTECT</code>. Обычно, это места расположения файлов конфигурации. Каталоги в списке разделяются пробелами.</p>
+
+
+	<p>Файл, который должен быть записан в такой защищенный каталог, переименовывается, а пользователь получает предупреждение о наличии новой версии (обычно) файла конфигурации.</p>
+
+
+	<p>Узнать текущее значение <code>CONFIG_PROTECT</code> можно из сообщений <span class="bluecode" >emerge --info</span>:</p>
+
+
+	<pre><code>emerge --info | grep 'CONFIG_PROTECT='</code></pre>
+
+
+	<p>Более подробная информация о защите конфигурационных файлов, осуществляемой системой Portage, доступна по команде <span class="bluecode" >emerge</span>:</p>
+
+
+	<pre><code>emerge --help config</code></pre>
+
+
+	<h3 id="Исключение-каталогов">Исключение каталогов<a href="#Исключение-каталогов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Чтобы снять защиту с определенных подкаталогов защищенного каталога, можно использовать переменную <code>CONFIG_PROTECT_MASK</code>.</p>
+
+
+	<h2 id="Параметры-скачивания">Параметры скачивания<a href="#Параметры-скачивания" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Расположение-сервера">Расположение сервера<a href="#Расположение-сервера" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Если запрошенная информация или данные отсутствуют в вашей системе, Portage обращается за ними в интернет. Расположение серверов для различных каналов получения информации задается следующими переменными:</p>
+
+
+	<ul>
+	<li><code>GENTOO_MIRRORS</code> определяет список адресов серверов, содержащих исходный код (distfiles)</li>
+		<li><code>PORTAGE_BINHOST</code> указывает расположение определенного сервера, содержащего двоичные пакеты (prebuilt packages) для вашей системы</li>
+	</ul>
+
+
+	<p>Третья переменная содержит расположение сервера rsync, который используется при обновлении вашего дерева портежей:</p>
+
+
+	<ul>
+	<li><code>SYNC</code> указывает сервер, с которого Portage извлекает дерево портежей</li>
+	</ul>
+
+
+	<p>Переменные <code>GENTOO_MIRRORS</code> и <code>SYNC</code> можно установить автоматически программой <span class="bluecode" >mirrorselect</span>. Перед тем, как использовать, ее нужно установить, выполнив emerge <span class="bluecode" >mirrorselect</span>. За дополнительной информацией обращайтесь к оперативной справке mirrorselect:</p>
+
+
+	<pre><code>mirrorselect --help</code></pre>
+
+
+	<p>Если вы вынуждены использовать прокси-сервер, для его указания можно использовать переменные <code>HTTP_PROXY</code>, <code>FTP_PROXY</code> и <code>RSYNC_PROXY</code>.</p>
+
+
+	<h3 id="Команды-для-извлечения">Команды для извлечения<a href="#Команды-для-извлечения" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Когда Portage требуется извлечь исходный код, по умолчанию используется <span class="bluecode" >wget</span>. Вы можете это изменить с помощью переменной <code>FETCHCOMMAND</code>.</p>
+
+
+	<p>Portage может возобновлять скачивание частично загруженного исходного кода. По умолчанию используется <span class="bluecode" >wget</span>, но это можно переопределить переменной <code>RESUMECOMMAND</code>.</p>
+
+
+	<p>Удостоверьтесь, что ваши команды <code>FETCHCOMMAND</code> и <code>RESUMECOMMAND</code> сохраняют исходный код в нужном месте. Внутри этих переменных следует использовать <code>\${URI}</code> и <code>\${DISTDIR}</code>, для указания расположения исходных кодов и distfiles, соответственно.</p>
+
+
+	<p>Также существует возможность определить индивидуальные настройки для различных протоколов, используя <code>FETCHCOMMAND_HTTP</code>, <code>FETCHCOMMAND_FTP</code>, <code>RESUMECOMMAND_HTTP</code>, <code>RESUMECOMMAND_FTP</code> и т.п.</p>
+
+
+	<h3 id="Настройки-rsync">Настройки rsync<a href="#Настройки-rsync" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Вы не можете заменить команду rsync, которую Portage использует для обновления дерева портежей, но можно установить несколько переменных, определяющих ее поведение:</p>
+
+
+	<ul>
+	<li><code>RSYNC_EXCLUDEFROM</code> указывает на файл, где перечислены пакеты и/или категории, которые rsync должна игнорировать во время обновления.</li>
+		<li><code>RSYNC_RETRIES</code> определяет, сколько раз rsync должна пытаться соединиться с зеркалом, на которое указывает переменная <code>SYNC</code>. По умолчанию равна 3.</li>
+		<li><code>RSYNC_TIMEOUT</code> определяет количество секунд, в течение которого rsync соединение может бездействовать, перед тем как rsync сочтет его превысившим время ожидания. По умолчанию равна 180, но если вы используете соединение по модему или у вас медленный компьютер, возможно, следует установить значение этой переменной равным 300 или большим.</li>
+	</ul>
+
+
+	<h2 id="Настройка-Gentoo">Настройка Gentoo<a href="#Настройка-Gentoo" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Выбор-ветви">Выбор ветви<a href="#Выбор-ветви" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Используемую ветвь можно изменить переменной <code>ACCEPT_KEYWORDS</code>. По умолчанию используется стабильная ветвь для вашей архитектуры. Дополнительная информация о ветвях Gento находится в следующей главе.</p>
+
+
+	<h3 id="Возможности-Portage">Возможности Portage<a href="#Возможности-Portage" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Вы можете включить отдельные функции Portage с помощью переменной <code>FEATURES</code>. Возможности Portage рассматривались в предыдущих главах, например <a href="Возможности Portage.html" class="wiki-page">Возможности Portage</a>.</p>
+
+
+	<h2 id="Поведение-Portage">Поведение Portage<a href="#Поведение-Portage" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Распределение-ресурсов">Распределение ресурсов<a href="#Распределение-ресурсов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>С помощью переменной <code>PORTAGE_NICENESS</code> можно увеличивать или уменьшать значение nice, с которым выполняется Portage. Значение <code>PORTAGE_NICENESS</code> <em>прибавляется</em> к текущему значению nice.</p>
+
+
+	<p>Более подробно о значениях nice написано в странице справки:</p>
+
+
+	<pre><code>man nice</code></pre>
+
+
+	<h3 id="Настройки-вывода">Настройки вывода<a href="#Настройки-вывода" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Переменная <code>NOCOLOR</code> (по умолчанию "false") определяет, следует ли Portage отключить цветовую раскраску своих сообщений.</p>
+</body>
+</html>

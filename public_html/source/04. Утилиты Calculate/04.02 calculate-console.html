@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>calculate-console</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Консольный-клиент-утилит-Calculate">Консольный клиент утилит Calculate<a href="#Консольный-клиент-утилит-Calculate" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Консольный-клиент-утилит-Calculate">Консольный клиент утилит Calculate</a></li>
+<li class="heading2"><a href="#Введение">Введение</a></li>
+<li class="heading2"><a href="#Создание-сертификата">Создание сертификата</a></li>
+<li class="heading2"><a href="#Выполнение-методов-на-сервере-утилит">Выполнение методов на сервере утилит</a></li>
+<li class="heading2"><a href="#Действия-с-клиентом">Действия с клиентом</a></li>
+<li class="heading3"><a href="#Работа-с-сессией">Работа с сессией</a></li>
+<li class="heading3"><a href="#Работа-с-процессами">Работа с процессами</a></li>
+<li class="heading3"><a href="#cl-consoled">@cl-consoled@</a></li>
+</ul>
+
+
+	<h2 id="Введение">Введение<a href="#Введение" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Клиент утилит Calculate Console служит для сетевого доступа по протоколу <noindex><a href="http://ru.wikipedia.org/wiki/HTTPS" rel="nofollow" target="_blank" class="external">https</a></noindex> к функциям сервера утилит Calculate 3 (<a href="calculate-core.html" class="wiki-page">calculate-core</a>). Установить клиент можно при помощи пакета <code>sys-apps/calculate-console</code>.</p>
+
+
+	<h2 id="Создание-сертификата">Создание сертификата<a href="#Создание-сертификата" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для работы с сервером утилит необходимы секретный ключ и сертификат, подписанный сервером утилит.</p>
+
+
+	<p>Для генерации секретного ключа и создания запроса на подпись сертификата, используйте ключ <code>--gen-cert-by &lt;хост&gt;</code> и ключ <code>--port &lt;порт&gt;</code> для указания номера порта (по умолчанию порт 8888), например:</p>
+
+
+<pre>
+cl-console --gen-cert-by 192.168.0.56 --port 8888
+</pre>
+
+	<p>Если по адресу 192.168.0.56 порт 8888 прослушивает сервер утилит, то пользователю будет предложено создать запрос на подпись сертификата.</p>
+
+
+	<p>Первым действием является установка пароля для дополнительного шифрования секретного ключа. Введённый пароль будет запрашиваться для установки соединения с сервером утилит. Чтобы не зашифровывать секретный ключ, оставьте поле пароль пустым.</p>
+
+
+	<p>Также необходимо ввести некоторые данные, необходимые для создания сертификата. В квадратных скобках будут показаны значения по умолчанию, например:</p>
+
+
+<pre>
+Имя хоста [iivanov@iivanov.company.ru]:
+Имя пользователя [Иван Иванов]:
+</pre>
+
+	<p>Большая часть данных, кроме названия организации и города, будет заполнена автоматически. Не меняйте автоматически подставленные значения, если не уверены, что значения неверны.</p>
+
+
+	<p>После отправления запроса на сервер утилит, пользователю будет сообщён номер, под которым запрос находится на текущем сервере утилит.</p>
+
+
+	<p>Подписать запрос можно на сервере утилит через клиента или с помощью команды:</p>
+
+
+<pre>
+cl-core --sign-client &lt;n&gt;
+</pre>
+
+	<p>где &lt;n&gt; - номер запроса.</p>
+
+
+	<p>После подписания сертификата на сервере, его необходимо забрать, используя ключ <code>--get-cert-from &lt;хост&gt;</code> и ключ <code>--port &lt;порт&gt;</code>, например:<br /><pre>
+cl-console --get-cert-from 192.168.0.56 --port 8888
+</pre><br />Если запрос ещё не подписан или отвергнут, то появится соответствующее сообщение.</p>
+
+
+	<p>Для указания пути к файлам сертификата и секретного ключа (при нахождении их не в стандартной директории) используйте ключ --cert-path <code>&lt;путь&gt;</code>:<br /><pre>
+cl-console --cert-path /media/flash/cert_dir
+</pre></p>
+
+
+	<h2 id="Выполнение-методов-на-сервере-утилит">Выполнение методов на сервере утилит<a href="#Выполнение-методов-на-сервере-утилит" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для просмотра доступных методов на сервере утилит используйте команду</p>
+
+
+<pre>
+cl-console --host &lt;хост&gt; --port &lt;порт&gt;
+</pre>
+
+	<p>По умолчанию клиент соединяется с локальным сервером утилит и 8888 портом, например:</p>
+
+
+<pre>
+cl-console
+cl-console --host 192.168.0.56 --port 9999
+</pre>
+
+	<p>Первая команда выведет все доступные методы на локальном сервере утилит, прослушивающем порт 8888, вторая - на сервере утилит, находящемуся по адресу 192.168.0.56:9999.</p>
+
+
+	<p>Для запуска метода используйте ключ --method &lt;метод&gt;, например:</p>
+
+
+<pre>
+cl-console --method install --iso /path_to_image/cld-x86_64.iso -d /dev/sda1:swap -d /dev/sda2:/:ext4:on
+</pre>
+
+	<p>Для просмотра справки метода используйте ключ <code>-h</code>, <code>--help</code>:</p>
+
+
+<pre>
+cl-core --method install --help
+</pre>
+
+	<p>Ключ <code>-f</code>, <code>--force</code> устанавливает режим, при котором пользователю не задаются вопросы и не отображаются предварительные параметры.</p>
+
+
+	<p>Ключ <code>--no-progress</code> отключает отображение прогрессбаров (текущего прогресса выполнения задачи).</p>
+
+
+	<h2 id="Действия-с-клиентом">Действия с клиентом<a href="#Действия-с-клиентом" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Работа-с-сессией">Работа с сессией<a href="#Работа-с-сессией" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для просмотра информации о сессии и сертификате используйте ключ <code>--session-info</code>:</p>
+
+
+<pre>
+cl-console --session-info
+</pre>
+
+	<p>Для просмотра списка активных сессий на сервере утилит используйте ключ <code>--session-list</code>:</p>
+
+
+<pre>
+cl-console --session-list
+</pre>
+
+	<p>Для просмотра информации о конкретной сессии, используйте ключ --session-num-info &lt;sid&gt;, например, команда</p>
+
+
+<pre>
+cl-core --session-num-info 5474
+</pre>
+
+	<p>выведет информацию о сессии с номером 5474.</p>
+
+
+	<p>Для очистки кэша своей сессии используйте ключ <code>--session-clean</code>:</p>
+
+
+<pre>
+cl-console --session-clean
+</pre>
+
+	<h3 id="Работа-с-процессами">Работа с процессами<a href="#Работа-с-процессами" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Каждый запущенный метод на сервере утилит является процессом, результат работы которого можно просмотреть.<br />Для просмотра списка запущенных процессов текущей сессии, используйте ключ <code>--list-pid</code>:</p>
+
+
+<pre>
+cl-core --list-pid
+</pre>
+
+	<p>Для более подробного вывода совместно с ключом <code>--list-pid</code> используйте ключ <code>-d</code>, <code>--dump</code>:</p>
+
+
+<pre>
+cl-core --list-pid --dump
+</pre>
+
+	<p>Для просмотра результатов работы процесса, используйте ключ <code>--pid-result &lt;pid&gt;</code>, например</p>
+
+
+<pre>
+cl-core --pid-result 1234</pre>
+
+	<p>выведет результат работы процесса с номером 1234.</p>
+
+
+	<p>Если необходимо прервать работающий процесс, используйте ключ <code>--pid-kill &lt;pid&gt;</code>, например</p>
+
+
+<pre>
+cl-core --pid-kill 1234
+</pre>
+
+	<p>сообщит серверу утилит, что необходимо завершить процесс с номером 1234.</p>
+
+
+	<h3 id="cl-consoled"><code>cl-consoled</code><a href="#cl-consoled" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Если пользователем используется пароль для дополнительного шифрования секретного ключа, то консольным клиентом используется демон <code>cl-consoled</code>.</p>
+
+
+	<p><code>cl-consoled</code> предназначен для кратковременного хранения введённых паролей, чтобы пользователю не было необходимо при каждом соединении вводить пароль. Пароль к секретному ключу сервера утилит выдаётся только при совпадении ряда данных.</p>
+
+
+	<p>Для остановки <code>cl-consoled</code> используйте команду</p>
+
+
+<pre>
+cl-console --stop-consoled
+</pre>
+
+	<p>В этом случае при следующем запуске <code>cl-console</code> заново потребует пароль и запустит <code>cl-consoled</code>.</p>
+
+
+	<p>При необходимости обновить список отзыва сертификатов, используйте ключ <code>--update-crl</code>:</p>
+
+
+<pre>
+cl-console --update-crl
+</pre>
+</body>
+</html>

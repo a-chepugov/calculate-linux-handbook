@@ -1,0 +1,584 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>templates variables</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Переменные-шаблонов">Переменные шаблонов<a href="#Переменные-шаблонов" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Переменные-шаблонов">Переменные шаблонов</a></li>
+<li class="heading2"><a href="#Введение">Введение</a></li>
+<li class="heading2"><a href="#Типы-переменных">Типы переменных</a></li>
+<li class="heading3"><a href="#Переменные-выполняемых-действий">Переменные выполняемых действий</a></li>
+<li class="heading3"><a href="#События">События</a></li>
+<li class="heading2"><a href="#Значения-переменных">Значения переменных</a></li>
+<li class="heading2"><a href="#Изменение-значений-переменных">Изменение значений переменных</a></li>
+<li class="heading3"><a href="#Изменение-значения-переменной-в-командной-строке">Изменение значения переменной в командной строке</a></li>
+<li class="heading3"><a href="#Изменение-значения-через-конфигурационный-файл">Изменение значения через конфигурационный файл</a></li>
+<li class="heading2"><a href="#Использование-переменных">Использование переменных</a></li>
+<li class="heading3"><a href="#Вставка-значений-в-шаблон">Вставка значений в шаблон</a></li>
+<li class="heading3"><a href="#Передача-значения-функции">Передача значения функции</a></li>
+<li class="heading3"><a href="#Условия-в-заголовках-шаблонов">Условия в заголовках шаблонов</a></li>
+<li class="heading3"><a href="#Условные-выражения">Условные выражения</a></li>
+</ul>
+
+
+	<h2 id="Введение">Введение<a href="#Введение" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Утилиты Calculate содержат <em>переменные</em>, которые могут быть использованы в <a href="шаблонах.html" class="wiki-page">шаблонах</a>. Каждый пакет утилит добавляет свой набор переменных. Несмотря на то что переменные принадлежат разным пакетам, их имена уникальны. Для просмотра переменных и их значений используется утилита <code>cl-core-variables-show</code>:</p>
+
+
+<pre>
+# cl-core-variables-show
+* Список переменных
++----------------------------------------+-----+------------+---------------------------------------------+
+|Переменная                              |Режим|Расположение|Значение                                     |
++----------------------------------------+-----+------------+---------------------------------------------+
+|main.ac_custom_name                     | wc  |            |''                                           |
+|main.cl_action                          | rs  |            |''                                           |
+|main.cl_autoupdate_set                  | wb  |   system   |off                                          |
+...
+|install.ac_install_configure            | rs  |            |off                                          |
+|install.ac_install_disk                 | rs  |            |off                                          |
+|install.ac_install_flash                | rs  |            |off                                          |
+...
+|update.ac_update_sync                   | rs  |            |''                                           |
+|update.cl_rebuild_world_set             | wb  |            |off                                          |
+|update.cl_update_rev_set                | wb  |            |off                                          |
+|update.cl_update_world                  | ws  |            |''                                           |
++----------------------------------------+-----+------------+---------------------------------------------+
+</pre>
+
+Здесь видно, что утилита, отобразила переменные всех пакетов. Колонка "Переменная" отображает модуль переменной и имя переменной, разделенных точкой. "Режим" состоит из двух букв:
+	<ul>
+	<li>доступ
+	<ul>
+	<li>"r" только для чтения</li>
+		<li>"w" поддерживает изменение</li>
+	</ul>
+	</li>
+		<li>тип переменной
+	<ul>
+	<li>"s" строка</li>
+		<li>"b" логическая переменная (on/off)</li>
+		<li>"l" список</li>
+		<li>"t" таблица</li>
+		<li>"c" строка с выбором</li>
+	</ul></li>
+	</ul>
+
+
+	<p>"Расположение" указано для тех переменных, чьи значения изменяются в calculate.env файлах. Есть три места в которых можно изменять значения по умолчанию для writeable переменных: system (/etc/calculate/calculate.env), local (/var/calculate/calculate.env), remote (/var/calculate/remote/calculate.env).</p>
+
+
+	<p>"Значение" отображает содержимое переменной. Содержимое переменных не точное, так как при различных командах содержимое может изменяться (например изменение значений при указании опций команды).</p>
+
+
+С помощью параметра <code>--filter</code> можно задать фильтрацию выводимых переменных:
+	<ul>
+	<li>userset - переменные установленные в calculate.env файлах</li>
+		<li>writable - переменные доступные для изменения</li>
+		<li>system,local,remote - переменные указанные в конкретном calculate.env файле</li>
+		<li>часть имени переменной</li>
+	</ul>
+
+
+	<h2 id="Типы-переменных">Типы переменных<a href="#Типы-переменных" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для удобства в именах переменных используется обозначение типа переменной, часто используется название пакета и может использоваться тип возвращаемого значения.</p>
+
+
+	<p>Всего существует семь типов переменных:</p>
+
+
+	<ol>
+	<li><code>ac</code> - переменные выполняемых действий</li>
+		<li><code>cl</code> - общие настройки утилит</li>
+		<li><code>hr</code> - настройки оборудования</li>
+		<li><code>ld</code> - атрибуты LDAP</li>
+		<li><code>os</code> - операционная система</li>
+		<li><code>sr</code> - настройки сервисов</li>
+		<li><code>ur</code> - информация о пользователе</li>
+	</ol>
+
+
+	<p>Для примера: переменная <code>cl_install_autoupdate_set</code> относится к общим настройкам утилит, принадлежит пакету <code>calculate-install</code> и содержит одно из двух значений - <span class="bluecode" >on</span> либо <span class="bluecode" >off</span>.</p>
+
+
+	<h3 id="Переменные-выполняемых-действий">Переменные выполняемых действий<a href="#Переменные-выполняемых-действий" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Пакеты утилит содержат шаблоны настройки, сгруппированные по определенным действиям. Например, настройка профиля пользователя, настройка пакета при установке и т.д. Для того, чтобы определить, какие шаблоны следует накладывать, пакеты утилит содержат специальные переменные выполняемых действий.</p>
+
+
+	<p><strong>calculate-install</strong></p>
+
+
+	<ul>
+	<li><code>ac_install_configure</code> - выполнение шаблонов настройки компонентов системы</li>
+		<li><code>ac_install_disk</code> - настройки системы для загрузки с жесткого диска</li>
+		<li><code>ac_install_flash</code> - настройка системы для загрузки с USB-Flash</li>
+		<li><code>ac_install_live</code> - настройка  пакета (динамические параметры)</li>
+		<li><code>ac_install_merge</code> - настройка пакета (статические параметры)</li>
+		<li><code>ac_install_patch</code> - модификация исходного кода пакета</li>
+		<li><code>ac_install_pxe</code> - настройка PXE загрузки</li>
+		<li><code>ac_install_unmerge</code> - настройка системы при удалении пакета</li>
+	</ul>
+
+
+	<p><strong>calculate-desktop</strong></p>
+
+
+	<ul>
+	<li><code>ac_desktop_profile</code> - настройка пакета в профиле пользователя</li>
+		<li><code>ac_desktop_merge</code> - настройка пакета в рабочей системе</li>
+	</ul>
+
+
+	<p><strong>calculate-client</strong></p>
+
+
+	<ul>
+	<li><code>ac_client_merge</code> - настройка пакета в рабочей системе</li>
+		<li><code>ac_client_domain</code> - настройка машины для работы в домене</li>
+		<li><code>ac_client_undomain</code> - настройка машины для локальной работы</li>
+	</ul>
+
+
+	<p><strong>calculate-core</strong></p>
+
+
+	<ul>
+	<li><code>ac_custom_name</code> - выполнение произвольного действия</li>
+	</ul>
+
+
+<strong>calculate-builder</strong> (<strong>Утилиты Calculate 2.2</strong>)
+	<ul>
+	<li><code>ac_builder_iso</code> - настройка ISO-образа</li>
+		<li><code>ac_builder_squash</code> - настройка Squash-образа</li>
+	</ul>
+
+
+<strong>calculate-assemble</strong>  (<strong>Утилиты Calculate 2.2</strong>)
+	<ul>
+	<li><code>ac_assemble_prepare</code> - первичная настройка собираемой системы</li>
+		<li><code>ac_assemble_setup</code> - настройка системы во время сборки</li>
+	</ul>
+
+
+	<h3 id="События">События<a href="#События" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>В зависимости от событий (например, установка пакета), утилиты выставляют значения переменных действий и накладывают шаблоны.</p>
+
+
+	<p>Ниже перечислены события, а также значения переменных действий, записанные через знак двойного равенства, принятый в условных выражениях шаблонов:</p>
+
+
+	<h4>Настройка системы</h4>
+
+
+Выполняется во время первой загрузки системы, загрузке с LiveCD, USB-Flash или USB-HDD, при выполнении команды <span class="bluecode" >cl-setup-system --live</span>.
+	<ul>
+	<li><code>ac_client_domain==on</code> (если машина настроена на работу в домене)</li>
+		<li><code>ac_client_undomain==on</code> (если машина настроена как локальная)</li>
+		<li><code>ac_client_merge==on</code></li>
+		<li><code>ac_install_live==on</code></li>
+		<li><code>ac_desktop_merge==on</code></li>
+	</ul>
+
+
+	<h4>Установка системы на жесткий диск</h4>
+
+
+Выполняется при установке системы командой <span class="bluecode" >cl-install</span>.
+	<ul>
+	<li><code>ac_install_merge==on</code></li>
+		<li><code>ac_install_live==on</code></li>
+		<li><code>ac_install_disk==on</code></li>
+	</ul>
+
+
+	<h4>Установка системы на USB-Flash</h4>
+
+
+Выполняется при установке системы, если в качестве носителя используется USB-Flash <span class="bluecode" >cl-install</span>.
+	<ul>
+	<li><code>ac_install_flash==on</code></li>
+	</ul>
+
+
+	<h4>Установка системы для загрузки по сети (PXE)</h4>
+
+
+Выполняется при установке системы на сервере для загрузки по сети <span class="bluecode" >cl-install --pxe</span>.
+	<ul>
+	<li><code>ac_install_pxe==on</code></li>
+	</ul>
+
+
+	<h4>Установка пакета</h4>
+
+
+Выполняется во время установки программы <span class="bluecode" >emerge &lt;название_пакета&gt;</span> в builder или через calculate-assemble
+	<ul>
+	<li><code>ac_install_merge==on</code></li>
+	</ul>
+
+
+Выполняется во время удаления программы <span class="bluecode" >emerge -C &lt;название_пакета&gt;</span> в builder или через calculate-assemble
+	<ul>
+	<li><code>ac_install_merge==on</code></li>
+		<li><code>ac_install_unmerge==on</code></li>
+	</ul>
+
+
+Выполняется во время установки программы <span class="bluecode" >emerge &lt;название_пакета&gt;</span> в рабочей системе
+	<ul>
+	<li><code>ac_install_merge==on</code></li>
+		<li><code>ac_install_live==on</code></li>
+		<li><code>ac_desktop_merge==on</code></li>
+		<li><code>ac_client_merge==on</code></li>
+		<li><code>ac_client_domain==on</code> (если машина настроена на работу в домене)</li>
+		<li><code>ac_client_undomain==on</code> (если машина настроена как локальная)</li>
+	</ul>
+
+
+Выполняется во время удаления программы <span class="bluecode" >emerge -C &lt;название_пакета&gt;</span> в рабочей системе
+	<ul>
+	<li><code>ac_install_unmerge==on</code></li>
+		<li><code>ac_install_merge==on</code></li>
+		<li><code>ac_install_live==on</code></li>
+		<li><code>ac_desktop_merge==on</code></li>
+		<li><code>ac_client_merge==on</code></li>
+		<li><code>ac_client_domain==on</code> (если машина настроена на работу в домене)</li>
+		<li><code>ac_client_undomain==on</code> (если машина настроена как локальная)</li>
+	</ul>
+
+
+	<h4>Настройка профиля пользователя</h4>
+
+
+Выполняется при запуске <span class="bluecode" >cl-desktop &lt;логин_пользователя&gt;</span> во время входа в сеанс.
+	<ul>
+	<li><code>ac_desktop_profile==up</code></li>
+	</ul>
+
+
+Выполняется во время установки программы в рабочей системе <span class="bluecode" >emerge &lt;название_пакета&gt;</span>
+	<ul>
+	<li><code>ac_desktop_profile==on</code></li>
+	</ul>
+
+
+	<h4>Ввод компьютера в домен</h4>
+
+
+Выполняется при вводе компьютера в домен командой <span class="bluecode" >cl-client &lt;host&gt;</span>.
+	<ul>
+	<li><code>ac_client_domain==on</code></li>
+		<li><code>ac_client_merge==on</code></li>
+	</ul>
+
+
+	<h4>Вывод компьютера из домена</h4>
+
+
+Выполняется при выводе компьютера из домена командой <span class="bluecode" >cl-client -r</span>.
+	<ul>
+	<li><code>ac_client_undomain==on</code></li>
+		<li><code>ac_client_merge==on</code></li>
+	</ul>
+
+
+	<h4>Подключение удаленных ресурсов домена при загрузке</h4>
+
+
+	<p>Выполняется при запуске демона <code>init.d/client</code> во время загрузки (<span class="bluecode" >cl-client --mount</span>)</p>
+
+
+	<ul>
+	<li><code>ac_client_merge==on</code></li>
+		<li><code>ac_client_domain==on</code> (если машина настроена на работу в домене)</li>
+		<li><code>ac_client_undomain==on</code> (если машина настроена как локальная)</li>
+	</ul>
+
+
+	<h4>Обновление портежей</h4>
+
+
+	<p>Выполняется после обновления портежей и оверлея командой <span class="bluecode" >eix-sync</span></p>
+
+
+	<ul>
+	<li><code>ac_update_sync==on</code></li>
+	</ul>
+
+
+	<h4>Модификация исходного кода пакета</h4>
+
+
+	<p>Выполняется во время сборки пакета <span class="bluecode" >emerge &lt;название_пакета&gt;</span> перед его компиляцией</p>
+
+
+	<ul>
+	<li><code>ac_install_patch==on</code></li>
+	</ul>
+
+
+	<h4>Подготовка squash-образа (<strong>Calculate утилиты 2.2</strong>)</h4>
+
+
+Выполняется перед упаковкой в Squash-образ <span class="bluecode" >cl-image iso</span> или <span class="bluecode" >cl-image squash</span>.
+	<ul>
+	<li><code>ac_builder_squash==up</code></li>
+	</ul>
+
+
+	<h4>Подготовка ISO-образа (<strong>Calculate утилиты 2.2</strong>)</h4>
+
+
+Выполняется перед созданием ISO-образа командой <span class="bluecode" >cl-image iso</span>.
+	<ul>
+	<li><code>ac_builder_iso==up</code></li>
+	</ul>
+
+
+	<h4>Подготовка к сборке дистрибутива (<strong>Calculate утилиты 2.2</strong>)</h4>
+
+
+Выполняется во время подготовки к сборке дистрибутива, после распаковки Stage-образа, командой <span class="bluecode" >cl-assemble</span>.
+	<ul>
+	<li><code>ac_assemble_prepare==up</code></li>
+	</ul>
+
+
+	<h4>Настройка системы во время сборки (<strong>Calculate утилиты 2.2</strong>)</h4>
+
+
+Выполняется во время подготовки к сборке дистрибутива, после добавления оверлея <code>calculate</code>, командой <span class="bluecode" >cl-assemble</span>.
+	<ul>
+	<li><code>ac_assemble_setup==up</code></li>
+	</ul>
+
+
+	<h4>Обновление системы во время сборки (<strong>Calculate утилиты 2.2</strong>)</h4>
+
+
+Выполняется перед сборкой пакетов в собираемой системе, командой <span class="bluecode" >cl-make -u</span> или <span class="bluecode" >cl-make -U</span>.
+	<ul>
+	<li><code>ac_assemble_prepare==up</code></li>
+		<li><code>ac_assemble_setup==up</code></li>
+	</ul>
+
+
+	<h4>Произвольное событие</h4>
+
+
+Выполняется при вызове команды <span class="bluecode" >cl-core-custom имя_события</span>
+	<ul>
+	<li><code>ac_core_custom==имя_события</code></li>
+	</ul>
+
+
+	<h2 id="Значения-переменных">Значения переменных<a href="#Значения-переменных" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Переменные могут содержать несколько типов значений:</p>
+
+
+	<ol>
+	<li><strong>значение для подстановки</strong> используется для подстановки значения в шаблон;<br />Пример:<br /><pre>
+|main.os_locale_locale             | rs  |            |ru_RU.UTF-8                                   |
+|main.os_net_allow                 | rs  |            |10.0.0.0/24                                   |
+|main.os_net_ip                    | rs  |            |10.0.0.84                                     |
+|main.os_x11_video_drv             | rs  |            |radeon                                        |
+</pre></li>
+		<li><strong>значение для условного выражения</strong> участвует в условных выражениях;<br />Пример:<br /><pre>
+|main.hr_video                     | rs  |            |ati                                           |
+|install.os_install_linux_system   | rs  |            |desktop                                       |
+|install.os_install_locale_language| rs  |            |ru                                            |
+</pre></li>
+		<li><strong>информация</strong> отображает текущие настройки системы;<br />Пример:<br /><pre>
+|install.os_net_interfaces_info    | rs  |            |enp1s0 (10.0.0.84)                            |
+|main.hr_video_name                | rs  |            |Advanced Radeon HD 7540D                      |
+</pre></li>
+		<li><strong>массив значений</strong> используется другими переменными или функциями.<br />Пример:<br /><pre>
+|install.cl_migrate_user           | wl  |            |guest                                         |
+|install.os_device_data            | rt  |            |/dev/sda,dos,hdd,0,ATA OCZ-VERTEX3,60022480896|
+|desktop.cl_desktop_online_data    | rt  |            |guest,0,6                                     |
+</pre></li>
+	</ol>
+
+
+	<p>Переменные разбиты на типы условно. Одно и то же значение может соответствовать нескольким типам.</p>
+
+
+	<h2 id="Изменение-значений-переменных">Изменение значений переменных<a href="#Изменение-значений-переменных" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>При обращении к переменной ее значение определяется программой на основании настроек системы, а также значений других переменных. Значения некоторых переменных можно изменить. Такие переменные отмечены первой буквой <code>w</code> в поле "Режим". Остальные переменные, доступные только для чтения, отмечены первой буквой <code>r</code>. Пример:</p>
+
+
+<pre>
+|main.cl_ver                       | rs  |            |3.1.7                                         |
+|install.os_install_x11_composite  | wb  |            |on                                            |
+</pre>
+
+	<p>Изменить значение переменной можно либо из командной строки параметрами утилиты, либо сохранив значение в конфигурационном файле. Если переменная меняется в обоих местах, приоритет отдается командной строке.</p>
+
+
+	<h3 id="Изменение-значения-переменной-в-командной-строке">Изменение значения переменной в командной строке<a href="#Изменение-значения-переменной-в-командной-строке" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для изменения значений переменных используются различные параметры команд:</p>
+
+
+Например
+	<ul>
+	<li>для изменения cl_autopartition_root_size в команде cl-install используется опция --root-size</li>
+		<li>для изменения os_install_x11_video_drv в команде cl-install используется опция --video</li>
+	</ul>
+
+
+	<h3 id="Изменение-значения-через-конфигурационный-файл">Изменение значения через конфигурационный файл<a href="#Изменение-значения-через-конфигурационный-файл" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Вы можете предопределить значения переменных в файле <code>calculate.env</code>. Пути к файлам находятся в переменной <code>cl_env_path</code>:</p>
+
+
+<pre>
+|main.cl_env_path                  | wl  |            |/etc/calculate/calculate.env,                 |
+|                                  |     |            |/var/calculate/calculate.env,                 |
+|                                  |     |            |/var/calculate/remote/calculate.env           |
+</pre>
+
+	<p>Приоритет распределяется от первой к последней записи. Т.е. переменная, измененная в файле <code>/var/calculate/remote/calculate.env</code>, перепишет другие значения.</p>
+
+
+	<p>Пример содержимого файла <code>calculate.env</code>:</p>
+
+
+<pre>
+[install]
+os_install_ntp = ntp0.zenon.net
+</pre>
+
+	<p>Обратите внимание: переменная находится в секции <code>[install]</code>, т.е. это модуль <code>calculate-install</code>.</p>
+
+
+	<p>Для изменения значений переменных в calculate.env файлах можно воспользоваться утилитой <code>cl-core-variables</code> с параметром <code>--set</code>. Преимущество этого способа заключается в том, что перед записью значения переменной выполняется проверка на допустимость.</p>
+
+
+	<p>Изменение значения переменной <code>install.cl_autologin</code><br /><pre>
+cl-core-variables --set install.cl_autologin=guest
+</pre></p>
+
+
+	<p>Изменение значения переменной <code>install.cl_autologin</code> в <code>/var/calculate/calculate.env</code><br /><pre>
+cl-core-variables --set install.cl_autologin=guest:local
+</pre></p>
+
+
+	<p>Удаление значения <code>install.cl_autologin</code> из calculate.env<br /><pre>
+cl-core-variables --set install.cl_autologin
+</pre></p>
+
+
+	<h2 id="Использование-переменных">Использование переменных<a href="#Использование-переменных" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Переменные - основа шаблонов. Их значения настраивают систему в зависимости от текущего состояния оборудования и определяют логику работы. Здесь мы рассмотрим все случаи использования переменных.</p>
+
+
+	<h3 id="Вставка-значений-в-шаблон">Вставка значений в шаблон<a href="#Вставка-значений-в-шаблон" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для вставки значения переменной в шаблон используйте конструкцию <code>#-_имя_переменной_-#</code> или расширенная конструкция <code>#-_модуль.имя_перменной_-#</code>.</p>
+
+
+	<p>Пример настройки Xorg-сервера:</p>
+
+
+<pre>
+Modes "#-install.os_install_x11_resolution-#" 
+</pre>
+
+	<p>Необходимость указания модуля зависит от значения модуля по умолчанию. Модуль по умолчанию задается параметром env в заголовке шаблона и распространяется на все вложенные шаблоны.</p>
+
+
+	<p>Пример:<br /><pre>
+# Calculate env=install
+
+Modes "#-os_install_x11_resolution-#" 
+</pre></p>
+
+
+	<h3 id="Передача-значения-функции">Передача значения функции<a href="#Передача-значения-функции" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Значение переменной, заключенной в <code>#--#</code>, вычисляется и подставляется в шаблон в первую очередь. Если переменная будет записана в параметрах функции, для вычисления последней будет использоваться рассчитанное значение переменной.</p>
+
+
+	<p>Пример:<br /><pre>
+&lt;entry name="paned_size" type="int" value="#-sum(ysize,,#-os_x11_height-# / 3)-#"/&gt;
+</pre></p>
+
+
+	<p>В примере функция <em>sum</em> получит три значения: параметр <code>ysize</code>, пустое значение и формулу для расчёта содержимого переменной <code>os_x11_height</code> (разрешение экрана по вертикали), поделенное на 3.</p>
+
+
+	<h3 id="Условия-в-заголовках-шаблонов">Условия в заголовках шаблонов<a href="#Условия-в-заголовках-шаблонов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Заголовок файла шаблона может включать условные выражения, в случае успешного выполнения которых шаблон будет использоваться либо нет при настройке системы.</p>
+
+
+	<p>Пример заголовка шаблона с условием проверки системы:</p>
+
+
+<pre>
+# Calculate os_install_linux_system==server
+</pre>
+
+	<h3 id="Условные-выражения">Условные выражения<a href="#Условные-выражения" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>В настоящее время поддерживаются простые конструкции условных блоков. Условное выражение, состоящее из одной или более переменных (или функций), начинается с <code>#?</code> и заканчивается <code>#</code>. Далее следует блок текста, после чего завершающая конструкция из первой переменной условия, заключенной в <code>#</code>. Пример:</p>
+
+
+<pre>
+#?hr_laptop==#
+numlock on
+#hr_laptop#
+</pre>
+
+	<p>или</p>
+
+
+<pre>
+#?os_locale_language==ru&#38;&#38;pkg(media-gfx/cldx-themes)!=#
+current_theme   calculate_ru
+#os_locale_language#
+</pre>
+
+	<p>Во втором примере в условном выражении участвует функция <code>pkg()</code>, и её значение сравнивается с пустотой. Условие будет выполнено, если в системе используется русский язык и установлен пакет <code>media-gfx/cldx-themes</code>.</p>
+</body>
+</html>

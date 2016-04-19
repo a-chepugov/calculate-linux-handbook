@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>irc</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Описание-IRC">Описание IRC<a href="#Описание-IRC" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>IRC (англ. Internet Relay Chat — ретранслируемый интернет-чат) — сервисная система, при помощи которой можно общаться через сеть Интернет с другими людьми в режиме реального времени.</p>
+
+
+	<h2 id="Использование">Использование<a href="#Использование" class="wiki-anchor">&para;</a></h2>
+
+
+	<h2 id="Регистрация-ника">Регистрация ника<a href="#Регистрация-ника" class="wiki-anchor">&para;</a></h2>
+
+
+Регистрация ника происходит следующим образом:
+	<ul>
+	<li>с помощью команды <em>/nick</em> устанавливается ник:<br /><pre>
+/nick supernick
+</pre></li>
+		<li>Если выводится сообщение <em>Nickname is already in use.</em> или <em>This nickname is registered.</em>, это значит, что данный ник уже занят и надо подобрать другой.</li>
+		<li>После того, как вы выбрали имя, необходимо начать регистрацию при помощи команды <em>/msg NickServ REGISTER &lt;пароль&gt; &lt;почта&gt;</em>. Обязательно укажите реальный почтовый адрес, поскольку на него придут данные, необходимые для завершения регистрации. Вот пример регистрации текущего ника с паролем <em>mysuperpass</em> и почтовым адресом <em><a class="email" href="mailto:test@post.ru">test@post.ru</a></em>:<br /><pre>
+/msg NickServ REGISTER mysuperpass test@post.ru
+</pre></li>
+		<li>Затем необходимо дождаться письма от irc-сервера, в котором должны присутстовать строки, похожие на эти:<br /><pre>
+In order to complete your registration, you must send the following
+command on IRC:
+/msg NickServ VERIFY REGISTER supernick pbhdoztzxmzj
+</pre></li>
+		<li>Вводим высланную команду для подтверждения регистрации.</li>
+		<li>Включаем защиту от несанкционированного использования вашего ника (при попытке использовать этот ник будет дано 30 секунд для ввода пароля):<br /><pre>
+/msg NickServ SET ENFORCE ON
+</pre></li>
+	</ul>
+</body>
+</html>

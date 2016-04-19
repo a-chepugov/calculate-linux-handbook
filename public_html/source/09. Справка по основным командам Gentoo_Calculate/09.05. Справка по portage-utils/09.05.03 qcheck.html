@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>qcheck</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="qcheck">qcheck<a href="#qcheck" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+qcheck - проверка целостности установленного пакета 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>qcheck</strong> <em>&lt;опции&gt; &lt;пакет&gt;</em></p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Допустимые опции: <strong>-[eauAHTBvqChV]</strong></p>
+
+
+	<p><strong>-e</strong>, <strong>--exact</strong></p>
+
+
+	<p style="padding-left:4em;">* Точное совпадение (только CAT/PN или PN без PV)</p>
+
+
+	<p><strong>-a</strong>, <strong>--all</strong></p>
+
+
+	<p style="padding-left:4em;">* Вывести все пакеты</p>
+
+
+	<p><strong>-u</strong>, <strong>--update</strong></p>
+
+
+	<p style="padding-left:4em;">* Обновить данные об отсутствующих файлах, контрольных суммах и времени последнего изменения пакетов</p>
+
+
+	<p><strong>-A</strong>, <strong>--noafk</strong></p>
+
+
+	<p style="padding-left:4em;">* Игнорировать отсутствующие файлы</p>
+
+
+	<p><strong>-H</strong>, <strong>--nohash</strong></p>
+
+
+	<p style="padding-left:4em;">* Игнорировать отличия/отсутствие контрольной суммы</p>
+
+
+	<p><strong>-T</strong>, <strong>--nomtime</strong></p>
+
+
+	<p style="padding-left:4em;">* Игнорировать отличия во времени последнего изменения файлов</p>
+
+
+	<p><strong>-B</strong>, <strong>--badonly</strong></p>
+
+
+	<p style="padding-left:4em;">* Выводить только пакеты, содержащие битые файлы, исключая /etc.</p>
+
+
+	<p><strong>-v</strong>, <strong>--verbose</strong></p>
+
+
+	<p style="padding-left:4em;">* Предлагать подробный вывод</p>
+
+
+	<p><strong>-q</strong>, <strong>--quiet</strong></p>
+
+
+	<p style="padding-left:4em;">* Предлагать компактный вывод - в частности, не выводить предупреждения</p>
+
+
+	<p><strong>-C</strong>, <strong>--nocolor</strong></p>
+
+
+	<p style="padding-left:4em;">* Не использовать цветной вывод</p>
+
+
+	<p><strong>-h</strong>, <strong>--help</strong></p>
+
+
+	<p style="padding-left:4em;">* Вывести эту справку и выйти</p>
+
+
+	<p><strong>-V</strong>, <strong>--version</strong></p>
+
+
+	<p style="padding-left:4em;">* Вывести версию программы и выйти</p>
+
+
+	<p>$Id: qcheck.1,v 1.24 2008/04/12 17:26:00 solar Exp $</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Апрель 2008</p>
+</body>
+</html>

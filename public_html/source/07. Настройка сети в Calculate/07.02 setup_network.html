@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>setup network</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-сети">Настройка сети<a href="#Настройка-сети" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Настройка-сети">Настройка сети</a></li>
+<li class="heading2"><a href="#Настройка-графическим-клиентом">Настройка графическим клиентом</a></li>
+<li class="heading2"><a href="#Настройка-консольным-клиентом">Настройка консольным клиентом</a></li>
+<li class="heading2"><a href="#Настройка-сервером-утилит">Настройка сервером утилит</a></li>
+<li class="heading2"><a href="#Настройка-без-использования-утилит-Calculate">Настройка без использования утилит Calculate</a></li>
+</ul>
+
+
+Настройка сети включает в себя основные параметры:
+	<ul>
+	<li>выбор менеджера сети;</li>
+		<li>установка адреса для интерфейса (DHCP, IP адрес и маска);</li>
+		<li>установка имени хоста;</li>
+		<li>установка сервера времени;</li>
+	</ul>
+
+
+и дополнительные параметры:
+	<ul>
+	<li>установка сервера доменных имён;</li>
+		<li>установка доменов для поиска;</li>
+		<li>установка маршрутизации (сеть, шлюз, интерфейс, исходный IP).</li>
+	</ul>
+
+
+	<h2 id="Настройка-графическим-клиентом">Настройка графическим клиентом<a href="#Настройка-графическим-клиентом" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Настройка сети для графического клиента cl-console-gui находится в категории <strong>Настройка</strong>. Для настройки локализации необходимо выбрать требуемые параметры, затем нажать кнопку <strong>Сохранить</strong>. Дополнительные параметры можно открыть нажав на соответствующую кнопку.<br /><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/2387" title="Настройка сети" alt="Настройка сети" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<h2 id="Настройка-консольным-клиентом">Настройка консольным клиентом<a href="#Настройка-консольным-клиентом" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для настройки сети с помощью консольного клиента cl-console используйте команду<br /><pre>
+cl-console --method setup_network
+</pre></p>
+
+
+Назначение ключей:
+	<ul>
+	<li><code>--netconf NETMANAGER</code>    - выбор менеджера сети (networkmanager или openrc)</li>
+		<li><code>--iface IFACE_SETTINGS</code>  - установка адреса для сетевого интерфейса</li>
+		<li><code>--hostname HOSTNAME</code>     - установка короткого или полного имени хоста</li>
+		<li><code>--ntp NTP</code>               - установка NTP сервера для системы</li>
+		<li><code>--dns DNS</code>               - установка серверов доменных имен (запятая - разделитель)</li>
+		<li><code>--domain-search DOMAINS</code> - установка доменов для поиска (запятая - разделитель)</li>
+		<li><code>--route NETROUTE</code>        - добавить правило маршрутизации</li>
+	</ul>
+
+
+	<p>Пример:<br /><pre>
+cl-console --method setup_network --netconf openrc --iface eth0:192.168.1.47:24 --hostname iivanov.company.ru --route default:192.168.1.1:eth0:192.168.1.47
+</pre></p>
+
+
+	<h2 id="Настройка-сервером-утилит">Настройка сервером утилит<a href="#Настройка-сервером-утилит" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для настройки с помощью сервера утилит используйте команду<br /><pre>
+cl-setup-network
+</pre></p>
+
+
+	<p>Все ключи и их назначение совпадают с ключами, описанными выше в разделе настройка консольным клиентом.</p>
+
+
+	<p>Пример:<br /><pre>
+cl-setup-network --netconf openrc --iface eth0:192.168.1.47:24 --hostname iivanov.company.ru --route default:192.168.1.1:eth0:192.168.1.47
+</pre></p>
+
+
+	<h2 id="Настройка-без-использования-утилит-Calculate">Настройка без использования утилит Calculate<a href="#Настройка-без-использования-утилит-Calculate" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Настройку сети в CLD, CLDG и CLDX выполняет <em>Networkmanager</em>. Программа имеет графический интерфейс, при помощи которого можно настроить как проводную, так и беспроводную сеть. При загрузке программа попытается настроить сетевой интерфейс и получить IP-адрес от DHCP-сервера. Доступ к программе можно получить, кликнув по иконке в правом верхнем углу экрана.</p>
+
+
+	<p>Настройка сети в CLS, CDS и CSS осуществляется путем редактирования конфигурационного файла <code>/etc/conf.d/net</code>. Справку по настройке сети можно найти в файле <code>/usr/share/doc/openrc-0.6.x/net.example</code>. После изменения настроек нужно перезапустить сетевой интерфейс (как правило, eth0 для проводной сети):<br /><pre>
+/etc/init.d/net.eth0 restart
+</pre></p>
+</body>
+</html>

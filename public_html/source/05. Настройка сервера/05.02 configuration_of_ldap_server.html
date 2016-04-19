@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>configuration of ldap server</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-LDAP-сервера">Настройка LDAP сервера<a href="#Настройка-LDAP-сервера" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Введение">Введение<a href="#Введение" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><em>LDAP</em> (англ. Lightweight Directory Access Protocol — «облегчённый протокол доступа к каталогам») — это сетевой протокол для доступа к службе каталогов. LDAP — относительно простой протокол, использующий TCP/IP и позволяющий производить операции аутентификации (bind), поиска (search) и сравнения (compare), а также операции добавления, изменения или удаления записей. Обычно LDAP-сервер принимает входящие соединения на порт 389 по протоколам TCP или UDP. Для LDAP-сеансов, инкапсулированных в SSL, обычно используется порт 636.</p>
+
+
+	<h2 id="Настройка">Настройка<a href="#Настройка" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В качестве LDAP сервера в <a href="Calculate Directory Server.html" class="wiki-page">Calculate Directory Server</a> используется <noindex><a href="http://www.openldap.org" rel="nofollow" target="_blank" class="external">OpenLDAP</a></noindex>. Настройка сервера выполняется пакетом <em>calculate-server</em> из состава утилит <a href="Calculate 2.html" class="wiki-page new">Calculate 2</a>.</p>
+
+
+	<p>Для настройки сервера, воспользуйтесь программой <em>cl-setup</em>, выполнив:<br /><pre>
+cl-setup ldap
+</pre></p>
+
+
+	<p>Во время выполнения этой команды, программа выполнит настройку сервера LDAP, запустит его и пропишет в автозагрузку. Будьте внимательны, программа перезапишет базу данных LDAP. Если вы работали с LDAP сервером до этого, выполните <a href="резервное копирование.html" class="wiki-page">резервное копирование</a> ваших данных. Пароли доступа к LDAP всех сервисов хранятся в <em>/etc/calculate/calculate.ldap</em>.</p>
+</body>
+</html>

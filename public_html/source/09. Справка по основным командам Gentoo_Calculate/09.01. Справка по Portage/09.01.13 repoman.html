@@ -1,0 +1,764 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>repoman</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="REPOMAN">REPOMAN<a href="#REPOMAN" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+repoman - программа Gentoo, обеспечивающая минимальный уровень качества пакетов, добавляемых к дереву портежей 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>repoman</strong> [<em>опция</em>] [<em>режим</em>]</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>Качество прежде всего.</strong></p>
+
+
+	<p>Утилита <strong>repoman</strong> предназначена для контроля качества репозитариев ебилдов.</p>
+
+
+	<p>Примечание: <strong>repoman commit</strong> работает только <em>в локальных репозитариях</em> cvs, git или subversion.</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>-a</strong>, <strong>--ask</strong></p>
+
+
+	<p style="padding-left:4em;">Запросить подтверждение перед коммитом.</p>
+
+
+	<p><strong>--force</strong></p>
+
+
+	<p style="padding-left:4em;">Принудительно сделать коммит, независимо от проблем QA. Эта опция удобна, если вы хотите пропустить QA-проверки, занимающие наибольшее время. Сообщение, прилагаемое к коммиту, наряду с обычной отметкой о версии portage будет содержать указание на то, что опция включена.</p>
+
+
+	<p style="padding-left:4em;">При использовании в режиме <strong>manifest</strong> опция <strong>--force</strong> вызывает замену существующих digest-файлов любыми файлами, расположенными в каталоге ${DISTDIR}. Существующие дайджесты будут считаться корректными для файлов, которые в противном случае потребовалось бы перезагрузить для повторной генерации дайджестов. <strong>ВНИМАНИЕ:</strong> При замене существующих дайджестов пользователю необходимо убедиться, что файлы в каталоге ${DISTDIR} определяются верно. Особенно осторожным следует быть, если имеются частично загруженные файлы.</p>
+
+
+	<p><strong>-q</strong>, <strong>--quiet</strong></p>
+
+
+	<p style="padding-left:4em;">Не выдавать лишней информации.</p>
+
+
+	<p><strong>-p</strong>, <strong>--pretend</strong></p>
+
+
+	<p style="padding-left:4em;">Не делать коммита, не вносить исправлений, а только перечислить планируемые действия.</p>
+
+
+	<p><strong>-x</strong>, <strong>--xmlparse</strong></p>
+
+
+	<p style="padding-left:4em;">Принудительно выполнить синтаксический анализ metadata.xml.</p>
+
+
+	<p><strong>-v</strong>, <strong>--verbose</strong></p>
+
+
+	<p style="padding-left:4em;">При проверке отображать названия пакетов.</p>
+
+
+	<p><strong>--echangelog=&lt;y|n|force&gt;</strong></p>
+
+
+	<p style="padding-left:4em;">В режиме коммита вызывает echangelog, если чейнджлог не изменился (или, если выбрано значение force - независимо от изменений чейнджлога). Эта опция может быть включена по умолчанию для заданного репозитария путем установки значения update-changelog = true в файле metadata/layout.conf (см. <strong><a href=".html" class="wiki-page">portage</a>(5)</strong>).</p>
+
+
+	<p><strong>--if-modified=&lt;y|n&gt;</strong></p>
+
+
+	<p style="padding-left:4em;">Проверять только те пакеты, которые имеют изменения, не внесенные в коммит.</p>
+
+
+	<p><strong>-i</strong>, <strong>--ignore-arches</strong></p>
+
+
+	<p style="padding-left:4em;">Игнорировать ошибки, специфичные для данной архитектуры (архитектура != хост).</p>
+
+
+	<p><strong>--ignore-default-opts</strong></p>
+
+
+	<p style="padding-left:4em;">Не использовать переменную окружения <em>REPOMAN_DEFAULT_OPTS</em>.</p>
+
+
+	<p><strong>-I</strong>, <strong>--ignore-masked</strong></p>
+
+
+	<p style="padding-left:4em;">Игнорировать замаскированные пакеты (не допускается в режиме <strong>commit</strong>).</p>
+
+
+	<p><strong>-d</strong>, <strong>--include-dev</strong></p>
+
+
+	<p style="padding-left:4em;">Включить профили для разработчиков в проверку зависимостей.</p>
+
+
+	<p><strong>--unmatched-removal</strong></p>
+
+
+	<p style="padding-left:4em;">Включить строгую проверку файлов package.mask и package.unmask на предмет несовпадающих атомов на удаление.</p>
+
+
+	<p><strong>--without-mask</strong></p>
+
+
+	<p style="padding-left:4em;">Вести себя так, как если бы в package.mask не существовало записей (не допускается в режиме <strong>commit</strong>)</p>
+
+
+	<p><strong>-m</strong>, <strong>--commitmsg</strong></p>
+
+
+	<p style="padding-left:4em;">Добавить сообщение с коммитом в командной строке.</p>
+
+
+	<p><strong>-M</strong>, <strong>--commitmsgfile</strong></p>
+
+
+	<p style="padding-left:4em;">Добавить сообщение с коммитом из указанного файла.</p>
+
+
+	<p><strong>-V</strong>, <strong>--version</strong></p>
+
+
+	<p style="padding-left:4em;">Отобразить версию.</p>
+
+
+	<p><strong>-h</strong>, <strong>--help</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести эту справку.</p>
+
+
+	<h2 id="РЕЖИМЫ">РЕЖИМЫ<a href="#РЕЖИМЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>full</strong></p>
+
+
+	<p style="padding-left:4em;">Дерево каталога сканируется на предмет ошибок QA (полный вывод).</p>
+
+
+	<p><strong>help</strong></p>
+
+
+	<p style="padding-left:4em;">Выводится справка.</p>
+
+
+	<p><strong>scan</strong></p>
+
+
+	<p style="padding-left:4em;">Дерево каталога сканируется на предмет ошибок QA (краткий вывод).</p>
+
+
+	<p><strong>fix</strong></p>
+
+
+	<p style="padding-left:4em;">Исправляются простые ошибки QA (дайджест, не соотнесенный с пакетом, отсутствующий дайджест).</p>
+
+
+	<p><strong>manifest</strong></p>
+
+
+	<p style="padding-left:4em;">Генерируется manifest-файл (при необходимости будут загружены файлы исходного кода). Если вы хотите заменить существующие дайджесты, см. опцию <strong>--force</strong>.</p>
+
+
+	<p><strong>manifest-check</strong></p>
+
+
+	<p style="padding-left:4em;">Осуществляется проверка, не содержат ли манифесты отсутствующих или некорректных дайджестов.</p>
+
+
+	<p><strong>commit</strong></p>
+
+
+	<p style="padding-left:4em;">Дерево каталога будет просканировано на предмет ошибок QA; если ошибок нет, будет сделан коммит через cvs.</p>
+
+
+	<h2 id="Ошибки-QA">Ошибки QA<a href="#Ошибки-QA" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>CVS/Entries.IO_error</strong></p>
+
+
+	<p style="padding-left:4em;">При попытке сделать коммит возникла ошибка ввода-вывода при доступе к файлу Entries.</p>
+
+
+	<p><strong>DEPEND.bad</strong></p>
+
+
+	<p style="padding-left:4em;">Видимые пользователем ебилды с некорректным значением DEPEND (среди *видимых* ебилдов)</p>
+
+
+	<p><strong>DEPEND.badindev</strong></p>
+
+
+	<p style="padding-left:4em;">Видимые пользователем ебилды с некорректным значением DEPEND (среди *видимых* ебилдов) из ветки разработки</p>
+
+
+	<p><strong>DEPEND.badmasked</strong></p>
+
+
+	<p style="padding-left:4em;">Замаскированные ебилды с некорректным значением DEPEND (среди *всех* ебилдов)</p>
+
+
+	<p><strong>DEPEND.badmaskedindev</strong></p>
+
+
+	<p style="padding-left:4em;">Замаскированные ебилды с некорректным значением DEPEND (среди *всех* ебилдов) из ветки разработки</p>
+
+
+	<p><strong>DEPEND.badtilde</strong></p>
+
+
+	<p style="padding-left:4em;">DEPEND использует оператор зависимости ~ dep с ненулевой строкой ревизии, что не имеет смысла (ревизия игнорируется)</p>
+
+
+	<p><strong>DEPEND.syntax</strong></p>
+
+
+	<p style="padding-left:4em;">Синтаксическая ошибка в DEPEND (обычно лишний или недостающий пробел/скобка)</p>
+
+
+	<p><strong>DESCRIPTION.missing</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды без переменной DESCRIPTION или с пустым значением этой переменной.</p>
+
+
+	<p><strong>EAPI.definition</strong></p>
+
+
+	<p style="padding-left:4em;">EAPI определяется после наследования (а должен - до).</p>
+
+
+	<p><strong>EAPI.deprecated</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды с функционалом, устаревшим в текущей версии EAPI.</p>
+
+
+	<p><strong>EAPI.incompatible</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды с функционалом, доступным только с EAPI другой версии.</p>
+
+
+	<p><strong>EAPI.unsupported</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды с неподдерживаемой версией EAPI (вы должны обновить portage)</p>
+
+
+	<p><strong>HOMEPAGE.missing</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды без переменной HOMEPAGE или с пустым значением этой переменной.</p>
+
+
+	<p><strong>HOMEPAGE.virtual</strong></p>
+
+
+	<p style="padding-left:4em;">Виртуальные пакеты с непустым значением переменной HOMEPAGE.</p>
+
+
+	<p><strong>IUSE.invalid</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд вызывает IUSE-переменную, которая не фигурирует в use.desc или его файле метаданных metadata.xml.</p>
+
+
+	<p><strong>IUSE.missing</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд использует условие USE, которое отсылает к флагу, отсутствующему в IUSE.</p>
+
+
+	<p><strong>IUSE.undefined</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд не определяет IUSE (тогда как правила синтаксиса требуют определять IUSE даже при пустом значении).</p>
+
+
+	<p><strong>KEYWORDS.dropped</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды, для которых, вероятно, установленное значение KEYWORDS было заменено другим ключевым словом архитектуры.</p>
+
+
+	<p><strong>KEYWORDS.invalid</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд содержит ключевое слово, которое не указано в profiles/arch.list или на которое не был найден доступный профиль.</p>
+
+
+	<p><strong>KEYWORDS.missing</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды без переменной KEYWORDS или с пустым значением этой переменной.</p>
+
+
+	<p><strong>KEYWORDS.stable</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды, которые были напрямую добавлены с ключевым словом стабильной архитектуры.</p>
+
+
+	<p><strong>KEYWORDS.stupid</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды, использующие значение KEYWORDS=-* вместо значения файла package.mask.</p>
+
+
+	<p><strong>LICENSE.invalid</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд имеет лицензию, которая не фигурирует в каталоге license/ портежей.</p>
+
+
+	<p><strong>LICENSE.missing</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды без переменной LICENSE или с пустым значением этой переменной.</p>
+
+
+	<p><strong>LICENSE.syntax</strong></p>
+
+
+	<p style="padding-left:4em;">Синтаксическая ошибка в LICENSE (обычно лишний или недостающий пробел/скобка).</p>
+
+
+	<p><strong>LICENSE.virtual</strong></p>
+
+
+	<p style="padding-left:4em;">Виртуальные пакеты с непустым значением переменной LICENSE.</p>
+
+
+	<p><strong>LIVEVCS.stable</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд представляет собой ебилд live-системы контроля (cvs, git, darcs, svn и т.д.) с ключевым словом стабильной архитектуры.</p>
+
+
+	<p><strong>LIVEVCS.unmasked</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд представляет собой ебилд live-системы контроля (cvs, git, darcs, svn и т.д.), но имеет ключевые слова и не замаскирован в глобальном package.mask.</p>
+
+
+	<p><strong>PDEPEND.bad</strong></p>
+
+
+	<p style="padding-left:4em;">Видимые пользователям ебилды с некорректным значением PDEPEND (среди *видимых* ебилдов).</p>
+
+
+	<p><strong>PDEPEND.badindev</strong></p>
+
+
+	<p style="padding-left:4em;">Видимые пользователям ебилды с некорректным значением PDEPEND (среди *видимых* ебилдов) в ветке разработки.</p>
+
+
+	<p><strong>PDEPEND.badmasked</strong></p>
+
+
+	<p style="padding-left:4em;">Замаскированные ебилды с некорректным значением PDEPEND (среди *всех* ебилдов).</p>
+
+
+	<p><strong>PDEPEND.badmaskedindev</strong></p>
+
+
+	<p style="padding-left:4em;">Замаскированные ебилды с некорректным значением PDEPEND (среди *всех* ебилдов) в ветке разработки.</p>
+
+
+	<p><strong>PDEPEND.badtilde</strong></p>
+
+
+	<p style="padding-left:4em;">PDEPEND использует оператор зависимости ~ dep с ненулевой строкой ревизии, что не имеет смысла (ревизия игнорируется).</p>
+
+
+	<p><strong>PDEPEND.suspect</strong></p>
+
+
+	<p style="padding-left:4em;">PDEPEND содержит пакет, который обычно принадлежит только DEPEND.</p>
+
+
+	<p><strong>PDEPEND.syntax</strong></p>
+
+
+	<p style="padding-left:4em;">Синтаксическая ошибка в PDEPEND (обычно лишний или недостающий пробел/скобка).</p>
+
+
+	<p><strong>PROVIDE.syntax</strong></p>
+
+
+	<p style="padding-left:4em;">Синтаксическая ошибка в PROVIDE (обычно лишний или недостающий пробел/скобка).</p>
+
+
+	<p><strong>RDEPEND.bad</strong></p>
+
+
+	<p style="padding-left:4em;">Видимые пользователям ебилды с некорректным значением RDEPEND (среди *видимых* ебилдов).</p>
+
+
+	<p><strong>RDEPEND.badindev</strong></p>
+
+
+	<p style="padding-left:4em;">Видимые пользователям ебилды с некорректным значением RDEPEND (среди *видимых* ебилдов) в ветке разработки.</p>
+
+
+	<p><strong>RDEPEND.badmasked</strong></p>
+
+
+	<p style="padding-left:4em;">Замаскированные ебилды с некорректным значением RDEPEND (среди *всех* ебилдов).</p>
+
+
+	<p><strong>RDEPEND.badmaskedindev</strong></p>
+
+
+	<p style="padding-left:4em;">Замаскированные ебилды с некорректным значением RDEPEND (среди *всех* ебилдов) в ветке разработки.</p>
+
+
+	<p><strong>RDEPEND.badtilde</strong></p>
+
+
+	<p style="padding-left:4em;">RDEPEND использует оператор зависимости ~ dep с ненулевой строкой ревизии, что не имеет смысла (ревизия игнорируется).</p>
+
+
+	<p><strong>RDEPEND.implicit</strong></p>
+
+
+	<p style="padding-left:4em;">Значение RDEPEND в ебилде не установлено; тем самым неявно назначается RDEPEND=$DEPEND (до EAPI 4).</p>
+
+
+	<p><strong>RDEPEND.suspect</strong></p>
+
+
+	<p style="padding-left:4em;">RDEPEND содержит пакет, который обычно принадлежит только DEPEND.</p>
+
+
+	<p><strong>RDEPEND.syntax</strong></p>
+
+
+	<p style="padding-left:4em;">Синтаксическая ошибка в RDEPEND (обычно лишний или недостающий пробел/скобка).</p>
+
+
+	<p><strong>PROPERTIES.syntax</strong></p>
+
+
+	<p style="padding-left:4em;">Синтаксическая ошибка в PROPERTIES (обычно лишний или недостающий пробел/скобка).</p>
+
+
+	<p><strong>RESTRICT.syntax</strong></p>
+
+
+	<p style="padding-left:4em;">Синтаксическая ошибка в RESTRICT (обычно лишний или недостающий пробел/скобка).</p>
+
+
+	<p><strong>SLOT.invalid</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды с отсутствующим или ошибочным значением переменной SLOT.</p>
+
+
+	<p><strong>SRC_URI.mirror</strong></p>
+
+
+	<p style="padding-left:4em;">URI, фигурирующий в profiles/thirdpartymirrors, обнаружен среди значений SRC_URI.</p>
+
+
+	<p><strong>changelog.ebuildadded</strong></p>
+
+
+	<p style="padding-left:4em;">Был добавлен ебилд, но чейнджлог не изменился.</p>
+
+
+	<p><strong>changelog.missing</strong></p>
+
+
+	<p style="padding-left:4em;">Отсутствуют чейнджлоги.</p>
+
+
+	<p><strong>changelog.notadded</strong></p>
+
+
+	<p style="padding-left:4em;">Чейнджлоги существуют, но не было добавлены в cvs.</p>
+
+
+	<p><strong>dependency.unknown</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд имеет в зависимостях неизвестный пакет (это может не быть ошибкой, если речь идет о блокировке переименованного/удаленного пакета или об альтернативе, предоставляемой оверлеем).</p>
+
+
+	<p><strong>digest.assumed</strong></p>
+
+
+	<p style="padding-left:4em;">Существующий дайджест должен считаться корректным (только на уровне пакета)</p>
+
+
+	<p><strong>digest.missing</strong></p>
+
+
+	<p style="padding-left:4em;">Некоторые файлы, указанные в SRC_URI, не фигурируют в манифесте.</p>
+
+
+	<p><strong>digest.unused</strong></p>
+
+
+	<p style="padding-left:4em;">Некоторые файлы, указанные в Manifest-файле, не фигурируют в SRC_URI.</p>
+
+
+	<p><strong>ebuild.allmasked</strong></p>
+
+
+	<p style="padding-left:4em;">Для этого пакета замаскированы все ебилды (только на уровне пакета).</p>
+
+
+	<p><strong>ebuild.badheader</strong></p>
+
+
+	<p style="padding-left:4em;">У ебилда некорректный заголовок.</p>
+
+
+	<p><strong>ebuild.invalidname</strong></p>
+
+
+	<p style="padding-left:4em;">Файлы ебилда имеют названия, не поддающиеся синтаксическому анализу или содержащие синтаксические ошибки (или имеют расширения версии portage 2.1).</p>
+
+
+	<p><strong>ebuild.majorsyn</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд содержит серьезную синтаксическую ошибку, которая может привести к полной или частичной неработоспособности ебилда.</p>
+
+
+	<p><strong>ebuild.minorsyn</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд содержит мелкую синтаксическую ошибку, нарушающую требования, предъявляемые к программированию под gentoo.</p>
+
+
+	<p><strong>ebuild.namenomatch</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд содержит файлы, имена которых не совпадают с именами в родительском каталоге.</p>
+
+
+	<p><strong>ebuild.nesteddie</strong></p>
+
+
+	<p style="padding-left:4em;">Помещение 'die' в ( ) вызывает ошибку, но не завершает ebuild-сценарий.</p>
+
+
+	<p><strong>ebuild.nostable</strong></p>
+
+
+	<p style="padding-left:4em;">Нет ебилдов, которые были бы маркированы как стабильные для вашей архитектуры.</p>
+
+
+	<p><strong>ebuild.notadded</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды существуют, но не были добавлены в cvs.</p>
+
+
+	<p><strong>ebuild.output</strong></p>
+
+
+	<p style="padding-left:4em;">Простая передача данных ебилду сопровождается выводом; это нарушает требования, предъявляемые к ебилдам.</p>
+
+
+	<p><strong>ebuild.patches</strong></p>
+
+
+	<p style="padding-left:4em;">Переменная PATCHES должна быть массивом bash, чтобы обеспечивалась корректная обработка пробелов.</p>
+
+
+	<p><strong>ebuild.syntax</strong></p>
+
+
+	<p style="padding-left:4em;">Ошибка генерации кэша ебилда, вызванная, вероятнее всего, синтаксической ошибкой в ебилде или ошибкой при проверке дайджеста.</p>
+
+
+	<p><strong>eprefixify.defined</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд использует eprefixify, но не наследует екласс префикса.</p>
+
+
+	<p><strong>file.UTF8</strong></p>
+
+
+	<p style="padding-left:4em;">Файл не в кодировке UTF8.</p>
+
+
+	<p><strong>file.executable</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилды, дайджесты, файл метаданных metadata.xml, манифест, чейнджлог не требуют исполняемого файла.</p>
+
+
+	<p><strong>file.name</strong></p>
+
+
+	<p style="padding-left:4em;">Имя файла/каталога может включать только следующие символы: a-zA-Z0-9._-+:</p>
+
+
+	<p><strong>file.size</strong></p>
+
+
+	<p style="padding-left:4em;">Файлы в каталоге files должны быть размером менее 20k.</p>
+
+
+	<p><strong>inherit.autotools</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд наследует autotools, но не вызывает eautomake, eautoconf и eautoreconf.</p>
+
+
+	<p><strong>inherit.deprecated</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд наследует устаревший екласс.</p>
+
+
+	<p><strong>java.eclassesnotused</strong></p>
+
+
+	<p style="padding-left:4em;">Если virtual/jdk прописан в DEPEND, должен наследоваться екласс java. См. подробнее: <em><noindex><a class="external" href="http://www.gentoo.org/proj/en/java/java-devel.xml" ref="nofollow">http://www.gentoo.org/proj/en/java/java-devel.xml</a></noindex></em>.</p>
+
+
+	<p><strong>manifest.bad</strong></p>
+
+
+	<p style="padding-left:4em;">Manifest-файл имеет отсутствующие или некорректные дайджесты.</p>
+
+
+	<p><strong>metadata.bad</strong></p>
+
+
+	<p style="padding-left:4em;">Некорректные файлы metadata.xml.</p>
+
+
+	<p><strong>metadata.missing</strong></p>
+
+
+	<p style="padding-left:4em;">Отсутствуют файлы metadata.xml.</p>
+
+
+	<p><strong>metadata.warning</strong></p>
+
+
+	<p style="padding-left:4em;">Предупреждения в файлах metadata.xml.</p>
+
+
+	<p><strong>portage.internal</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд обращается к внутренней функции Portage.</p>
+
+
+	<p><strong>upstream.workaround</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд обходит ошибку апстрима; на ошибку следует разместить заявку на багтрекере bugs.gentoo.org.</p>
+
+
+	<p><strong>usage.obsolete</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд использует устаревшую конструкцию.</p>
+
+
+	<p><strong>variable.invalidchar</strong></p>
+
+
+	<p style="padding-left:4em;">Переменная содержит некорректный символ, не из набора ASCII.</p>
+
+
+	<p><strong>variable.readonly</strong></p>
+
+
+	<p style="padding-left:4em;">Переменная назначается только для чтения.</p>
+
+
+	<p><strong>variable.usedwithhelpers</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд использует переменные D, ROOT, ED, EROOT, EPREFIX с помощниками.</p>
+
+
+	<p><strong>virtual.oldstyle</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд предоставляет виртуальный пакет устаревшего типа (см. GLEP 37).</p>
+
+
+	<p><strong>wxwidgets.eclassnotused</strong></p>
+
+
+	<p style="padding-left:4em;">Ебилд зависит от пакета x11-libs/wxGTK, не наследуя екласс wxwidgets.eclass. См. подробнее в отчете об ошибке #305469.</p>
+
+
+	<h2 id="БАГТРЕКЕР">БАГТРЕКЕР<a href="#БАГТРЕКЕР" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Об обнаруженных ошибках сообщайте на <noindex><a class="external" href="http://bugs.gentoo.org" ref="nofollow">http://bugs.gentoo.org</a></noindex>.</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Daniel Robbins &lt;<a class="email" href="mailto:drobbins@gentoo.org">drobbins@gentoo.org</a>&gt;</li>
+		<li>Saleem Abdulrasool &lt;<a class="email" href="mailto:compnerd@gentoo.org">compnerd@gentoo.org</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">emerge</a></strong>(1)</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Октябрь 2011</p>
+</body>
+</html>

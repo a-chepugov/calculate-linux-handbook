@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>qfile</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="qfile">qfile<a href="#qfile" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+qfile - вывод всех пакетов, которым принадлежит файл 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>qfile</strong> <em>&lt;файл&gt;</em></p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Доступные опции: <strong>-[ef:m:oRx:vqChV]</strong></p>
+
+
+	<p><strong>-e</strong>, <strong>--exact</strong></p>
+
+
+	<p style="padding-left:4em;">* Искать точное соответствие</p>
+
+
+	<p><strong>-f</strong>, <strong>--from</strong> &lt;аргумент&gt;</p>
+
+
+	<p style="padding-left:4em;"> * Брать аргументы из файла в &lt;аргументе&gt; ("-" для стандартного ввода)</p>
+
+
+	<p><strong>-m</strong>, <strong>--max-args</strong> &lt;аргумент&gt;</p>
+
+
+	<p style="padding-left:4em;"> * Обрабатывать файлы группами в количестве, заданном &lt;аргументом&gt; (значение по умолчанию - 5000)</p>
+
+
+	<p><strong>-o</strong>, <strong>--orphans</strong></p>
+
+
+	<p style="padding-left:4em;">* Вывести список файлов</p>
+
+
+	<p><strong>-R</strong>, <strong>--root-prefix</strong></p>
+
+
+	<p style="padding-left:4em;">* Считать, что префикс $ROOT уже добавлен к аргументам</p>
+
+
+	<p><strong>-x</strong>, <strong>--exclude</strong> &lt;аргумент&gt;</p>
+
+
+	<p style="padding-left:4em;"> * Не рассматривать пакет в &lt;аргументе&gt;</p>
+
+
+	<p><strong>-v</strong>, <strong>--verbose</strong></p>
+
+
+	<p style="padding-left:4em;">* Предлагать подробный вывод</p>
+
+
+	<p><strong>-q</strong>, <strong>--quiet</strong></p>
+
+
+	<p style="padding-left:4em;">* Предлагать компактный вывод - в частности, не выводить предупреждения</p>
+
+
+	<p><strong>-C</strong>, <strong>--nocolor</strong></p>
+
+
+	<p style="padding-left:4em;">* Не использовать цветной вывод</p>
+
+
+	<p><strong>-h</strong>, <strong>--help</strong></p>
+
+
+	<p style="padding-left:4em;">* Вывести эту справку и выйти</p>
+
+
+	<p><strong>-V</strong>, <strong>--version</strong></p>
+
+
+	<p style="padding-left:4em;">* Вывести версию программы и выйти</p>
+
+
+	<p><em>$Id: qfile.1,v 1.24 2007/01/13 19:17:40 Написано для Gentoo solar и vapier, gentoo.org</em></p>
+
+
+	<h2 id="НАХОЖДЕНИЕ-ПАКЕТОВ-ВЛАДЕЛЬЦЕВ-ФАЙЛОВ">НАХОЖДЕНИЕ ПАКЕТОВ - ВЛАДЕЛЬЦЕВ ФАЙЛОВ<a href="#НАХОЖДЕНИЕ-ПАКЕТОВ-ВЛАДЕЛЬЦЕВ-ФАЙЛОВ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Это поведение утилиты <strong>qfile</strong> по умолчанию. Будет выведен перечень пакетов, которым принадлежат запрошенные файлы (вместо файлов могут быть каталоги, символические ссылки и любые другие элементы, устанавливаемые Portage). Для запроса можно использовать как путь, так и просто имя файла. Стандартный вывод утилиты включает названия пакетов и полные пути доступа к файлам, удовлетворяющим запросу. Если вы используете опцию <strong>--exact</strong>, будут отображаться также версии пакетов. Если же выставить опцию <strong>--quiet</strong>, будут выведены только названия пакетов, без путей доступа к файлам. Аналогично опции <strong>--exact</strong> работает <strong>--verbose</strong>, но выводит еще больше информации. Когда все пакеты, которым принадлежат файлы, указанные в аргументе, найдены, <strong>qfile</strong> возвращает <em>0</em>.</p>
+
+
+	<p>Найти пакет(ы), которому/-ым принадлежит "/bin/bash": <br /><pre>
+    $ qfile -q /bin/bash 
+    app-shells/bash 
+</pre></p>
+
+
+	<p>Найти пакет(ы), которому/-ым принадлежит любой файл с именем "bash", и показать пути доступа к нему: <br /><pre>
+    $ qfile bash 
+    app-shells/bash (/bin/bash) 
+    app-shells/bash (/etc/bash) 
+</pre></p>
+
+
+	<p>Найти пакет(ы), которому/-ым принадлежит любой файл с именем "bash", в текущем каталоге. Кроме того, будет выведен точный номер версии: <br /><pre>
+    $ cd /bin 
+    $ qfile -e ./bash 
+    app-shells/bash-3.1_p17 (/bin/bash) 
+</pre></p>
+
+
+	<p>Найти пакет(ы), которому/-ым принадлежат библиотеки, требуемые бинарным Bash: <br /><pre>
+    $ qfile $(scanelf -nq -F%n#F /bin/bash | tr , '\n') 
+    sys-libs/ncurses (/lib/libncurses.so.5) 
+    sys-libs/glibc (/lib/libdl.so.2) 
+    sys-libs/glibc (/lib/libc.so.6) 
+</pre></p>
+
+
+	<h2 id="ОБНАРУЖЕНИЕ-НЕИСПОЛЬЗУЕМЫХ-ФАЙЛОВ">ОБНАРУЖЕНИЕ НЕИСПОЛЬЗУЕМЫХ ФАЙЛОВ<a href="#ОБНАРУЖЕНИЕ-НЕИСПОЛЬЗУЕМЫХ-ФАЙЛОВ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>qfile</strong> умеет также находить файлы, не принадлежащие ни одному пакету; для этого необходимо использовать опцию <strong>--orphans</strong>. Фактически при этом утилита осуществляет операцию, обратную своему обычному поведению: выводит список элементов, для которых не найдено соответствий в базе данных установленных пакетов. Опция <strong>--exact</strong> в данном режиме не работает, но вы можете использовать <strong>--verbose</strong>, если вы хотите видеть дополнительную информацию. Если же вы выставите опцию <strong>--quiet</strong>, вывод утилиты будет полностью отключен: команда отработает молча и вернет <em>0</em> только в том случае, если неиспользуемых файлов среди запрошенных вами нет.</p>
+
+
+	<p>Найти неиспользуемые файлы библиотек: <br /><pre>
+    $ qfile -o $(find /lib /usr/lib -name "*.la") 
+    /usr/lib/libGL.la 
+</pre></p>
+
+
+	<p>Найти библиотеки, которые нужны для работы бинарному пакету "foo", но при этом не были установлены ни одним пакетом: <br /><pre>
+    $ qfile -o $(scanelf -nq -F%n#F /путь/к/foo | tr , '\n') 
+    libinstalledmanually.so.2 
+</pre></p>
+
+
+	<h2 id="ОБРАБОТКА-ПЕРЕМЕННОЙ-ROOT">ОБРАБОТКА ПЕРЕМЕННОЙ ROOT<a href="#ОБРАБОТКА-ПЕРЕМЕННОЙ-ROOT" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Установив переменную окружения <em>ROOT</em>, вы можете указать <strong>qfile</strong>, в какой системе работать. В приведенном примере осуществляется поиск пакета-владельца файла "/bin/sh" - сначала в вашей основной системе, а затем в системе, смонтированной в каталог "/mnt": <br /><pre>
+    $ qfile -q /bin/sh 
+    app-shells/bash 
+    $ ROOT=/mnt qfile -q /bin/sh 
+    sys-apps/busybox 
+</pre></p>
+
+
+	<p>Обратите внимание, что в обеих командах аргументов запроса является "/bin/sh": по умолчанию <strong>qfile</strong> ищет по путям доступа к файлам, прописанным в базе данных пакетов адресуемой системы, и эти пути не включают <em>$ROOT</em>. Если же вы хотите искать по действительным путям доступа к файлам (включая точку монтирования), используйте опцию <strong>--root-prefix</strong> (<strong>-R</strong>): <br /><pre>
+    $ ROOT=/mnt qfile -Rq /mnt/bin/sh 
+    sys-apps/busybox 
+</pre></p>
+
+
+	<p>Кроме того, опция <strong>-R</strong> отличается от настроек по умолчанию выводом путей доступа. В предыдущем примере префикс <em>$ROOT</em> не используется, а в примере ниже - используется: <br /><pre>
+    $ ROOT=/mnt qfile sh 
+    sys-apps/busybox (/bin/sh) 
+    $ ROOT=/mnt qfile -R sh 
+    sys-apps/busybox (/mnt/bin/sh) 
+</pre></p>
+
+
+	<p>Разумеется, сказанное справедливо и для поиска неиспользуемых файлов: <br /><pre>
+    $ ROOT=/mnt qfile -o $(ls /mnt/bin/ | sed 's:^/mnt::') 
+    /bin/dostuff.sh 
+    $ ROOT=/mnt qfile -Ro /mnt/bin/* 
+    /mnt/bin/dostuff.sh 
+</pre></p>
+
+
+	<h2 id="СЧИТЫВАНИЕ-АРГУМЕНТОВ-ИЗ-ФАЙЛА-СТАНДАРТНЫЙ-ВВОД">СЧИТЫВАНИЕ АРГУМЕНТОВ ИЗ ФАЙЛА (СТАНДАРТНЫЙ ВВОД)<a href="#СЧИТЫВАНИЕ-АРГУМЕНТОВ-ИЗ-ФАЙЛА-СТАНДАРТНЫЙ-ВВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Пытаясь запустить <strong>qfile</strong> с большим количеством аргументов, вы можете столкнуться со следующей ошибкой интерпретатора: <br /><pre>
+    $ qfile -o $(find /usr/lib) 
+    bash: ./qfile: Argument list too long 
+</pre></p>
+
+
+	<p>Во избежание этого следует использовать опцию <strong>--from</strong> (<strong>-f</strong>), которая позволяет считывать список аргументов из файла: <br /><pre>
+    $ find /usr/lib &gt; ~/usr-lib.list 
+    $ qfile -o -f ~/usr-lib.list 
+    /usr/lib/libMagick-5.5.7-Q16.so.0.0.0 
+    /usr/lib/libGL.so 
+    ... 
+</pre></p>
+
+
+	<p>В каждой строке списка аргументов должен располагаться только один файл, без какого либо мусора (без пробелов в начале или в конце строки, без пропусков строки и т.п.). Стандартный формат вывода <strong>find</strong>, как правило, вполне удобен.</p>
+
+
+	<p>Но аргументы могут быть перенаправлены и со стандартного ввода, с помощью псевдо-имени файла "<strong>-</strong>"; это удобно при использовании конвейера: <br /><pre>
+    $ find /usr/lib | qfile -o -f - 
+    /usr/lib/libMagick-5.5.7-Q16.so.0.0.0 
+    /usr/lib/libGL.so 
+    ... 
+</pre></p>
+
+
+	<p>Ниже приведен пример сценария, которые ищет некоторые файлы, которые могут оказаться неиспользуемыми конфигурационными файлами, не удаленными Portage при удалении или обновлении пакетов: <br /><pre>
+    #!/bin/bash 
+    SEARCH_PATHS="$(portageq envvar CONFIG_PROTECT)" 
+    SEARCH_MASK="$(portageq envvar CONFIG_PROTECT_MASK) 
+        /etc/runlevels /etc/portage 
+        /etc/ssl/certs /etc/ssh 
+        /etc/bash_completion.d /etc/cups" 
+    for path in ${SEARCH_MASK} ; do 
+        EXCLUDE="${EXCLUDE} -not -path ${path}/*" 
+    done 
+    set -f 
+    find ${SEARCH_PATHS} ${EXCLUDE} | qfile -o -f - 
+</pre></p>
+
+
+	<p><strong>ВНИМАНИЕ:</strong> приведенный сценарий не следует рассматривать как рабочий инструмент - это не более чем набросок. Не удаляйте вслепую файлы, которые будут выведены при запуске этого сценария!</p>
+
+
+	<p>Если аргументы считываются из файла или перенаправляются со стандартного ввода, для улучшения производительности <strong>qfile</strong> обрабатывает данные блоками по 5000 элементов (будет осуществлен поиск пакетов-владельцев первых 5000 файлов, затем 5000 следующих и т.д.). В большинстве случаев это условное значение вполне удобно, но при желании вы можете изменить его с помощью опции <strong>--max-args</strong> (<strong>-m</strong>). Увеличение значения по умолчанию увеличит объем используемой оперативной памяти, но может ускорить обработку запросов с очень большим количеством аргументов; тем не менее всякое необдуманное изменение может самым негативным образом сказаться на производительности. Не вдаваясь в детали, можно сказать, что вам, скорее всего, не потребуется изменять стандартное значение.</p>
+
+
+	<h2 id="ПОИСК-КОНФЛИКТУЮЩИХ-ФАЙЛОВ">ПОИСК КОНФЛИКТУЮЩИХ ФАЙЛОВ<a href="#ПОИСК-КОНФЛИКТУЮЩИХ-ФАЙЛОВ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Последней опцией утилиты <strong>qfile</strong> является <strong>--exclude</strong> (<strong>-x</strong>). Она позволяет пропустить при поиске пакетов-владельцев файлов один определенный пакет. Эта опция принимает один аргумент: это может быть название пакета (например, <strong>bash</strong> или <strong>app-shells/bash</strong>), название пакета с указанием версии (например, <strong>bash-3.2_p9-r1</strong> или <strong>app-shells/bash-3.2_p9-r1</strong>), название пакета с указанием слота (<strong>bash:0</strong> или <strong>app-shells/bash:0</strong>). Опция полезна для выявления конфликтов между пакетами (в частности, путем сопоставления содержимого одного пакета с другими).</p>
+
+
+	<p>Так, приведенный ниже сценарий предназначен для поиска конфликтов между любыми установленными пакетами. Имейте в виду, что это займет некоторое время: <br /><pre>
+    #!/bin/bash 
+    cd $(portageq vdb_path) 
+    for pkg in *-*/*-* ; do 
+        [[ -f ${pkg}/CONTENTS ]] || continue 
+        collisions=$(sed -n 
+                '/^obj\|^sym/s:^... \([^ ]\+\).*:\1:p' 
+                ${pkg}/CONTENTS 
+            | qfile -e -x ${pkg} -f -) 
+        [[ -n ${collisions} ]] 
+            &#38;&#38; echo "&gt;&gt;&gt; ${pkg}:" 
+            &#38;&#38; echo "${collisions}" 
+    done 
+</pre></p>
+
+
+	<p>А этот сценарий может быть использован для проверки, не имеет ли бинарный пакет (.tbz2-архив) конфликтов с каким-либо из установленных пакетов, за исключением того, который он может заменить (с тем же именем и слотом), если таковой имеется: <br /><pre>
+#!/bin/bash 
+pkgver=$(basename "${1}") 
+pkgver=${pkgver%%.tbz2} 
+pn=$(qatom ${pkgver} | cut -d\  -f2) 
+tmpdir=$(mktemp -t -d) || exit 1 
+tarbz2=${tmpdir}/${pkgver}.tar.bz2 
+xpak=${tmpdir}/${pkgver}.xpak 
+qtbz2 -s "${1}" "${tarbz2}" "${xpak}" 
+categ=$(qxpak -O -x "${xpak}" CATEGORY) 
+slot=$(qxpak -O -x "${xpak}" SLOT) 
+tar tjf "${tarbz2}" 
+    | sed -e 's:^\./:/:' -e '\:/$:d' 
+    | qfile -e -f - -x ${categ}/${pn}:${slot} 
+rm -rf "${tmpdir}" 
+</pre></p>
+
+
+	<h2 id="РАЗРАБОТАНО-ПРИ-УЧАСТИИ">РАЗРАБОТАНО ПРИ УЧАСТИИ<a href="#РАЗРАБОТАНО-ПРИ-УЧАСТИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>TGL <a class="email" href="mailto:degrenier@easyconnect.fr">degrenier@easyconnect.fr</a></li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Январь 2007</p>
+</body>
+</html>

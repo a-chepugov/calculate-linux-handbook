@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>layman</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="LAYMAN">LAYMAN<a href="#LAYMAN" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+layman - утилита для управления оверлеями Gentoo 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>layman</strong> [-a] | [--add]  [ALL] | [<em>оверлей</em>]</p>
+
+
+	<p><strong>layman</strong> [-d] | [--delete]  [ALL] | [<em>оверлей</em>]</p>
+
+
+	<p><strong>layman</strong> [-s] | [--sync]  [ALL] | [<em>оверлей</em>]</p>
+
+
+	<p><strong>layman</strong> [-i] | [--info]  [ALL] | [<em>оверлей</em>]</p>
+
+
+	<p><strong>layman</strong> [-S] | [--sync-all] </p>
+
+
+	<p><strong>layman</strong> [-L] | [--list] </p>
+
+
+	<p><strong>layman</strong> [-l] | [--list-local] </p>
+
+
+	<p><strong>layman</strong> [-f] | [--fetch] </p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>layman</strong> представляет собой сценарий, позволяющий вам добавлять, удалять и обновлять оверлеи Gentoo из самых различных источников.</p>
+
+
+	<h3 id="-ВАЖНО"> ВАЖНО<a href="#-ВАЖНО" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>С помощью <strong>layman</strong> легко подключать и обновлять оверлеи Gentoo - но, увы, не сложнее и СЛОМАТЬ вашу систему.</p>
+
+
+	<p>В главном дереве портежей содержатся ебилды, за качество которых Gentoo отвечает, поскольку они все поддерживаются разработчиками проекта. Но большинство оверлеев, которые вы можете подключить с помощью <strong>layman</strong>, не дают таких гарантий, поэтому, используя их, вы подвергаете свою систему опасности. Всегда помните об этом, устанавливая сторонние ебилды.</p>
+
+
+	<p>Чтобы обеспечить безопасность системы, вам ОБЯЗАТЕЛЬНО следует ознакомиться с ебилдом, прежде чем его устанавливать.</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="-Действия"> Действия<a href="#-Действия" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Ниже перечислены доступные действия <strong>layman</strong>.</p>
+
+
+	<p><strong>-f</strong>, <strong>--fetch</strong></p>
+
+
+	<p style="padding-left:4em;">Загружает удаленный список оверлеев. Как правило, вам НЕ нужно явно указывать эту опцию: загрузка будет произведена автоматически при запуске действий sync, sync-all или list. Чтобы отказаться от автоматической загрузки, используйте опцию --nofetch.</p>
+
+
+	<p><strong>-a</strong> <em>оверлей</em>, <strong>--add</strong> <em>оверлей</em></p>
+
+
+	<p style="padding-left:4em;">Добавляет указанный оверлей из кэшированного удаленного списка к вашим локально установленным оверлеям. Чтобы добавить все оверлеи из списка, используйте параметр "ALL".</p>
+
+
+	<p><strong>-d</strong> <em>оверлей</em>, <strong>--delete</strong> <em>оверлей</em></p>
+
+
+	<p style="padding-left:4em;">Удаляет указанный оверлей из числа установленных локально в вашей системе. Чтобы удалить все оверлеи, используйте параметр "ALL".</p>
+
+
+	<p><strong>-s</strong> <em>оверлей</em>, <strong>--sync</strong> <em>оверлей</em></p>
+
+
+	<p style="padding-left:4em;">Обновляет указанный оверлей. Чтобы синхронизировать все оверлеи, используйте параметр "ALL".</p>
+
+
+	<p><strong>-i</strong> <em>оверлей</em>, <strong>--info</strong> <em>оверлей</em></p>
+
+
+	<p style="padding-left:4em;">Выводит всю доступную информацию по указанному оверлею.</p>
+
+
+	<p><strong>-S</strong>, <strong>--sync-all</strong></p>
+
+
+	<p style="padding-left:4em;">Обновляет все оверлеи. Алиас для -s ALL.</p>
+
+
+	<p><strong>-L</strong>, <strong>--list</strong></p>
+
+
+	<p style="padding-left:4em;">Выводит содержимое удаленного списка оверлеев.</p>
+
+
+	<p><strong>-l</strong>, <strong>--list-local</strong></p>
+
+
+	<p style="padding-left:4em;">Выводит список оверлеев, установленных локально.</p>
+
+
+	<h3 id="-Другие-опции"> Другие опции<a href="#-Другие-опции" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Ниже перечислены другие опции <strong>layman</strong>.</p>
+
+
+	<p><strong>-c</strong> <em>путь</em>, <strong>--config</strong> <em>путь</em></p>
+
+
+	<p style="padding-left:4em;">Устанавливает путь доступа к альтернативному конфигурационному файлу.</p>
+
+
+	<p><strong>-o</strong> <em>url</em>, <strong>--overlays</strong> <em>url</em></p>
+
+
+	<p style="padding-left:4em;">Устанавливает адреса, по которым расположены дополнительные списки оверлеев. Вы можете использовать этот флаг неоднократно, и указанные URL будут временно добавлены к списку URL в конфигурационном файле. Можно указать и локальные URL, поставив в начале пути <strong>file://</strong>. Однако они будут действительны только для данного запуска layman; чтобы добавить URL на постоянной основе, редактируйте конфигурационный файл. Данная опция полезна при тестировании.</p>
+
+
+	<p><strong>-n</strong>, <strong>--nofetch</strong></p>
+
+
+	<p style="padding-left:4em;">Не позволяет <strong>layman</strong> автоматически загружать списки удаленных оверлеев. По умолчанию <strong>layman</strong> при каждом действии sync, list или fetch загружает все удаленно размещенные списки.</p>
+
+
+	<p><strong>-k</strong>, <strong>--nocheck</strong></p>
+
+
+	<p style="padding-left:4em;">Не позволяет <strong>layman</strong> проверять удаленные списки оверлеев на наличие полного описания. По умолчанию layman отклоняет оверлеи, для которых не имеется описания или контактной информации.</p>
+
+
+	<p><strong>-q</strong>, <strong>--quiet</strong></p>
+
+
+	<p style="padding-left:4em;">Полностью отключает вывод сообщений в ходе работы <strong>layman</strong>. В таком "тихом" режиме дочерние процессы запускаются с отключенным стандартным вводом данных во избежание бесконечных интерактивных сеансов; таким образом, дочерний процесс может быть прерван в любой ситуации, требующей явных действий пользователя. Это может произойти, например, если у вас оверлей на сервере Subversion и сертификат SSL требует подтверждения вручную.</p>
+
+
+	<p><strong>-v</strong>, <strong>--verbose</strong></p>
+
+
+	<p style="padding-left:4em;">Задает для <strong>layman</strong> подробный вывод: вам будет предоставлена информация об оверлеях, которые вы можете загрузить.</p>
+
+
+	<p><strong>-N</strong>, <strong>--nocolor</strong></p>
+
+
+	<p style="padding-left:4em;">Отменяет цветной вывод для <strong>layman</strong>.</p>
+
+
+	<p><strong>-Q</strong><em>УРОВЕНЬ</em>, <strong>--quietness</strong><em>УРОВЕНЬ</em></p>
+
+
+	<p style="padding-left:4em;">Задает для <strong>layman</strong> компактный вывод. Допустимые значения уровня лежат в интервале от 0 до 4, причем 0 соответствует полному отключению информационных сообщений. При уровне ниже 3 справедливы те же ограничения, что для опции --quiet.</p>
+
+
+	<p><strong>-p</strong><em>УРОВЕНЬ</em>, <strong>--priority</strong><em>УРОВЕНЬ</em></p>
+
+
+	<p style="padding-left:4em;">Используйте эту опцию в связке с <strong>--add</strong>. Она позволяет изменить приоритет добавленного оверлея и тем самым влияет на порядок записей файла make.conf. Чем ниже выставленный уровень, тем раньше запись появится в списке. Допустимый интервал значений - от 0 до 100. По умолчанию значение принимается равным 50.</p>
+
+
+	<h2 id="НАСТРОЙКА">НАСТРОЙКА<a href="#НАСТРОЙКА" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>По умолчанию <strong>layman</strong> считывает параметры конфигурации из файла /etc/layman/layman.cfg. Всего могут быть настроены семь параметров.</p>
+
+
+	<p><strong>storage</strong></p>
+
+
+	<p style="padding-left:4em;">Каталог, который будет использован для хранения оверлеев и всех дополнительных данных, необходимых <strong>layman</strong>. По умолчанию это /var/lib/layman. layman сохраняет свои данные не в /var, а в подкаталогах /usr/portage. Было принято решение реализовать поддержку сетевых файловых систем. Если дерево портежей у вас на nfs или подобной файловой системе, и к одному репозитарию ебилдов по сети имеют доступ несколько машин, потребуется также сохранять все необходимые <strong>layman</strong> данные в дереве. Следовательно, и синхронизация оверлеев должна происходить в одном месте.</p>
+
+
+	<p><strong>cache</strong></p>
+
+
+	<p style="padding-left:4em;">Здесь <strong>layman</strong> сохраняет загруженный глобальный список оверлеев. Каталог по умолчанию - %(storage)s/cache.xml.</p>
+
+
+	<p><strong>overlays</strong></p>
+
+
+	<p style="padding-left:4em;">Здесь <strong>layman</strong> сохраняет список установленных оверлеев. Каталог по умолчанию - %(storage)s/overlays.xml.</p>
+
+
+	<p><strong>make.conf</strong></p>
+
+
+	<p style="padding-left:4em;">Это конфигурационный файл portage, который <strong>layman</strong> изменяет таким образом, чтобы portage мог обращаться к доступным оверлеям. Путь по умолчанию - %(storage)s/make.conf; можно указывать его и явно, как /etc/make.conf. Но это будет означать, что у вас есть внешняя программа, которая пытается автоматически назначить значения переменным внутри этого важнейшего конфигурационного файла. Мы полагаем, что это небезопасно, и рекомендуем иметь внешний файл минимального размера, определяющий только значение переменной PORTAGE_OVERLAYS, обращение к которому прописывается в файле /etc/make.conf. Вот почему после установки <strong>layman</strong> предлагает выполнить "echo "source /var/lib/layman/make.conf" >> /etc/make.conf".</p>
+
+
+	<p><strong>overlays</strong></p>
+
+
+	<p style="padding-left:4em;">Позволяет указать адрес URL, по которому расположен удаленный список всех доступных оверлеев; по умолчанию это <noindex><a class="external" href="http://www.gentoo.org/proj/en/overlays/repositories.xml" ref="nofollow">http://www.gentoo.org/proj/en/overlays/repositories.xml</a></noindex>. Вы можете указать здесь несколько URL (по одному адресу в строке): они будут добавлены к общему списку оверлеев. Таким образом вы можете использовать свою личную коллекцию оверлеев, отсутствующих в глобальном списке.</p>
+
+
+	<p><strong>proxy</strong></p>
+
+
+	<p style="padding-left:4em;">Если вам необходимо использовать прокси-сервер, укажите его здесь.</p>
+
+
+	<p><strong>nocheck</strong></p>
+
+
+	<p style="padding-left:4em;">Установите значение "yes", если следует запретить <strong>layman</strong> отслеживать оверлеи, не имеющие контактной информации или описания.</p>
+
+
+	<h2 id="РАБОТА-С-ОВЕРЛЕЯМИ">РАБОТА С ОВЕРЛЕЯМИ<a href="#РАБОТА-С-ОВЕРЛЕЯМИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Утилита <strong>layman</strong> призвана обеспечить удобство сопровождения оверлеев Gentoo без дополнительной настройки.</p>
+
+
+	<h3 id="-Списки-оверлеев"> Списки оверлеев<a href="#-Списки-оверлеев" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><strong>layman</strong> позволяет вам загрузить любой оверлей, не изменяя конфигурационных файлов. Для этого выполняемому сценарию необходим внешний список возможных источников данных оверлеев. По адресу <strong><noindex><a class="external" href="http://www.gentoo.org/proj/en/overlays/repositories.xml" ref="nofollow">http://www.gentoo.org/proj/en/overlays/repositories.xml</a></noindex></strong> доступен централизованный список, но ничто не мешает вам использовать или выложить для загрузки ваш собственный список оверлеев. Каталог для загрузки удаленных списков может быть также изменен с помощью опции <strong>--overlays</strong> при запуске <strong>layman</strong>.</p>
+
+
+	<p>Если вы хотите, чтобы к основному списку для layman добавили новый оверлей, направьте запрос по адресу <a class="email" href="mailto:overlays@gentoo.org">overlays@gentoo.org</a>. Разработчики Gentoo могут сами добавлять свои оверлеи к списку; доступ к нему возможен через репозитарий CVS для веб-сайта проекта Gentoo.</p>
+
+
+	<p>Вы можете также использовать несколько списков одновременно. Для этого допишите нужные вам URL в значение переменной оверлеев в вашем конфигурационном файле, по одному адресу в строке. Тогда <strong>layman</strong> установит содержимое всех списков.</p>
+
+
+	<p>Кроме того, <strong>layman</strong> допускает определение в этом списке локальных файлов. Убедитесь, что пути доступа к ним имеют стандартный для URL префикс file://.</p>
+
+
+	<p>Если для доступа в Интернет вам нужен прокси-сервер, вы можете воспользоваться соответствующей переменной в конфигурационном файле <strong>layman</strong>. Layman также принимает во внимание значение переменной окружения <strong>http_proxy</strong>, если оно определено.</p>
+
+
+	<h3 id="-Локальный-кэш"> Локальный кэш<a href="#-Локальный-кэш" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><strong>layman</strong> сохраняет локальную копию загруженного удаленного списка. По умолчанию она помещается в файл /var/lib/layman/cache.xml. Этот файл существует только в одном экземпляре и перезаписывается каждый раз, когда вы запускаете <strong>layman</strong>.</p>
+
+
+	<h3 id="-Обработка-файла-etcmakeconf"> Обработка файла /etc/make.conf<a href="#-Обработка-файла-etcmakeconf" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Поскольку <strong>layman</strong> призван автоматически включать оверлеи в вашу систему, ему должно быть доступно изменение переменной <strong>PORTDIR_OVERLAY</strong> в файле /etc/make.conf. Но именно /etc/make.conf является основным конфигурационным файлом Gentoo, жизненно важным для нормально функционирования системы, и его автоматическое изменение было бы опасно. Тем не менее вы можете разрешить это <strong>layman</strong>, установив /etc/make.conf значением переменной <strong>make_conf</strong> в конфигурационном файле.</p>
+
+
+	<p>Мы рекомендуем другое, значительно более безопасное решение: разрешить <strong>layman</strong> обращаться к внешнему файлу, содержащему лишь переменную <strong>PORTDIR_OVERLAY</strong> и вызываемому из стандартного /etc/make.conf. Для этого допишите в файле /etc/make.conf следующую строчку:</p>
+
+
+	<p>source /var/lib/layman/make.conf</p>
+
+
+	<p>Стандартные настройки layman содержатся в файле /var/lib/layman/make.conf. Если вы хотите хранить их в другом месте, измените имя этого файла.</p>
+
+
+	<p>При первом обращении файл может не существовать. В этом случае layman сам создаст его.</p>
+
+
+	<p>Нет необходимости удалять стандартную переменную <strong>PORTDIR_OVERLAY</strong> из файла make.conf. По мере необходимости layman будет добавлять новые оверлеи к существующему значению, так что все ваши прежние записи сохранятся.</p>
+
+
+	<h3 id="-Добавление-удаление-и-обновление-оверлеев"> Добавление, удаление и обновление оверлеев<a href="#-Добавление-удаление-и-обновление-оверлеев" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>После загрузки удаленного списка <strong>layman</strong> делает возможным добавление оверлеев из этого списка в вашу систему. Будет предпринята попытка загрузить оверлей. Если загрузка прошла успешно, информация об оверлее будет скопирована из кэша в список локально установленных оверлеев. Кроме того, <strong>layman</strong> при этом изменит значение переменной <strong>PORTDIR_OVERLAY</strong> таким образом, чтобы оно включало новые пути доступа к оверлеям.</p>
+
+
+	<p>Удаление оверлеев <strong>layman</strong> производит полностью, не оставляя никакого мусора.</p>
+
+
+	<p>Чтобы обновить все оверлеи под управлением <strong>layman</strong>, вы можете запустить его с опцией <strong>--sync ALL</strong> или включив <strong>--sync-all</strong>.</p>
+
+
+	<h3 id="-Вывод-списка-оверлеев"> Вывод списка оверлеев<a href="#-Вывод-списка-оверлеев" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Чтобы вывести список доступных или установленных оверлеев, запустите <strong>layman</strong> с опциями <strong>--list</strong> или <strong>--list-local</strong> соответственно.</p>
+
+
+	<p>Перед именем каждого полностью поддерживаемого оверлея в списке будет стоять зеленый астериск, а перед именем оверлея, который вам не удастся использовать, поскольку вы не располагаете необходимым функционалом - красный астериск.</p>
+
+
+	<p>По умолчанию layman отображает только полностью поддерживаемые оверлеи, опуская остальные. Кроме того, начиная с версии 1.0.7 layman выводит предупреждения об оверлеях с пустым полем описания или без контактной информации; если вы предпочитаете поведение layman, предлагавшееся в ранних версиях, используйте флаг опции k или выставьте опцию nocheck в конфигурационном файле.</p>
+
+
+	<h3 id="-Поиск-ебилдов-в-оверлеях"> Поиск ебилдов в оверлеях<a href="#-Поиск-ебилдов-в-оверлеях" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Вы можете искать ебилды, доступные в оверлеях на <strong><noindex><a class="external" href="http://overlays.gentoo.org" ref="nofollow">http://overlays.gentoo.org</a></noindex></strong>, с помощью утилиты "eix". Установите утилиту, если ее еще нет в вашей системе, и запустите <strong>eix-remote update</strong>.</p>
+
+
+	<h3 id="-Типы-оверлеев"> Типы оверлеев<a href="#-Типы-оверлеев" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>В настоящее время <strong>layman</strong> поддерживает оверлеи, экспортируемые через <strong>rsync</strong>, <strong>subversion</strong>, <strong>bzr</strong>, <strong>darcs</strong>, <strong>git</strong>, <strong>mercurial</strong> или распространяемые в виде <strong>tar</strong>-пакетов.</p>
+
+
+	<h2 id="СПИСКИ-ОВЕРЛЕЕВ">СПИСКИ ОВЕРЛЕЕВ<a href="#СПИСКИ-ОВЕРЛЕЕВ" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="-Формат-списка-оверлеев"> Формат списка оверлеев<a href="#-Формат-списка-оверлеев" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><strong>layman</strong> использует централизованный список оверлеев в формате XML. Этот файл выглядит следующим образом:</p>
+
+
+	<h3 id="-Локальное-добавление-оверлея"> Локальное добавление оверлея<a href="#-Локальное-добавление-оверлея" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Просто создайте список оверлеев в формате, описанном выше, и запустите <strong>layman</strong> с ключом <strong>-o</strong>. Перед локальным URL файла следует поставить <strong>file://</strong>.</p>
+
+
+	<h3 id="-Глобальное-добавление-оверлея"> Глобальное добавление оверлея<a href="#-Глобальное-добавление-оверлея" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Глобальный список оверлеев, к которому обращается <strong>layman</strong>, находится по адресу <noindex><a class="external" href="http://www.gentoo.org/proj/en/overlays/repositories.xml" ref="nofollow">http://www.gentoo.org/proj/en/overlays/repositories.xml</a></noindex>.</p>
+
+
+	<p>Все разработчики Gentoo имеют доступ к этому хранилищу через CVS и могут изменять состав предлагаемых оверлеев.</p>
+
+
+	<p>Если вы не участвуете в разработке Gentoo, но хотите, чтобы ваш оверлей попал в основной список, вам следует связаться с разработчиками проекта оверлеев по адресу <a class="email" href="mailto:overlays@gentoo.org">overlays@gentoo.org</a>. Кроме того, вы можете обратиться на канал <strong>#gentoo-overlays</strong> на сервере irc.freenode.net.</p>
+
+
+	<h2 id="ПРИМЕРЫ">ПРИМЕРЫ<a href="#ПРИМЕРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="-Установить-оверлей"> Установить оверлей<a href="#-Установить-оверлей" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><strong>layman -f -a wrobel</strong></p>
+
+
+	<p>К вашему списку установленных оверлеев будет добавлен оверлей <strong>wrobel</strong>.</p>
+
+
+	<h3 id="-Синхронизировать-ваши-оверлеи"> Синхронизировать ваши оверлеи<a href="#-Синхронизировать-ваши-оверлеи" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><strong>layman -s ALL</strong></p>
+
+
+	<p>Все оверлеи будут обновлены.</p>
+
+
+	<h3 id="-Выполнить-ряд-действий"> Выполнить ряд действий<a href="#-Выполнить-ряд-действий" class="wiki-anchor">&para;</a></h3>
+
+
+	<p><strong>layman -f -a wrobel -a webapps-experimental</strong></p>
+
+
+	<p>Будет получен удаленный список оверлеев и, незамедлительно после этого, добавлены два указанных оверлея.</p>
+
+
+	<h2 id="ФАЙЛЫ">ФАЙЛЫ<a href="#ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>/etc/layman/layman.cfg</p>
+
+
+	<p style="padding-left:4em;">Конфигурационный файл, содержащий настройки по умолчанию для <strong>layman</strong></p>
+
+
+	<h2 id="БАГТРЕКЕР">БАГТРЕКЕР<a href="#БАГТРЕКЕР" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Об обнаруженных ошибках сообщайте на <strong><noindex><a class="external" href="http://bugs.gentoo.org" ref="nofollow">http://bugs.gentoo.org</a></noindex></strong></p>
+
+
+	<h2 id="АВТОР">АВТОР<a href="#АВТОР" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Gunnar Wrobel &lt;<a class="email" href="mailto:wrobel@gentoo.org">wrobel@gentoo.org</a>&gt;</li>
+	</ul>
+
+
+	<p style="padding-left:4em;">Создатель утилиты.</p>
+
+
+	<h2 id="ПРАВА">ПРАВА<a href="#ПРАВА" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Copyright (c) 2005-2009 Gunnar Wrobel</p>
+
+
+	<p>Это свободное программное обеспечение. Вы можете распространять его на условиях GNU GPL v2 (<noindex><a class="external" href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html" ref="nofollow">http://www.gnu.org/licenses/old-licenses/gpl-2.0.html</a></noindex>).</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Июль 2010</p>
+</body>
+</html>

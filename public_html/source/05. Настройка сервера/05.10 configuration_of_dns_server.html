@@ -1,0 +1,725 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>configuration of dns server</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-DNS-сервера">Настройка DNS сервера<a href="#Настройка-DNS-сервера" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc right"><li class="heading1"><a href="#Настройка-DNS-сервера">Настройка DNS сервера</a></li>
+<li class="heading2"><a href="#Установка-DNS-сервиса-в-систему">Установка DNS сервиса в систему</a></li>
+<li class="heading2"><a href="#Управление-DNS-сервисом">Управление DNS сервисом</a></li>
+<li class="heading3"><a href="#Создание-DNS-зоны">Создание DNS зоны</a></li>
+<li class="heading3"><a href="#Модификация-DNS-зоны">Модификация DNS зоны</a></li>
+<li class="heading3"><a href="#Удаление-DNS-зоны">Удаление DNS зоны</a></li>
+<li class="heading3"><a href="#Удаление-MX-записей-для-зоны">Удаление MX записей для зоны</a></li>
+<li class="heading3"><a href="#Удаление-A-записи-для-зоны">Удаление A записи для зоны</a></li>
+<li class="heading3"><a href="#Создание-DNS-записи">Создание DNS записи</a></li>
+<li class="heading3"><a href="#Модификация-записи">Модификация записи</a></li>
+<li class="heading3"><a href="#Удаление-DNS-записи">Удаление DNS записи</a></li>
+<li class="heading2"><a href="#Информация-о-DNS-сервисе">Информация о DNS сервисе</a></li>
+<li class="heading3"><a href="#Информация-о-всех-зонах">Информация о всех зонах</a></li>
+<li class="heading3"><a href="#Информация-о-зоне">Информация о зоне</a></li>
+<li class="heading3"><a href="#Информация-о-записи">Информация о записи</a></li>
+<li class="heading2"><a href="#Пример-создания-зоны-и-записей-в-ней">Пример создания зоны и записей в ней</a></li>
+<li class="heading2"><a href="#Проверка-работоспособности-DNS-сервера">Проверка работоспособности DNS сервера</a></li>
+</ul>
+
+
+	<p>Настройка DNS сервера производится в несколько этапов:</p>
+
+
+	<h2 id="Установка-DNS-сервиса-в-систему">Установка DNS сервиса в систему<a href="#Установка-DNS-сервиса-в-систему" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Поддержка DNS сервиса появилась в пакете <a href="calculate-server.html" class="wiki-page new">calculate-server</a> <em>2.1.4</em>.<br />В качестве сервера используется наиболее распространенный DNS сервер BIND.</p>
+
+
+	<p>Перед установкой убедитесь что BIND скомпилирован с поддержкой <em>sdb-ldap</em>.</p>
+
+
+	<p>Перед установкой, убедитесь что у вас в системе установлен сервис ldap, если он не был установлен, выполните установку командой:<br /><pre>
+cl-setup ldap
+</pre><br />Установка dns сервиса выполняется командой<br /><pre>
+cl-setup dns
+</pre></p>
+
+
+	<p>Установка сервиса с установкой доверительных сетей:<br /><pre>
+cl-setup -a dns
+</pre></p>
+
+
+	<p>Примечание: Интервал времени жизни DNS записи - ttl, составляет 178600 секунд.</p>
+
+
+	<h2 id="Управление-DNS-сервисом">Управление DNS сервисом<a href="#Управление-DNS-сервисом" class="wiki-anchor">&para;</a></h2>
+
+
+<strong>Термины:</strong>
+	<ul>
+	<li><em>DNS зона</em> - сегмент пространства доменных имен.</li>
+		<li><em>master DNS зона</em> - основная зона хранения записей.</li>
+		<li><em>slave DNS зона</em> - подчиненная основной зона хранения записей.</li>
+		<li><em>Прямая DNS зона</em> - зона хранения записей соответствия доменного имени ip адресу.</li>
+		<li><em>Обратная DNS зона</em> - зона хранения записей соответствия ip адреса доменному имени.</li>
+		<li><em>Авторитативный сервер</em> - сервер для хранения DNS зоны, записи которого считаются авторитетными для других DNS серверов.</li>
+		<li><em>SOA запись</em> - запись описания зоны.</li>
+		<li><em>NS запись</em> - доменное имя авторитативного сервера.</li>
+		<li><em>A запись</em> - соответствие доменного имени ip адресу.</li>
+		<li><em>PTR запись</em> - соответствие ip адреса доменному имени.</li>
+		<li><em>CNAME запись</em> - соответствие одного доменного имени другому.</li>
+		<li><em>MX запись</em> - соответствие доменного имени доменным именам почтовых серверов.</li>
+	</ul>
+
+
+	<h3 id="Создание-DNS-зоны">Создание DNS зоны<a href="#Создание-DNS-зоны" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для создания DNS зоны используется команда <em>cl-dns-zoneadd</em>.</p>
+
+
+	<h4>Создание master DNS зоны</h4>
+
+
+	<p>Cоздание зоны с авторитативным сервером в создаваемой зоне.<br /><pre>
+cl-dns-zoneadd -n &lt;имя зоны&gt; --server &lt;имя авторитативного сервера&gt; --ipserver &lt;ip авторитативного сервера&gt;
+</pre><br />Cоздание зоны с авторитативным сервером в другой зоне.<br /><pre>
+cl-dns-zoneadd -n &lt;имя зоны&gt; --server &lt;имя авторитативного сервера&gt;
+</pre></p>
+
+
+	<p><strong>Примеры:</strong><br /><pre>
+cl-dns-zoneadd -n test.ru --server test.ru --ipserver 10.0.0.34
+</pre></p>
+
+
+	<ul>
+	<li>Будет создана прямая зона test.ru</li>
+		<li>Если не существует, будет создана обратная зона 0.0.10.in-addr.arpa</li>
+		<li>Будет создана в записи зоны test.ru, A запись - test.ru соответствует 10.0.0.34</li>
+		<li>Будет создана в записи зоны test.ru NS запись - test.ru</li>
+		<li>Если обратная зона 0.0.10.in-addr.arpa была создана, для нее будет создана NS запись - test.ru</li>
+	</ul>
+
+
+<pre>
+cl-dns-zoneadd -n test.ru --server ns.test.ru --ipserver 10.0.0.34
+</pre>
+
+	<ul>
+	<li>Будет создана прямая зона test.ru</li>
+		<li>Если не существует, будет создана обратная зона 0.0.10.in-addr.arpa</li>
+		<li>Будет создана в зоне test.ru, A запись - ns.test.ru соответствует 10.0.0.34</li>
+		<li>Будет создана в записи зоны test.ru NS запись - ns.test.ru</li>
+		<li>Если обратная зона 0.0.10.in-addr.arpa была создана, для нее будет создана NS запись - test.ru</li>
+		<li>В обратной зоне 0.0.10.in-addr.arpa будет создана PTR запись - 10.0.0.34 соответствует ns.test.ru, если такая запись не существует.</li>
+	</ul>
+
+
+<pre>
+cl-dns-zoneadd -n 10.0.10.0/24 --server test.ru
+</pre>
+* Будет создана обратная зона для сети 10.0.10.0/24 - 10.0.10.in-addr.arpa
+* Будет создана в записи зоны 10.0.10.in-addr.arpa NS запись - test.ru
+
+	<h4>Создание slave DNS зоны</h4>
+
+
+	<p>Создание DNS зоны.<br /><pre>
+cl-dns-zoneadd -t slave -n &lt;имя зоны&gt; --servers &lt;ip серверов хранения master зоны для этой зоны&gt;
+</pre></p>
+
+
+<strong>Примеры:</strong><br /><pre>
+cl-dns-zoneadd -t slave -n slave.ru --servers 10.0.0.3,10.0.10.5
+</pre>
+	<ul>
+	<li>Будет создана подчиненная прямая зона slave.ru, данные для которой будут получены из основной зоны slave.ru находящейся на DNS серверах с адресами 10.0.0.3, 10.0.10.5</li>
+	</ul>
+
+
+<pre>
+cl-dns-zoneadd -t slave -n 10.0.0.0/24 --servers 10.0.0.3
+</pre>
+* Будет создана подчиненная обратная зона для сети 10.0.0.0/24 - 0.0.10.in-addr.arpa, данные для которой будут получены из основной зоны 0.0.10.in-addr.arpa находящейся на DNS сервере с адресом 10.0.0.3
+
+	<h3 id="Модификация-DNS-зоны">Модификация DNS зоны<a href="#Модификация-DNS-зоны" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для модификации DNS зоны используется команда <em>cl-dns-zonemod</em>.</p>
+
+
+	<p>Модификация параметров зоны возможна только для master зоны.<br /><pre>
+cl-dns-zonemod  -n &lt;имя зоны или сеть&gt; &lt;параметры&gt;
+</pre><br />имя зоны - модификация прямой зоны</p>
+
+
+	<p>сеть - модификация обратной зоны</p>
+
+
+	<p><strong>Параметры модификации зоны:</strong></p>
+
+
+	<ul>
+	<li>--server - изменение доменного имени главного авторитативного сервера зоны</li>
+		<li>--ip - изменение или добавление в случае отсутствия, ip адреса для зоны (модификация или добавление A записи)</li>
+		<li>--mx - замена или добавление в случае отсутствия, MX записей для зоны (модификация или добавление доменных имен почтовых серверов)</li>
+		<li>--mxmod - замена одного доменного имени почтового сервера на другой в MX записи для зоны (модификация доменного имени почтового сервера)</li>
+		<li>-- email - изменение почтового адреса администратора зоны (по умолчанию root@имя_зоны)</li>
+		<li>--servers - изменение списка всех авторитативных серверов зоны (NS записи зоны)</li>
+		<li>--refresh - интервал времени после которого будет обновлена зона в секундах или число + (M - минуты, H - часы, D - дни, W - недели).<br />По умолчанию 8H - 8 часов.</li>
+		<li>--update - интервал времени после неудачного обновления зоны после которого будет сделано новое обновление зоны.<br />По умолчанию 2H - 2 часа.</li>
+		<li>--expiry - интервал времени после которого данные зоны устареют на вторичных DNS серверах в случае невозможности соединения с главным DNS сервером.<br />По умолчанию 2W - 2 недели.</li>
+		<li>--minimum - интервал времени хранения данных неудачных запросов для этой зоны.<br />По умолчанию 2H - 2 часа.</li>
+	</ul>
+
+
+	<p><strong>Примеры:</strong><br /><pre>
+cl-dns-zonemod -n test.ru --email admin@test.ru
+</pre></p>
+
+
+	<p>Модификация почтового адреса администратора зоны<br /><pre>
+cl-dns-zonemod -n test.ru --refresh 10H
+</pre></p>
+
+
+	<p>Модификация интервала времени обновления зоны (10 часов)</p>
+
+
+	<h3 id="Удаление-DNS-зоны">Удаление DNS зоны<a href="#Удаление-DNS-зоны" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для удаления DNS зоны используется команда <em>cl-dns-zonedel</em>.<br /><pre>
+cl-dns-zonedel -n &lt;имя зоны или сеть&gt;
+</pre></p>
+
+
+	<p>имя зоны - удаление прямой зоны<br />сеть - удаление обратной зоны</p>
+
+
+	<p><strong>Примеры:</strong><br /><pre>
+cl-dns-zonedel -n test.ru
+</pre></p>
+
+
+	<p>Будет удалена прямая зона test.ru<br /><pre>
+сl-dns-zonedel -n 10.0.0.0/24
+</pre></p>
+
+
+	<p>Будет удалена обратная зона 0.0.10.in-addr.arpa</p>
+
+
+	<h3 id="Удаление-MX-записей-для-зоны">Удаление MX записей для зоны<a href="#Удаление-MX-записей-для-зоны" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Пример.<br /><pre>
+cl-dns-zonedel --mx -n test.ru
+</pre></p>
+
+
+	<p>Будут удалены MX записи для зоны test.ru (доменные имена почтовых серверов для зоны)</p>
+
+
+	<h3 id="Удаление-A-записи-для-зоны">Удаление A записи для зоны<a href="#Удаление-A-записи-для-зоны" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Пример.<br /><pre>
+cl-dns-zonedel --ip -n test.ru
+</pre></p>
+
+
+	<p>Будет удалена A запись для зоны test.ru (ip зоны)</p>
+
+
+	<h3 id="Создание-DNS-записи">Создание DNS записи<a href="#Создание-DNS-записи" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для создания DNS записи используется команда <em>cl-dns-recadd</em>.</p>
+
+
+	<p>Для создания записи необходимо создание master зоны в которую будет добавлена эта запись.</p>
+
+
+	<p>Для A записи (host.test.ru --> 10.0.0.4 ) необходимо создание master прямой зоны test.ru.</p>
+
+
+	<p>Для PTR записи (10.0.0.4 --> host.test.ru) необходимо создание master обратной зоны 0.0.10.in-addr.arpa</p>
+
+
+	<h4>Cоздание A записи</h4>
+
+
+	<p><strong>Примеры создания записей:</strong></p>
+
+
+Создание A записи и PTR записи. Сначала должны быть созданы прямая и обратная зоны, test.ru и 0.0.10.in-addr.arpa.<br /><pre>
+cl-dns-recadd --host host.test.ru --ip 10.0.0.66
+</pre>
+	<ul>
+	<li>Будет создана запись в прямой зоне test.ru, host.test.ru соответствует 10.0.0.66.</li>
+		<li>Будет создана запись в обратной зоне 0.0.10.in-addr.arpa, 10.0.0.66 соответствует host.test.ru</li>
+	</ul>
+
+
+	<p>Создание только A записи. Сначала должна быть создана прямая зона test.ru.<br /><pre>
+cl-dns-recadd --autoptr off --host host.test.ru --ip 10.0.0.66
+</pre></p>
+
+
+	<ul>
+	<li>Будет создана запись в прямой зоне test.ru, host.test.ru соответствует 10.0.0.66.</li>
+	</ul>
+
+
+	<h4>Создание A записи, MX записи и PTR записи</h4>
+
+
+	<p>Пример создания A записи, MX записи и PTR записи. Сначала должны быть созданы прямая и обратная зоны, test.ru и 0.0.10.in-addr.arpa.<br /><pre>
+cl-dns-recadd --mx mail1.test.ru,mail2.test.ru --host host2.test.ru --ip 10.0.0.69
+</pre></p>
+
+
+	<ul>
+	<li>Будет создана запись в прямой зоне test.ru, host2.test.ru соответствует 10.0.0.69.</li>
+		<li>Будет создана MX запись в прямой зоне test.ru, host2.test.ru соответствует двум почтовым серверам mail1.test.ru (приоритет 10), mail2.test.ru (приоритет 20)</li>
+		<li>Будет создана запись в обратной зоне 0.0.10.in-addr.arpa, 10.0.0.69 соответствует host2.test.ru</li>
+	</ul>
+
+
+	<h4>Создание A записи и MX записи</h4>
+
+
+Пример создания A записи и MX записи. Сначала должна быть создана прямая зона test.ru.<br /><pre>
+cl-dns-recadd --autoptr off --mx mail1.test.ru,mail2.test.ru --host host2.test.ru --ip 10.0.0.69
+</pre>
+	<ul>
+	<li>Будет создана запись в прямой зоне test.ru, host2.test.ru соответствует 10.0.0.69.</li>
+		<li>Будет создана MX запись в прямой зоне test.ru, host2.test.ru соответствует двум почтовым серверам mail1.test.ru (приоритет 10), mail2.test.ru (приоритет 20)</li>
+	</ul>
+
+
+	<h4>Создание PTR записи</h4>
+
+
+Пример создания PTR записи. Сначала должна быть создана обратная зона 0.0.10.in-addr.arpa.<br /><pre>
+cl-dns-recadd -t ptr --ip 10.0.0.67 --host host.test.ru
+</pre>
+	<ul>
+	<li>Будет создана запись в обратной зоне 0.0.10.in-addr.arpa, 10.0.0.67 соответствует host.test.ru</li>
+	</ul>
+
+
+	<h4>Cоздание CNAME записи</h4>
+
+
+Пример создания CNAME записи. Сначала должна быть создана прямая зона test.ru.<br /><pre>
+cl-dns-recadd -t cname --host host.test.ru --cname calculate.ru
+</pre>
+	<ul>
+	<li>Будет создана запись в прямой зоне test.ru, host.test.ru соответствует calculate.ru</li>
+	</ul>
+
+
+	<h3 id="Модификация-записи">Модификация записи<a href="#Модификация-записи" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для модификации DNS записи используется команда <em>cl-dns-recmod</em>.</p>
+
+
+	<h4>Модификация A записи</h4>
+
+
+	<h5>Изменение доменного имени A записи и PTR записи</h5>
+
+
+	<p>Пример.<br /><pre>
+cl-dns-recmod --host newname.test.ru oldname.test.ru
+</pre><br />или<br /><pre>
+cl-dns-recmod --host newname.test.ru 10.0.0.5
+</pre><br />Изменяет доменное имя oldname.test.ru на newname.test.ru</p>
+
+
+	<p><em>Исходные записи:</em><br />A запись, oldname.test.ru соответствует 10.0.0.5<br />PTR запись, 10.0.0.5 соответствует oldname.test.ru</p>
+
+
+	<p><em>Записи после модификации:</em><br />A запись, newname.test.ru соответствует 10.0.0.5<br />PTR запись, 10.0.0.5 соответствует newname.test.ru</p>
+
+
+	<h5>Изменение ip A записи и PTR записи</h5>
+
+
+	<p><strong>Пример:</strong><br /><pre>
+cl-dns-recmod --ip 10.0.0.6 10.0.0.5
+</pre><br />или<br /><pre>
+cl-dns-recmod --ip 10.0.0.6 oldname.test.ru
+</pre><br />Изменяет ip для доменного имени oldname.test.ru</p>
+
+
+	<p><em>Исходные записи:</em><br />A запись oldname.test.ru соответствует 10.0.0.5<br />PTR запись 10.0.0.5 соответствует oldname.test.ru</p>
+
+
+	<p><em>Записи после модификации:</em><br />A запись oldname.test.ru соответствует 10.0.0.6<br />PTR запись 10.0.0.6 соответствует oldname.test.ru</p>
+
+
+	<h5>Изменение доменного имени A записи</h5>
+
+
+	<p><strong>Пример:</strong><br /><pre>
+cl-dns-recmod --automod off --host newname.test.ru oldname.test.ru
+</pre><br />или<br /><pre>
+cl-dns-recmod --automod off --host newname.test.ru 10.0.0.5
+</pre><br />Изменяет доменное имя oldname.test.ru на newname.test.ru</p>
+
+
+	<p><em>Исходная запись:</em><br />A запись, oldname.test.ru соответствует 10.0.0.5</p>
+
+
+	<p><em>Запись после модификации:</em><br />A запись, newname.test.ru соответствует 10.0.0.5</p>
+
+
+	<h5>Изменение ip A записи<br /><strong>Пример:</strong><br /><pre>
+cl-dns-recmod --automod off --ip 10.0.0.6 10.0.0.5
+</pre><br />или<br /><pre>
+cl-dns-recmod --ip 10.0.0.6 oldname.test.ru
+</pre><br />Изменяет ip на 10.0.0.6 для доменного имени oldname.test.ru</h5>
+
+
+	<p><em>Исходная запись:</em><br />A запись oldname.test.ru соответствует 10.0.0.5</p>
+
+
+	<p><em>Запись после модификации:</em><br />A запись oldname.test.ru соответствует 10.0.0.6</p>
+
+
+	<h4>Модификация PTR записи</h4>
+
+
+	<h5>Изменение доменного имени PTR записи и A записи</h5>
+
+
+	<p><strong>Пример:</strong><br /><pre>
+cl-dns-recmod -t ptr --host newname.test.ru oldname.test.ru
+</pre><br />или<br /><pre>
+cl-dns-recmod -t ptr --host newname.test.ru 10.0.0.5
+</pre><br />Изменяет доменное имя oldname.test.ru на newname.test.ru</p>
+
+
+	<p><em>Исходные записи:</em><br />PTR запись 10.0.0.5 соответствует oldname.test.ru<br />A запись oldname.test.ru соответствует 10.0.0.5</p>
+
+
+	<p><em>Записи после модификации:</em><br />PTR запись 10.0.0.5 соответствует newname.test.ru<br />A запись newname.test.ru соответствует 10.0.0.5</p>
+
+
+	<h5>Изменение ip PTR записи и A записи</h5>
+
+
+	<p><strong>Пример:</strong><br /><pre>
+cl-dns-recmod -t ptr --ip 10.0.0.6 10.0.0.5
+</pre><br />или<br /><pre>
+cl-dns-recmod --ip 10.0.0.6 oldname.test.ru
+</pre><br />Изменяет ip для доменного имени oldname.test.ru</p>
+
+
+	<p><em>Исходные записи:</em><br />PTR запись 10.0.0.5 соответствует oldname.test.ru<br />A запись oldname.test.ru соответствует 10.0.0.5</p>
+
+
+	<p><em>Записи после модификации:</em><br />PTR запись 10.0.0.6 соответствует oldname.test.ru<br />A запись oldname.test.ru соответствует 10.0.0.6</p>
+
+
+	<h5>Изменение доменного имени PTR записи</h5>
+
+
+	<p><strong>Пример:</strong><br /><pre>
+cl-dns-recmod -t ptr --automod off --host newname.test.ru oldname.test.ru
+</pre><br />или<br /><pre>
+cl-dns-recmod -t ptr --automod off --host newname.test.ru 10.0.0.5
+</pre><br />Изменяет доменное имя oldname.test.ru на newname.test.ru</p>
+
+
+	<p><em>Исходная запись:</em><br />PTR запись 10.0.0.5 соответствует oldname.test.ru</p>
+
+
+	<p><em>Запись после модификации:</em><br />PTR запись 10.0.0.5 соответствует newname.test.ru</p>
+
+
+	<h5>Изменение ip PTR записи</h5>
+
+
+	<p><strong>Пример:</strong><br /><pre>
+cl-dns-recmod -t ptr --automod off --ip 10.0.0.6 10.0.0.5
+</pre><br />или<br /><pre>
+cl-dns-recmod -t ptr --ip 10.0.0.6 oldname.test.ru
+</pre><br />Изменяет ip на 10.0.0.6 для доменного имени oldname.test.ru</p>
+
+
+	<p><em>Исходная запись:</em><br />PTR запись 10.0.0.5 соответствует oldname.test.ru</p>
+
+
+	<p><em>Запись после модификации:</em><br />PTR запись 10.0.0.6 соответствует oldname.test.ru</p>
+
+
+	<h4>Модификация CNAME записи</h4>
+
+
+	<p><strong>Пример 1:</strong><br /><pre>
+cl-dns-recmod --cname calculate.ru cn.test.ru
+</pre><br />Изменяет CNAME запись.</p>
+
+
+	<p><em>Исходная запись:</em><br />CNAME запись cn.test.ru соответствует acoola.ru</p>
+
+
+	<p><em>Запись после модификации:</em><br />CNAME запись cn.test.ru соответствует calculate.ru</p>
+
+
+	<p><strong>Пример 2:</strong><br /><pre>
+cl-dns-recmod -t cname --host cname.test.ru cn.test.ru
+</pre><br />Изменяет CNAME запись.</p>
+
+
+	<p><em>Исходная запись:</em><br />CNAME запись cn.test.ru соответствует calculate.ru</p>
+
+
+	<p><em>Запись после модификации:</em><br />CNAME запись cname.test.ru соответствует calculate.ru</p>
+
+
+	<h4>Модификация или создание MX записи</h4>
+
+
+	<p><strong>Пример 1:</strong><br /><pre>
+cl-dns-recmod --mx mail1.test.ru,mail2.test.ru test.test.ru
+</pre><br />Заменяет а в случае отсутствия добавляет MX записи в A запись test.test.ru.</p>
+
+
+	<p><em>Исходная запись:</em><br />A запись test.test.ru - MX запись mail.test.ru (приоритет 10)</p>
+
+
+	<p><em>Запись после модификации:</em><br />A запись test.test.ru - MX запись mail1.test.ru (приоритет 10), MX запись mail2.test.ru (приоритет 20)</p>
+
+
+	<p><strong>Пример 2:</strong><br /><pre>
+cl-dns-recmod --mxmod mail2.test.ru,mailnew.test.ru test.test.ru
+</pre><br />Изменяет MX запись.</p>
+
+
+	<p><em>Исходная запись:</em><br />A запись test.test.ru - MX запись mail1.test.ru (приоритет 10), MX запись mail2.test.ru (приоритет 20)</p>
+
+
+	<p><em>Запись после модификации:</em><br />A запись test.test.ru - MX запись mail1.test.ru (приоритет 10), MX запись mailnew.test.ru (приоритет 20)</p>
+
+
+	<h3 id="Удаление-DNS-записи">Удаление DNS записи<a href="#Удаление-DNS-записи" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для удаления DNS записи используется команда <em>cl-dns-recdel</em>.</p>
+
+
+	<h4>Удаление A или СNAME записи</h4>
+
+
+	<p><strong>Пример:</strong><br /><pre>
+cl-dns-recdel --host test.test.ru
+</pre><br />Будет удалена A или CNAME запись test.test.ru</p>
+
+
+	<h4>Удаление PTR записи</h4>
+
+
+	<p><strong>Пример:</strong><br /><pre>
+cl-dns-recdel --ip 10.0.0.20
+</pre><br />Будет удалена PTR запись 20.0.0.10.in-addr.arpa (10.0.0.20 соответствует test.test.ru)</p>
+
+
+	<h4>Удаление MX записи из A записи</h4>
+
+
+	<p><strong>Пример:</strong><br /><pre>
+cl-dns-recdel --mx --host test.test.ru
+</pre><br />Будет удалены все MX записи из A записи test.test.ru</p>
+
+
+	<h2 id="Информация-о-DNS-сервисе">Информация о DNS сервисе<a href="#Информация-о-DNS-сервисе" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для получения информации о записях и зонах DNS сервиса используется команда <em>cl-info</em>.</p>
+
+
+	<h3 id="Информация-о-всех-зонах">Информация о всех зонах<a href="#Информация-о-всех-зонах" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+cl-info -z dns
+</pre>
+
+	<h3 id="Информация-о-зоне">Информация о зоне<a href="#Информация-о-зоне" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+cl-info -Z &lt;имя_зоны или сеть&gt; dns
+</pre>
+
+	<p><strong>Примеры:</strong></p>
+
+
+<pre>
+cl-info -Z 10.0.0.0/24 dns
+</pre>
+
+	<p>Информация о обратной зоне 0.0.10.in-addr.arpa (сеть 10.0.0.0/24)<br /><pre>
+cl-info -Z test.ru dns
+</pre><br />Информация о прямой зоне test.ru</p>
+
+
+	<h3 id="Информация-о-записи">Информация о записи<a href="#Информация-о-записи" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+cl-info -r &lt;имя_записи или ip&gt; dns
+</pre>
+
+	<p><strong>Примеры:</strong><br /><pre>
+cl-info -r 10.0.0.5 dns
+</pre><br />Информация о записи в обратной зоне 5.0.0.10.in-addr.arpa (ip 10.0.0.5)</p>
+
+
+<pre>
+cl-info -r test.test.ru dns
+</pre><br />Информация о записи в прямой зоне test.test.ru
+
+	<h2 id="Пример-создания-зоны-и-записей-в-ней">Пример создания зоны и записей в ней<a href="#Пример-создания-зоны-и-записей-в-ней" class="wiki-anchor">&para;</a></h2>
+
+
+Необходимо создать зону test.ru а так-же доменные имена:
+	<ul>
+	<li>test.ru - ip 10.0.0.1 - WEB сервер, DNS сервер.</li>
+		<li>www.test.ru - ip 10.0.0.1 - WEB сервер (CNAME запись, тот же сервер что и test.ru)</li>
+		<li>ftp.test.ru - ip 10.0.0.5, FTP сервер</li>
+		<li>user1.test.ru - 10.0.0.100, компьютер пользователя</li>
+	</ul>
+
+
+	<p><em>Для этого выполняем следующие команды после установки сервиса DNS:</em></p>
+
+
+	<ol>
+	<li>Создаем зону test.ru с A записью (test.ru --> 10.0.0.1) и обратной зоной для сети 10.0.0.0/24<br /><pre>
+cl-dns-zoneadd -n test.ru --server test.ru --ipserver 10.0.0.1
+</pre></li>
+		<li>Cоздаем CNAME запись (www.test.ru --> test.ru)<br /><pre>
+cl-dns-recadd -t cname --host www.test.ru --cname test.ru
+</pre></li>
+		<li>Создаем A и PTR запись для FTP сервера<br /><pre>
+cl-dns-recadd --host ftp.test.ru --ip 10.0.0.5
+</pre></li>
+		<li>Создаем A и PTR запись для компьютера пользователя<br /><pre>
+cl-dns-recadd --host user1.test.ru --ip 10.0.0.100
+</pre></li>
+	</ol>
+
+
+	<h2 id="Проверка-работоспособности-DNS-сервера">Проверка работоспособности DNS сервера<a href="#Проверка-работоспособности-DNS-сервера" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для проверки работоспособности DNS сервера используйте утилиты <em>nslookup</em> или <em>host</em>.</p>
+
+
+	<p>После того как вы создали DNS зону и добавили в нее записи, нужно посмотреть существующие записи в зоне с помощью команды:<br /><pre>
+cl-info -Z имя_зоны dns
+</pre></p>
+
+
+	<p><strong>Пример:</strong></p>
+
+
+	<p>Ранее была создана зона test.ru и записи в ней.</p>
+
+
+	<p>Выполняем:<br /><pre>
+cl-info -Z domain.ru dns
+</pre></p>
+
+
+	<p><em>Результат:</em><br /><pre>
+Information about master DNS zone domain.ru                    
++----------------------------+----------------+                
+| Field                      | Value          |
++----------------------------+----------------+
+| Zone name                  | domain.ru      |
+| Master autoritative server | domain.ru      |
+| NS record                  | domain.ru.     |
+| A record                   | 10.0.0.5       |
+| Email administrator        | root@domain.ru |
+| Serial number              | 3              |
+| Refresh                    | 8H             |
+| Update                     | 2H             |
+| Expiry                     | 2W             |
+| Minimum                    | 2H             |
++----------------------------+----------------+
+(10 rows)
+
+Information about A records in master DNS zone domain.ru
++---------------------+-----------+
+| Domain              | ip        |
++---------------------+-----------+
+| localhost.domain.ru | 127.0.0.1 |
+| calculate.domain.ru | 10.0.0.54 |
++---------------------+-----------+
+(2 rows)
+</pre></p>
+
+
+	<p>Используя любую из cуществующих А записей проверьте работоспособность DNS cервера с помощью команд:<br /><pre>
+nslookup имя_A_записи ip_DNS_сервера
+</pre><br />или<br /><pre>
+host имя_A_записи ip_DNS_сервера
+</pre></p>
+
+
+	<p><strong>Пример:</strong></p>
+
+
+	<p>ip адрес проверяемого DNS сервера 10.0.0.5 информация о зоне domain.ru приведена в предыдущем примере.</p>
+
+
+	<p>Выполняем проверку при помощи <em>nslookup</em>:<br /><pre>
+nslookup calculate.domain.ru 10.0.0.5
+</pre><br />Результат при нормальной работе сервиса DNS:<br /><pre>
+Server:         10.0.0.5
+Address:        10.0.0.5#53
+
+Name:   calculate.domain.ru
+Address: 10.0.0.54
+</pre></p>
+
+
+	<p>Выполняем проверку при помощи <em>host</em>:<br /><pre>
+host calculate.domain.ru 10.0.0.5
+</pre></p>
+
+
+	<p>Результат при нормальной работе сервиса DNS:<br /><pre>
+Using domain server:
+Name: 10.0.0.5
+Address: 10.0.0.5#53
+Aliases:
+
+calculate.domain.ru has address 10.0.0.54
+</pre></p>
+</body>
+</html>

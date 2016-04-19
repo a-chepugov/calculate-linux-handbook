@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>ebump</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="ebump">ebump<a href="#ebump" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+ebump - Gentoo: сообщает номер ревизии ебилда 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>ebump [<em>опция</em>] &lt;<em>пакет[-версия]</em>&gt;</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Утилита <em>ebump</em> сообщает номер ревизии определенного ебилда и все вспомогательных файлов в каталоге files/, имеющих соответствующий суффикс версии.</p>
+
+
+	<p>По умолчанию все новые файлы ревизий добавляются в VCS.</p>
+
+
+	<p>Вы должны находиться в каталоге обрабатываемого ебилда.</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>-C</strong> <br /><strong>--no-vcs</strong></p>
+
+
+	<p style="padding-left:4em;">Не добавлять новые файлы в VCS.</p>
+
+
+	<p><strong>-V</strong> <br /><strong>--version</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести информацию о версии и выйти.</p>
+
+
+	<p><strong>-v</strong> <br /><strong>--verbose</strong></p>
+
+
+	<p style="padding-left:4em;">Выводить более подробную информацию. Эта опция может использоваться неоднократно.</p>
+
+
+	<p><strong>-q</strong> <br /><strong>--quiet</strong></p>
+
+
+	<p style="padding-left:4em;">Выводить лишь самую необходимую информацию.</p>
+
+
+	<p><strong>-a</strong> <br /><strong>--no-auxfiles</strong></p>
+
+
+	<p style="padding-left:4em;">Не обрабатывать вспомогательные файлы (files/*).</p>
+
+
+	<p><strong>-c</strong> <br /><strong>--no-changelog</strong></p>
+
+
+	<p style="padding-left:4em;">Не обновлять чейнджлоги (с помощью echangelog).</p>
+
+
+	<p><strong>-m</strong> &lt;<em>содержимое чейнджлога</em>&gt; <br /><strong>--message</strong> &lt;<em>содержимое_чейнджлога</em>&gt;</p>
+
+
+	<p style="padding-left:4em;">Позволяет задать текст, который будет добавлен в чейнджлог вместо стандартного подстановочного.</p>
+
+
+	<p><strong>-d</strong> <br /><strong>--delete-old</strong></p>
+
+
+	<p style="padding-left:4em;">Удалить из VCS более раннюю ревизию и вспомогательные файлы. Это <em>небезопасно</em>! Не используйте данную опцию, если не вполне уверены в своих действиях, так как:<br />1) более ранняя ревизия, возможно, стабильно работает на архитектуре, отличной от вашей; <br />2) удаляемые вспомогательные файлы могут понадобиться другим версиям ебилда;<br />3) как правило, новая ревизия должна пройти тестирование, прежде чем она будет помечена как стабильная.</p>
+
+
+	<h2 id="КОНФИГУРАЦИЯ">КОНФИГУРАЦИЯ<a href="#КОНФИГУРАЦИЯ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/etc/gentoolkit/ebump.conf</strong> <br /><strong>~/.gentoo/ebump.conf</strong></p>
+
+
+	<p style="padding-left:4em;">Из этих файлов <em>ebump</em> черпает настройки. <br /><strong>opt_verbosity</strong> (значение по умолчанию <em>1</em>) - степень подробности выводимой информации, от 0 до 10 <br /><strong>opt_add_changelog</strong> (значение по умолчанию <em>y</em>) - добавить запись в чейнджлог <br /><strong>opt_add_vcs</strong> (значение по умолчанию <em>y</em>) - добавить новые файлы в VCS<br /><strong>opt_bump_auxfiles</strong> (значение по умолчанию <em>y</em>) - обновить вспомогательные файлы в каталоге files/ <br /><strong>opt_delete_old</strong> (значение по умолчанию <em>n</em>) - удалить прежнюю ревизию (ОСТОРОЖНО!) <br /><strong>opt_commitmessage</strong> (значение по умолчанию <em>""</em>) - сообщение чейнджлога по умолчанию</p>
+
+
+	<p><strong>(УСТАРЕЛО)</strong> <br /><strong>~/.gentoo/gentool-env</strong> Из этого файла <em>ebump</em> берет переменные окружения <strong>AUTHORNAME</strong> и <strong>AUTHOREMAIL</strong>, которые используются для создания корректных записей ChangeLog.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Другие утилиты из комплекта <em>app-portage/gentoolkit-dev</em>, в частности, <strong><a href=".html" class="wiki-page">echangelog</a></strong>(1) и <strong><a href=".html" class="wiki-page">ekeyword</a></strong>(1).</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Karl Trygve Kalleberg &lt;<a class="email" href="mailto:karltk@gentoo.org">karltk@gentoo.org</a>&gt; </li>
+		<li>Christian Ruppert &lt;<a class="email" href="mailto:idl0r@gentoo.org">idl0r@gentoo.org</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>0.1.1</p>
+</body>
+</html>

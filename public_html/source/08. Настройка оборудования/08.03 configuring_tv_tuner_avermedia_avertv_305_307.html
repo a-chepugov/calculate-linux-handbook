@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>configuring tv tuner avermedia avertv 305 307</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-TV-тюнера-Avermedia-AVerTV-305307">Настройка TV тюнера Avermedia AVerTV 305/307<a href="#Настройка-TV-тюнера-Avermedia-AVerTV-305307" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Настройка-TV-тюнера-Avermedia-AVerTV-305307">Настройка TV тюнера Avermedia AVerTV 305/307</a></li>
+<li class="heading2"><a href="#Проверка-наличия-необходимых-модулей">Проверка наличия необходимых модулей</a></li>
+<li class="heading2"><a href="#Загрузка-модулей">Загрузка модулей</a></li>
+<li class="heading2"><a href="#tvtime">tvtime</a></li>
+<li class="heading3"><a href="#Телевизионный-стандарт-SECAM">Телевизионный стандарт SECAM</a></li>
+<li class="heading3"><a href="#Телевизионный-стандарт-PAL">Телевизионный стандарт PAL</a></li>
+<li class="heading3"><a href="#Настройка-просмотра-для-двух-стандартов-PALSECAM">Настройка просмотра для двух стандартов PAL,SECAM</a></li>
+<li class="heading2"><a href="#mplayer">mplayer</a></li>
+<li class="heading3"><a href="#Просмотр">Просмотр</a></li>
+<li class="heading3"><a href="#Запись">Запись</a></li>
+</ul>
+
+
+	<h2 id="Проверка-наличия-необходимых-модулей">Проверка наличия необходимых модулей<a href="#Проверка-наличия-необходимых-модулей" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Необходимо убедиться, что в системе присутствуют следующие модули: "tuner", "saa7134", "tda9887".</p>
+
+
+	<p>Проверяем наличие модулей:<br /><pre>
+modprobe tuner
+modprobe saa7134
+modprobe tda9887
+</pre></p>
+
+
+	<h2 id="Загрузка-модулей">Загрузка модулей<a href="#Загрузка-модулей" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В каталоге <code>/etc/modules.d</code> необходимо создать любой файл, например saa7134:<br /><pre>
+touch /etc/modules.d/saa7134
+</pre></p>
+
+
+	<p>Содежимое файла saa7134:<br /><pre>
+alias char-major-81 videodev
+alias char-major-81-0 saa7134
+options saa7134 card=102 tuner=38 secam=dk i2c_scan=1 alsa=1
+options tuner secam=d
+options tda9887 port2=0 port1=1
+</pre></p>
+
+
+	<p>Для загрузки модулей при запуске системы нужно выполнить:<br /><pre>
+update-modules --force
+</pre></p>
+
+
+	<p>Перезагружаемся.</p>
+
+
+	<h2 id="tvtime">tvtime<a href="#tvtime" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Устанавливаем <code>tvtime</code>:<br /><pre>
+emerge media-tv/tvtime
+</pre></p>
+
+
+	<h3 id="Телевизионный-стандарт-SECAM">Телевизионный стандарт SECAM<a href="#Телевизионный-стандарт-SECAM" class="wiki-anchor">&para;</a></h3>
+
+
+	<h4>Первый вариант настройки</h4>
+
+
+	<p>Выбираем tv-стандарт SECAM, таблицу каналов RUSSIA и выполняем поиск (команды в меню <em>tvtime</em>).</p>
+
+
+	<h4>Второй вариант настройки</h4>
+
+
+	<ol>
+	<li>Выбираем tv-стандарт SECAM, таблицу каналов CUSTOM.</li>
+		<li>Выходим из tvtime.</li>
+		<li>Выполняем:<br /><pre>
+tvtime-scanner
+tvtime
+</pre></li>
+	</ol>
+
+
+	<h3 id="Телевизионный-стандарт-PAL">Телевизионный стандарт PAL<a href="#Телевизионный-стандарт-PAL" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Аналогично SECAM, только меняем стандарт на PAL.</p>
+
+
+	<h3 id="Настройка-просмотра-для-двух-стандартов-PALSECAM">Настройка просмотра для двух стандартов PAL,SECAM<a href="#Настройка-просмотра-для-двух-стандартов-PALSECAM" class="wiki-anchor">&para;</a></h3>
+
+
+	<h4>Первый вариант</h4>
+
+
+	<ol>
+	<li>Выбираем tv стандарт SECAM, таблицу каналов RUSSIA и выполняем поиск.</li>
+		<li>Выбираем tv стандарт PAL, рестартуем выполняем поиск.</li>
+		<li>Редактируем файл <code>~/.tvtime/stationlist.xml</code>, там будет 2 раздела.<br />Для режима SECAM перечислены все каналы и для каждого своя строка с настройками.<br />Параметр active говорит о том, что канал настроен (есть сигнал - 1, нет сигнала - 0).<br />Ниже - тоже самое для режима PAL с его активными каналами. <br />Для каждого канала есть параметр norm=SECAM или PAL соответственно.</li>
+		<li>В раздел SECAM добавляем, где нужно, каналы из раздела PAL с active=1, norm=PAL.</li>
+		<li>Выбираем tv-стандарт SECAM, рестартуем.</li>
+	</ol>
+
+
+	<h4>Второй вариант</h4>
+
+
+	<p>Выполнить:<br /><pre>
+tvtime-scanner -n PAL &#38;&#38; tvtime-scanner -n SECAM
+</pre></p>
+
+
+	<p>Отредактировать файл <code>~/.tvtime/stationlist.xml</code> аналогично первому варианту (подразделы с 3 по 5)</p>
+
+
+	<h2 id="mplayer">mplayer<a href="#mplayer" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Просмотр">Просмотр<a href="#Просмотр" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+mplayer tv:// -tv device=/dev/video0:driver=v4l2:freq=144.25:normid=17
+</pre><br />где:
+* freq=144.25 - частота; можно посмотреть после сканирования в <code>~/.tvtime/stationlist.xml</code>
+* normid=17 - SECAM, телевизионный стандарт (при запуске <code>mplayer</code> показывает доступные стандарты и номера normid)
+
+	<h3 id="Запись">Запись<a href="#Запись" class="wiki-anchor">&para;</a></h3>
+
+
+<pre>
+mencoder tv:// -tv device=/dev/video0:driver=v4l2:freq=144.25:normid=17 -ffourcc XVID  -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=1800:v4mv -vf pp=fd -audio-demuxer 20  -oac mp3lame -lameopts cbr:preset=128:mode=1 -o ./Video.avi
+</pre>
+
+	<p>ffourcc XVID - совместимость с бытовыми плеерами и windows</p>
+
+
+	<p><em>Видеокодек mpeg4</em><br />Битрейт видео vbitrate=1800. Чем больше, тем качественней запись (больше загрузка  процессора). Значение больше 2500 имеет смысл только для очень качественного оригинала. <br />Бытовые плееры поддерживают примерно до 2000.</p>
+
+
+	<p><em>Удаление гребенки -vf pp=fd</em><br />Кодек звука mp3 (должен быть установлен аудиокодек <em>lame</em>)<br />Битрейт звука 128</p>
+
+
+	<p>Пишет в директорию, из которой запущен, файл <code>./Video.avi</code>.</p>
+</body>
+</html>

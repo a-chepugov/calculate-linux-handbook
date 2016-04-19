@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>qgrep</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="qgrep">qgrep<a href="#qgrep" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+qgrep - поиск по шаблону в ебилдах 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>qgrep</strong> <em>&lt;различные аргументы&gt;</em></p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Доступные опции: <strong>-[IiHNclLexJEsS:B:A:vqChV]</strong></p>
+
+
+	<p><strong>-I</strong>, <strong>--invert-match</strong></p>
+
+
+	<p style="padding-left:4em;">* Выбрать все строки, кроме совпадающих с шаблоном</p>
+
+
+	<p><strong>-i</strong>, <strong>--ignore-case</strong></p>
+
+
+	<p style="padding-left:4em;">* Игнорировать регистр</p>
+
+
+	<p><strong>-H</strong>, <strong>--with-filename</strong></p>
+
+
+	<p style="padding-left:4em;">* Выводить имя файла при каждом совпадении</p>
+
+
+	<p><strong>-N</strong>, <strong>--with-name</strong></p>
+
+
+	<p style="padding-left:4em;">* Выводить имя пакета или екласса при каждом совпадении</p>
+
+
+	<p><strong>-c</strong>, <strong>--count</strong></p>
+
+
+	<p style="padding-left:4em;">* Выводить только количество строк на ФАЙЛ, совпадающих с шаблоном</p>
+
+
+	<p><strong>-l</strong>, <strong>--list</strong></p>
+
+
+	<p style="padding-left:4em;">* Выводить только имена ФАЙЛов, совпадающие с шаблоном</p>
+
+
+	<p><strong>-L</strong>, <strong>--invert-list</strong></p>
+
+
+	<p style="padding-left:4em;">* Выводить только имена ФАЙЛов, не совпадающие с шаблоном</p>
+
+
+	<p><strong>-e</strong>, <strong>--regexp</strong></p>
+
+
+	<p style="padding-left:4em;">* Использовать как ШАБЛОН регулярное выражение</p>
+
+
+	<p><strong>-x</strong>, <strong>--extended</strong></p>
+
+
+	<p style="padding-left:4em;">* Использовать как ШАБЛОН расширенное регулярное выражение</p>
+
+
+	<p><strong>-J</strong>, <strong>--installed</strong></p>
+
+
+	<p style="padding-left:4em;">* Искать не в дереве, а в установленных ебилдах</p>
+
+
+	<p><strong>-E</strong>, <strong>--eclass</strong></p>
+
+
+	<p style="padding-left:4em;">* Искать не в ебилдах, а в еклассах</p>
+
+
+	<p><strong>-s</strong>, <strong>--skip-comments</strong></p>
+
+
+	<p style="padding-left:4em;">* Пропускать строки комментариев</p>
+
+
+	<p><strong>-S</strong>, <strong>--skip</strong> &lt;аргумент&gt;</p>
+
+
+	<p style="padding-left:4em;">  * Пропускать строки, совпадающие с шаблоном в &lt;аргументе&gt;</p>
+
+
+	<p><strong>-B</strong>, <strong>--before</strong> &lt;аргумент&gt;</p>
+
+
+	<p style="padding-left:4em;">  * Выводить строки, содержащие &lt;аргумент&gt; в начале</p>
+
+
+	<p><strong>-A</strong>, <strong>--after</strong> &lt;аргумент&gt;</p>
+
+
+	<p style="padding-left:4em;">  * Выводить строки, содержащие &lt;аргумент&gt; в конце</p>
+
+
+	<p><strong>-v</strong>, <strong>--verbose</strong></p>
+
+
+	<p style="padding-left:4em;">* Предлагать подробный вывод</p>
+
+
+	<p><strong>-q</strong>, <strong>--quiet</strong></p>
+
+
+	<p style="padding-left:4em;">* Предлагать компактный вывод - в частности, не выводить предупреждения</p>
+
+
+	<p><strong>-C</strong>, <strong>--nocolor</strong></p>
+
+
+	<p style="padding-left:4em;">* Не использовать цветной вывод</p>
+
+
+	<p><strong>-h</strong>, <strong>--help</strong></p>
+
+
+	<p style="padding-left:4em;">* Вывести эту справку и выйти</p>
+
+
+	<p><strong>-V</strong>, <strong>--version</strong></p>
+
+
+	<p style="padding-left:4em;">* Вывести версию программы и выйти</p>
+
+
+	<p>$Id: qgrep.1,v 1.17 2007/04/05 18:25:27 solar Exp $</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Апрель 2007</p>
+</body>
+</html>

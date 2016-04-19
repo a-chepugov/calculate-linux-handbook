@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>software modem configuration</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-софтового-модема">Настройка софтового модема<a href="#Настройка-софтового-модема" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Поддержка">Поддержка<a href="#Поддержка" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Большинство софтовых модемов поддерживается в <a href="Calculate Linux.html" class="wiki-page">Calculate Linux</a>. Программа установки не определяет наличие в компьютере модема, его нужно активировать самостоятельно.</p>
+
+
+	<h2 id="Настройка">Настройка<a href="#Настройка" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для запуска демона модема выполните:<br /><pre>
+/etc/init.d/slmodem start
+</pre></p>
+
+
+	<p>Если программа успешно определит модем, вы найдете новое устройство <em>/dev/ttySL0</em>. В противном случае можно попробовать изменить параметр <em>HW_SLOT</em> файла <code>/etc/conf.d/slmodem</code>, изменив его значение на <em>"modem:1"</em>, и выполнить:<br /><pre>
+/etc/init.d/slmodem restart
+</pre></p>
+
+
+	<h2 id="Автозапуск-демона">Автозапуск демона<a href="#Автозапуск-демона" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для добавления демона в автозагрузку выполните:<br /><pre>
+/sbin/rc-update add slmodem default
+</pre></p>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>using ebuild</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Использование-ebuild">Использование ebuild<a href="#Использование-ebuild" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Использование-ebuild">Использование ebuild</a></li>
+<li class="heading2"><a href="#emerge-и-ebuild">emerge и ebuild</a></li>
+<li class="heading2"><a href="#Ручная-установка-программ">Ручная установка программ</a></li>
+<li class="heading3"><a href="#Извлечение-исходных-кодов-и-проверка-контрольных-сумм">Извлечение исходных кодов и проверка контрольных сумм</a></li>
+<li class="heading3"><a href="#Распаковка-исходных-кодов">Распаковка исходных кодов</a></li>
+<li class="heading3"><a href="#Компиляция-исходных-кодов">Компиляция исходных кодов</a></li>
+<li class="heading3"><a href="#Установка-файлов-во-временное-место">Установка файлов во временное место</a></li>
+<li class="heading3"><a href="#Помещение-файлов-в-рабочую-файловую-систему">Помещение файлов в рабочую файловую систему</a></li>
+<li class="heading3"><a href="#Очистка-временного-каталога">Очистка временного каталога</a></li>
+<li class="heading2"><a href="#Дополнительные-возможности-Ebuild">Дополнительные возможности Ebuild</a></li>
+<li class="heading3"><a href="#Запуск-всех-команд-установки">Запуск всех команд установки</a></li>
+<li class="heading3"><a href="#Выполнение-действий-по-настройке">Выполнение действий по настройке</a></li>
+<li class="heading3"><a href="#Сборка-пакета-RPM">Сборка пакета (RPM)</a></li>
+<li class="heading2"><a href="#Дополнительная-информация">Дополнительная информация</a></li>
+</ul>
+
+
+	<h2 id="emerge-и-ebuild">emerge и ebuild<a href="#emerge-и-ebuild" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Программа <span class="bluecode" >ebuild</span> — это низкоуровневый интерфейс системы Portage. С ее помощью можно выполнять определенные действия над заданными сборками ebuild. Например, вы можете самостоятельно выполнить отдельные этапы установки.</p>
+
+
+	<p>Программа ebuild предназначена в основном для разработчиков, поэтому более подробная информация находится в <noindex><a href="http://www.gentoo.org/proj/en/devrel/handbook/handbook.xml" rel="nofollow" target="_blank" class="external">настольной книге разработчика</a></noindex> (англ.). Однако, мы расскажем, какие экземпляры ebuild вызываются системой Portage на разных этапах установки, и как выполнить пост-конфигурационные шаги, которые допускаются некоторыми пакетами.</p>
+
+
+	<h2 id="Ручная-установка-программ">Ручная установка программ<a href="#Ручная-установка-программ" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Извлечение-исходных-кодов-и-проверка-контрольных-сумм">Извлечение исходных кодов и проверка контрольных сумм<a href="#Извлечение-исходных-кодов-и-проверка-контрольных-сумм" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Каждый раз, когда вы вызываете <span class="bluecode" >ebuild</span> для какого-то ebuild-файла, проверяется совпадение контрольной суммы всех задействованных файлов с указаной в файлах <code>Manifest</code> или <code>files/digest-&lt;имя&gt;-&lt;версия&gt;</code>. Проверка выполняется после загрузки исходных кодов.</p>
+
+
+	<p>Чтобы загрузить исходные коды с помощью <span class="bluecode" >ebuild</span>, запустите:</p>
+
+
+	<pre><code>ebuild путь/к/файлу-ebuild fetch</code></pre>
+
+
+	<p>Если контрольная сумма md5 сборочного файла не совпадает с той, что указана в файле <code>Manifest</code>, или же один из загруженных файлов не совпадает с описанием в файле <code>files/digest&lt;пакет&gt;</code>, вы получите сообщение об ошибке, похожее на такое:</p>
+
+
+<pre>
+!!! File is corrupt or incomplete. (Digests do not match)
+&gt;&gt;&gt; our recorded digest: db20421ce35e8e54346e3ef19e60e4ee
+&gt;&gt;&gt;  your file's digest: f10392b7c0b2bbc463ad09642606a7d6
+
+(!!! Файл поврежден или усечен. (Контрольные суммы не совпадают) )
+</pre>
+
+	<p>На следующей строке указывается проблемный файл.</p>
+
+
+	<p>Если вы абсолютно уверены, что загруженные исходные коды и сам сборочный файл ebuild именно те, что вам нужны, можете пересоздать файлы <code>Manifest</code> и <code>digest-&lt;пакетe&gt;</code>, используя фукцию digest программы <span class="bluecode" >ebuild</span>. Пример создания новых файлов Manifest и digest:</p>
+
+
+	<pre><code>ebuild путь/к/файлу-ebuild digest</code></pre>
+
+
+	<h3 id="Распаковка-исходных-кодов">Распаковка исходных кодов<a href="#Распаковка-исходных-кодов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Чтобы рапаковать исходные коды в <code>/var/tmp/portage</code> (или любой другой каталог, указанный в <a href="/etc/make.conf.html" class="wiki-page">/etc/make.conf</a>), запустите функцию unpack программы <span class="bluecode" >ebuild</span>. Пример распаковки исходных кодов:</p>
+
+
+	<pre><code>ebuild путь/к/файлу-ebuild unpack</code></pre>
+
+
+	<p>Эта команда выполнит функцию src_unpack() программы ebuild (которая по умолчанию просто выполняет распаковку, если функция src_unpack() не определена). Все необходимые заплатки накладываются также на этом этапе.</p>
+
+
+	<h3 id="Компиляция-исходных-кодов">Компиляция исходных кодов<a href="#Компиляция-исходных-кодов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Следующий шаг в процессе установки — компиляция исходных кодов. Для этого выполняется функция src_compile() вашего сборочного файла. Если нужно, заодно выполняется конфигурация. Пример компиляции исходных кодов:</p>
+
+
+	<pre><code>ebuild путь/к/файлу-ebuild compile</code></pre>
+
+
+	<p>Если вы хотите изменить инструкции компиляции, советуем отредактировать функцию src_compile(). Однако, вы можете также обмануть Portage, заставив ее поверить, что программа <span class="bluecode" >ebuild</span> уже завершила компиляцию. Запустите нужные команды самостоятельно и создайте пустой файл <code>.compile</code> в рабочем каталоге:</p>
+
+
+	<pre><code>touch .compiled</code></pre>
+
+
+	<h3 id="Установка-файлов-во-временное-место">Установка файлов во временное место<a href="#Установка-файлов-во-временное-место" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Следующий шаг — установка всех необходимых файлов во временный каталог. В него помещаются все файлы, подлежащие включению в рабочую файловую систему. Вы можете выполнить этот этап, запустив функцию установки программы <span class="bluecode" >ebuild</span>, которая исполняет функцию src_install() сборочного файла:</p>
+
+
+	<pre><code>ebuild путь/к/файлу-ebuild install</code></pre>
+
+
+	<h3 id="Помещение-файлов-в-рабочую-файловую-систему">Помещение файлов в рабочую файловую систему<a href="#Помещение-файлов-в-рабочую-файловую-систему" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Последний этап — перенос всех файлов в рабочую файловую систему и их регистрация в системе Portage. В <span class="bluecode" >ebuild</span> этот этап называется "qmerge", и включает следующие действия:</p>
+
+
+	<ul>
+	<li>выполняется функция pkg_preinst(), если она определена</li>
+		<li>все файлы копируются в рабочую файловую систему</li>
+		<li>файлы регистрируются в системе Portage</li>
+		<li>выполняется функция pkg_postinst(), если она определена</li>
+	</ul>
+
+
+	<p>Запустите функцию qmerge программы <span class="bluecode" >ebuild</span>, чтобы выполнить этот этап:</p>
+
+
+	<pre><code>ebuild путь/к/файлу-ebuild qmerge</code></pre>
+
+
+	<h3 id="Очистка-временного-каталога">Очистка временного каталога<a href="#Очистка-временного-каталога" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Наконец, можно очистить временный каталог, используя команду clean программы <span class="bluecode" >ebuild</span>:</p>
+
+
+	<pre><code>ebuild путь/к/файлу-ebuild clean</code></pre>
+
+
+	<h2 id="Дополнительные-возможности-Ebuild">Дополнительные возможности Ebuild<a href="#Дополнительные-возможности-Ebuild" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Запуск-всех-команд-установки">Запуск всех команд установки<a href="#Запуск-всех-команд-установки" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>С помощью функции merge программы <span class="bluecode" >ebuild</span>, можно запустить команды извлечения, распаковки, компиляции, установки и помещения за один раз:</p>
+
+
+	<pre><code>ebuild путь/к/файлу-ebuild merge</code></pre>
+
+
+	<h3 id="Выполнение-действий-по-настройке">Выполнение действий по настройке<a href="#Выполнение-действий-по-настройке" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>В некоторых приложениях содержатся инструкции по дальнейшей настройке установленного пакета. Эти инструкции могут потребовать участия пользователя, и, следовательно, не выполняться автоматически. Для запуска шагов настройки, указанных в необязательной функции config() сборочного файла, используйте команду config программы <span class="bluecode" >ebuild</span>. Пример настройки пакета:</p>
+
+
+	<pre><code>ebuild путь/к/файлу-ebuild config</code></pre>
+
+
+	<h3 id="Сборка-пакета-RPM">Сборка пакета (RPM)<a href="#Сборка-пакета-RPM" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Вы можете попросить Portage создать двоичный пакет или даже RPM из вашего сборочного файла, воспользовавшись командами package и rpm, соответственно. Эти команды несколько различаются:</p>
+
+
+	<ul>
+	<li>команда package во многом похожа на merge, выполняя все необходимые шаги (извлечение, распаковку, компиляцию, установку) перед созданием пакета</li>
+		<li>команда rpm собирает пакет RPM из файлов созданных после запуска окончания функции install программы ebuild</li>
+	</ul>
+
+
+	<p>Пример создания пакетов:</p>
+
+
+<pre>
+#(cоздание двоичного пакета, совместимого с Portage)
+ebuild путь/к/файлу-ebuild package
+
+#(создание пакета RPM)
+ebuild путь/к/файлу-ebuild rpm
+</pre>
+
+	<p>Созданный RPM, однако, не будет содержать информацию о зависимостях из сборочного файла ebuild.</p>
+
+
+	<h2 id="Дополнительная-информация">Дополнительная информация<a href="#Дополнительная-информация" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>За дополнительными сведениями о системе Portage, программе ebuild и сценариях ebuild обращайтесь к следующим страницам справки man:</p>
+
+
+<pre>
+man portage    (сама система Portage)
+man emerge     (команда emerge)
+man ebuild     (команда ebuild)
+man 5 ebuild   (синтаксис файлов ebuild)
+</pre>
+
+	<p>Кроме того, дополнительные сведения, относящиеся к разработке, находятся в <noindex><a href="http://www.gentoo.org/proj/en/devrel/handbook/handbook.xml" rel="nofollow" target="_blank" class="external">настольной книге разработчика</a></noindex> (англ.).</p>
+</body>
+</html>

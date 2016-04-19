@@ -1,0 +1,821 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>equery</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="EQUERY">EQUERY<a href="#EQUERY" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+equery - вывод различных данных о пакетах Gentoo 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>equery </strong><em>[глобальные опции] </em><strong>module </strong><em>[локальные опции]</em></p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>Equery</strong> представляет собой набор модулей для вывода актуальной информации о пакетах, файлах и USE-флагах Gentoo.</p>
+
+
+	<h2 id="ГЛОБАЛЬНЫЕ-ОПЦИИ">ГЛОБАЛЬНЫЕ ОПЦИИ<a href="#ГЛОБАЛЬНЫЕ-ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>-h, --help</strong></p>
+
+
+	<p style="padding-left:4em;">Выводить справочное сообщение.</p>
+
+
+	<p><strong>-q, --quiet</strong></p>
+
+
+	<p style="padding-left:4em;">По возможности уменьшить объем выводимой информации. Для некоторых модулей использование этой опции может ускорить вывод.</p>
+
+
+	<p><strong>-C, --no-color</strong></p>
+
+
+	<p style="padding-left:4em;">Не использовать цветной вывод.</p>
+
+
+	<p><strong>-N, --no-pipe</strong></p>
+
+
+	<p style="padding-left:4em;">Отключить автоматическое обнаружение каналов. Используйте эту опцию, если не хотите, чтобы <strong>equery</strong> выяснял, идет ли вывод на экран или перенаправляется другой программе, и соответственно изменял настройки цвета и степени подробности выводимой информации.</p>
+
+
+	<p><strong>-V, --version</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести версию <strong>Gentoolkit</strong>. Пожалуйста, включайте вывод equery с данной опцией в сообщения об ошибках (см. ниже раздел <strong>ОШИБКИ</strong>).</p>
+
+
+	<h2 id="МОДУЛИ">МОДУЛИ<a href="#МОДУЛИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>Equery</strong> использует модульную систему. Каждый модуль имеет как полное, так и сокращенное имя. В приведенном ниже списке используются обозначения вида "<strong>module (m)</strong>", где <em>m</em> - сокращенное имя, а <em>module</em>, соответственно - полное.</p>
+
+
+	<p>Вы можете просмотреть <strong>справку</strong> по интересующему вас модулю, используя опцию <strong>-h</strong>, <strong>--help </strong> либо глобально (между <strong>equery</strong> и именем модуля) или локально(после имени модуля).</p>
+
+
+	<h3 id="-belongs-b-ОПЦИИ-ФАЙЛ"> belongs (b) [ОПЦИИ]  ФАЙЛ<a href="#-belongs-b-ОПЦИИ-ФАЙЛ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Выводит пакет, которому принадлежит <em>ФАЙЛ</em>.</p>
+
+
+	<p><strong>Примечание:</strong> как правило, <em>ФАЙЛ</em> принадлежит только одному пакету. Если один и тот же файл принадлежит нескольким пакетам одновременно, сообщите об этом разработчикам (см. ниже раздел <strong>ОШИБКИ</strong>).</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-f, --full-regex</strong></p>
+
+
+	<p style="padding-left:4em;">Запрос представляет собой регулярное выражение.</p>
+
+
+	<p><strong>-e, --early-out</strong></p>
+
+
+	<p style="padding-left:4em;">Завершить работу после первого найденного соответствия. Как правило, это безопасно и полезно при поиске пакета-владельца одного файла.</p>
+
+
+	<p><strong>-n, --name-only</strong></p>
+
+
+	<p style="padding-left:4em;">Не выводить версию.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+equery belongs --early-out /usr/bin/euse
+
+	<p style="padding-left:4em;">Выяснить, какой пакет установил команду.</p>
+
+
+emerge -p $(equery -q belongs -nf '^/usr/bin/g?vim.*')
+
+	<p style="padding-left:4em;">Заставить <strong>emerge</strong> переустановить или обновить все пакеты, которые установили файл, совпадающий с шаблоном.</p>
+
+
+	<h3 id="-changes-c-ОПЦИИ-ПАКЕТ"> changes (c) [ОПЦИИ]  ПАКЕТ<a href="#-changes-c-ОПЦИИ-ПАКЕТ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Отобразить запись Gentoo ChangeLog для последней доступной для установки версии <em>ПАКЕТА</em>.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-l, --latest</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести только последнюю запись чейнджлога. Зачастую, если не было мажорного обновления версии, изменения фиксируются в чейнджлоге без заголовка версии; используйте эту опцию для вывода подобных записей.</p>
+
+
+	<p><strong>-f, --full</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести полный ChangeLog. <br /><strong>Совет</strong>: Используйте конвейер (|) для постраничного вывода, например, с помощью 'less'.</p>
+
+
+	<p><strong>--limit=</strong><em>ЧИСЛО</em></p>
+
+
+	<p style="padding-left:4em;">Ограничить <em>ЧИСЛО</em> выводимых записей. Используйте эту опцию в связке с <strong>--full</strong>. <strong>--limit=3</strong> выведет три последних записи.</p>
+
+
+	<p><strong>--from=</strong><em>ВЕРСИЯ</em></p>
+
+
+	<p style="padding-left:4em;">Установить <em>ВЕРСИю</em>, начиная с которой отображать. Самостоятельное использование этой опции аналогично передаче модулю <strong>changes</strong> атому пакета на заданном интервале, например, '>=foo/bar-1.5'. Опцию можно использовать вместе с <strong>--to</strong>, если требуется задать более сложные условия поиска.</p>
+
+
+	<p><strong>--to=</strong><em>VER</em></p>
+
+
+	<p style="padding-left:4em;">Установить <em>ВЕРСИю</em>, до которой отображать. (См. <strong>--from</strong>)</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+	<p>equery changes portage</p>
+
+
+	<p style="padding-left:4em;">Выводить запись в чейнджлоге Gentoo для последней доступной для установки версии Portage.</p>
+
+
+equery changes '=sys-apps/portage-2.1.6*'
+
+	<p style="padding-left:4em;">Использовать синтаксис атома Portage. (Для вывода справки выполните <strong>man 5 ebuild</strong>.)</p>
+
+
+equery changes portage --from=2.2_rc1 --to=2.2
+
+	<p style="padding-left:4em;">Выводить любые записи чейнджлога на указанном интервале версий.</p>
+
+
+	<h3 id="-check-k-ОПЦИИ-ПАКЕТ"> check (k) [ОПЦИИ]  ПАКЕТ<a href="#-check-k-ОПЦИИ-ПАКЕТ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Проверяет отметки времени и контрольные суммы файлов, принадлежащих <em>ПАКЕТу</em>; <em>ПАКЕТ</em> здесь - один из установленных пакетов.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-f, --full-regex</strong></p>
+
+
+	<p style="padding-left:4em;">Запрашивать по регулярному выражению.</p>
+
+
+	<p><strong>-o, --only-failures</strong></p>
+
+
+	<p style="padding-left:4em;">Отображать только те пакеты, которые не прошли проверку.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+equery check --only-failures '*'
+
+	<p style="padding-left:4em;">Проверить отметки времени и контрольные суммы всех установленных пакетов и вывести только те пакеты, которые не прошли эту проверку.</p>
+
+
+equery check 'dev-python/*' dev-lang/python
+
+	<p style="padding-left:4em;">Проверить каждый установленный пакет из категории <strong>dev-python</strong> и сам Python.</p>
+
+
+	<h3 id="-depends-d-ОПЦИИ-ПАКЕТ"> depends (d) [ОПЦИИ]  ПАКЕТ<a href="#-depends-d-ОПЦИИ-ПАКЕТ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Вывести список всех зависимостей <em>ПАКЕТА</em>.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-a, --all-packages</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в запрос неустановленные зависимости. Операция может занять некоторое время.</p>
+
+
+	<p><strong>-D, --indirect</strong></p>
+
+
+	<p style="padding-left:4em;">Выявлять как явные, так и неявные зависимости.</p>
+
+
+	<p><strong>--depth=</strong><em>ЧИСЛО</em></p>
+
+
+	<p style="padding-left:4em;">Ограничить глубину неявной зависимости <em>ЧИСЛОм</em>. Использование значения <strong>--depth=0</strong> эквивалентно неиспользованию <strong>--indirect</strong>.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+equery depends --indirect xulrunner
+
+	<p style="padding-left:4em;">Выяснить, какие пакеты "притянули" интересующий вас пакет в систему.</p>
+
+
+	<h3 id="-depgraph-g-ОПЦИИ-ПАКЕТ"> depgraph (g) [ОПЦИИ]  ПАКЕТ<a href="#-depgraph-g-ОПЦИИ-ПАКЕТ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Выводит схему явных зависимостей для каждой версии <em>ПАКЕТа</em> по запросу. Схема зависимостей представляет собой дерево пакетов, показывающее отношения между пакетами и их зависимостями.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-A, --no-atom</strong></p>
+
+
+	<p style="padding-left:4em;">Не выводить атом зависимости, соответствующий пакету.</p>
+
+
+	<p><strong>-U, --no-useflags</strong></p>
+
+
+	<p style="padding-left:4em;">Не отображать USE-флаги.</p>
+
+
+	<p><strong>-l, --linear</strong></p>
+
+
+	<p style="padding-left:4em;">Отображать схему зависимостей в плоском виде, без отступов. При выборе этой опции глубина рекурсии будет показана в квадратных скобках перед именем пакета. Такой режим просмотра удобен на нешироком экране терминала.</p>
+
+
+	<p><strong>--depth=</strong><em>ЧИСЛО</em></p>
+
+
+	<p style="padding-left:4em;">Ограничить глубину отображаемых зависимостей <em>ЧИСЛОм</em>. Запись <strong>--depth=0</strong> обозначает, что максимальная глубина не указана. Значение по умолчанию - 1.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+equery depgraph --depth=0 portage
+
+	<p style="padding-left:4em;">Просмотреть полное дерево явных и неявных компиляционных, рабочих и постустановочных зависимостей пакета.</p>
+
+
+	<h3 id="-files-f-ОПЦИИ-ПАКЕТ"> files (f) [ОПЦИИ]  ПАКЕТ<a href="#-files-f-ОПЦИИ-ПАКЕТ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Выводит файлы и каталоги, устанавливаемые <em>ПАКЕТом</em>.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-m, --md5sum</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в вывод контрольную сумму файла.</p>
+
+
+	<p><strong>-s, --timestamp</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в вывод отметку времени.</p>
+
+
+	<p><strong>-t, --type</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в вывод тип файла.</p>
+
+
+	<p><strong>--tree</strong></p>
+
+
+	<p style="padding-left:4em;">Отображать файлы как дерево. Эта опция отключает все прочие локальные опции.</p>
+
+
+	<p><strong>-f, --filter=</strong><em>ПРАВИЛА</em></p>
+
+
+	<p style="padding-left:4em;">Фильтровать вывод по типу файла.</p>
+
+
+	<p>ПРАВИЛА</p>
+
+
+	<p style="padding-left:4em;">Представляют собой список, через запятую, расширений файлов (без пробелов); вы можете выбирать из: <strong>dir, obj, sym, dev, path, conf, cmd, doc, man, info</strong></p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+equery files --tree vlc
+
+	<p style="padding-left:4em;">Просмотреть полное дерево файлов, установленных пакетом.</p>
+
+
+equery files --filter=cmd vlc
+
+	<p style="padding-left:4em;">Выяснить, куда при установке были помещены исполняемые файлы пакета.</p>
+
+
+	<h3 id="-has-a-ОПЦИИ-КЛЮЧ-ЗНАЧЕНИЕ"> has (a) [ОПЦИИ]  КЛЮЧ  ЗНАЧЕНИЕ<a href="#-has-a-ОПЦИИ-КЛЮЧ-ЗНАЧЕНИЕ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Выводит все установленные пакеты, отвечающие заданным атрибутам <em>ПАКЕТа</em>.</p>
+
+
+	<p><strong>Примечание</strong>: <strong>КЛЮЧ</strong> чувствителен к регистру. Кроме того, опция <strong>has</strong> в настоящее время не умеет сопоставлять значения в зависимости от типа запрашиваемой информации: она лишь выполняет поиск по строке и сообщает, какие пакеты имеют заданное аргументом в командной строке <strong>ЗНАЧЕНИЕ</strong>. Это запрос информации общего характера, выполняемый с помощью функции portage dbapi.aux_get(). Внимание: качество результата, который вы увидите, зависит от качества поиска (с учетом ограничений метода сравнения) и записанных данных, доступных в vardb. (См. раздел_ПРИМЕРЫ_.)</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-I, --exclude-installed</strong></p>
+
+
+	<p style="padding-left:4em;">Исключить из вывода установленные пакеты.</p>
+
+
+	<p><strong>-o, --overlay-tree</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в обработку пакеты из оверлеев.</p>
+
+
+	<p><strong>-p, --portage-tree</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в обработку все пакеты из дерева портежей. Используйте эту опцию для поиска среди всех стандартных пакетов Gentoo, включая неустановленные.</p>
+
+
+	<p><strong>-F, --format=</strong><em>ШАБЛОН</em></p>
+
+
+	<p style="padding-left:4em;">Изменить формат вывода по умолчанию для отвечающих запросов пакету с помощью строки <em>ШАБЛОНа</em>.См. ниже в разделе об опцию <strong>--format</strong> для модуля <strong>list</strong> описание этого аргумента.</p>
+
+
+	<p><em>ВЫВОД:</em></p>
+
+
+	<p>См. ниже раздел <em>ВЫВОД</em> для модуля <strong>list</strong>.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+	<p>equery has SLOT 2.4</p>
+
+
+	<p style="padding-left:4em;">Просмотреть все установленные пакеты Gentoo с SLOT = "2.4".</p>
+
+
+	<p>equery has repository sunrise</p>
+
+
+	<p style="padding-left:4em;">Просмотреть все установленные пакеты Gentoo, которые были записаны для установки из ебилдов из оверлея sunrise.</p>
+
+
+	<p>equery has EAPI 2</p>
+
+
+	<p style="padding-left:4em;">Просмотреть все установленные пакеты Gentoo, которые были установлены из ебилдов с EAPI 2.</p>
+
+
+	<h3 id="-hasuse-h-ОПЦИИ-USE-ФЛАГ"> hasuse (h) [ОПЦИИ]  USE-ФЛАГ<a href="#-hasuse-h-ОПЦИИ-USE-ФЛАГ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Выводит все установленные пакеты, имеющие данный USE-флаг.</p>
+
+
+	<p><strong>Примечание</strong>: на данный момент <strong>hasuse</strong> не отображает информацию о том, собраны ли пакеты с данным флагом, а только показывает, для каких пакетов флаг доступен. (См. <em>ПРИМЕРЫ</em>)</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-I, --exclude-installed</strong></p>
+
+
+	<p style="padding-left:4em;">Исключить из вывода установленные пакеты.</p>
+
+
+	<p><strong>-o, --overlay-tree</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в обработку пакеты из оверлеев.</p>
+
+
+	<p><strong>-p, --portage-tree</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в обработку все пакеты из дерева портежей. Используйте эту опцию для поиска среди всех стандартных пакетов Gentoo, включая неустановленные.</p>
+
+
+	<p><strong>-F, --format=</strong><em>ШАБЛОН</em></p>
+
+
+	<p style="padding-left:4em;">Изменить формат вывода по умолчанию для отвечающих запросов пакету с помощью строки <em>ШАБЛОНа</em>. См. ниже в разделе об опции <strong>--format</strong> для модуля <strong>list</strong> описание этого аргумента.</p>
+
+
+	<p><em>ВЫВОД:</em></p>
+
+
+	<p>(См. ниже раздел <em>ВЫВОД</em> для модуля <strong>list</strong>)</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+	<p>equery hasuse -pI perl</p>
+
+
+	<p style="padding-left:4em;">Просмотреть все пакеты Gentoo с USE-флагом "perl", за исключением уже установленных.</p>
+
+
+	<p>USE="perl"; for PKG in $(equery -q hasuse $USE); do echo $PKG: $(equery -q uses $PKG |grep $USE); done</p>
+
+
+	<p style="padding-left:4em;">Этот однострочный сценарий для Bash вызывает <strong>hasuse</strong> для составления перечня пакетов с определенным USE-флагом и <strong>uses</strong>, чтобы проверить, включен или отключен флаг. Для изменения запроса редактируйте значение <strong>USE="perl"</strong>.</p>
+
+
+	<h3 id="-list-l-ОПЦИИ-ПАКЕТ"> list (l) [ОПЦИИ]  ПАКЕТ<a href="#-list-l-ОПЦИИ-ПАКЕТ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Выводит установленные версии <em>ПАКЕТа</em> или всех пакетов, удовлетворяющих шаблону поиска.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-d, --duplicates</strong></p>
+
+
+	<p style="padding-left:4em;">Выводить только пакеты, для которых установлены несколько версий.</p>
+
+
+	<p><strong>-f, --full-regex</strong></p>
+
+
+	<p style="padding-left:4em;">Искать по регулярному выражению.</p>
+
+
+	<p><strong>-m, --mask-reason</strong></p>
+
+
+	<p style="padding-left:4em;">Сообщать причину, по которой тот или иной пакет замаскирован.</p>
+
+
+	<p><strong>-I, --exclude-installed</strong></p>
+
+
+	<p style="padding-left:4em;">Исключить из вывода установленные пакеты.</p>
+
+
+	<p><strong>-o, --overlay-tree</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в обработку пакеты из оверлеев.</p>
+
+
+	<p><strong>-p, --portage-tree</strong></p>
+
+
+	<p style="padding-left:4em;">Включить в обработку все пакеты из дерева портежей. Используйте эту опцию для поиска среди всех стандартных пакетов Gentoo, включая неустановленные.</p>
+
+
+	<p><strong>-F, --format=</strong><em>TMPL</em></p>
+
+
+	<p style="padding-left:4em;">Изменить формат вывода по умолчанию для отвечающих запросов пакету с помощью строки <em>ШАБЛОНа</em>. <em>ШАБЛОН</em> может содержать следующие подстановочные поля:</p>
+
+
+	<p style="padding-left:4em;"><strong>$cp</strong> - Только категория и название пакета (например, 'app-portage/gentoolkit').</p>
+
+
+	<p style="padding-left:4em;"><strong>$cpv</strong> - Категория, название пакета и его полная версия (например, 'app-portage/gentoolkit-0.3.0_rc10-r1').</p>
+
+
+	<p style="padding-left:4em;"><strong>$category</strong> - Только категория (например, 'app-portage').</p>
+
+
+	<p style="padding-left:4em;"><strong>$name</strong> - Только название пакета (например, 'gentoolkit').</p>
+
+
+	<p style="padding-left:4em;"><strong>$version</strong> - Версия пакета (без указания ревизии) (например, '0.3.0_rc10').</p>
+
+
+	<p style="padding-left:4em;"><strong>$revision</strong> - Ревизия пакета (например, 'r1').</p>
+
+
+	<p style="padding-left:4em;"><strong>$fullversion</strong> - Версия пакета с ревизией (например, '0.3.0_rc10-r1').</p>
+
+
+	<p style="padding-left:4em;"><strong>$slot</strong> - Слот пакета.</p>
+
+
+	<p style="padding-left:4em;"><strong>$repo</strong> - Имя репозитария пакета (например, 'gentoo').</p>
+
+
+	<p style="padding-left:4em;"><strong>$mask</strong> - Поле для указания маски пакета (<strong>~M-??</strong>), подробнее см. ниже в разделе <em>ВЫВОД</em>.</p>
+
+
+	<p style="padding-left:4em;"><strong>$mask2</strong> - Подробное описание статуса маскировки пакетов.</p>
+
+
+	<p style="padding-left:4em;"><strong>$location</strong> - Поле для указания расположения пакета (<strong>IPO-</strong>), подробнее см. ниже в разделе <em>ВЫВОД</em>.</p>
+
+
+	<p>Кроме перечисленных подстановочных полей, строка шаблона может содержать любой произвольный текст. Аналогично переменным интерпретатора bash, здесь можно использовать фигурные скобки для отличения имен переменных от объемлющего текста.</p>
+
+
+	<p><em>ВЫВОД:</em> </p>
+
+
+	<pre><code>$ equery list binutils  * Searching for binutils ...  [I--] [??] sys-devel/binutils-2.18-r1:i686-pc-linux-gnu-2.18  [IP-] [ ~] sys-devel/binutils-2.19.1-r1:i686-pc-linux-gnu-2.19.1</code></pre>
+
+
+	<p>Поле расположения (<strong>[IPO-]</strong>):</p>
+
+
+	<p style="padding-left:4em;">Первое поле - расположение и статус установки пакета. Оно содержит три символа в квадратных скобках. <strong>I</strong> означает, что на данный момент пакет установлен. <strong>P</strong> означает, что пакет доступен в дереве портежей. <strong>O</strong> означает, что пакет доступен по крайней мере в одном оверлее. <strong>-</strong> не означает ничего, занимая пустое поле. Так, если вы видите <strong>[I-O]</strong>, это значит, что пакет установлен и доступен в оверлее, но в дереве портежей его нет.</p>
+
+
+	<p>Поле маски (<strong>[ ~M-??]</strong>):</p>
+
+
+	<p style="padding-left:4em;">Второе поле - статус маскировки пакета. Пустые скобки означают, что пакет не замаскирован. Тильда <strong>~</strong> означает, что пакет замаскирован по ключевому слову: например, ваша система из стабильной ветки, а пакет помечен как тестируемый. <strong>M</strong> означает жесткую маскировку: например, мейнтейнер пакета посчитал, что пакет не пригоден для широкого использования. <strong>-</strong> означает маскировку по архитектуре: например, у вас amd64, а пакет работает только на архитектуре x86. В последних версиях обозначение <strong>??</strong> появляется лишь в том случае, если в поле расположения стоит <strong>[I--]</strong>. В связке друг с другом они означают, что пакет был установлен из дерева портежей или из оверлея, но затем были удалены из хранилища; в результате утилита <strong>equery</strong> не может определить статус маскировки пакета.</p>
+
+
+	<p>Название пакета:</p>
+
+
+	<p style="padding-left:4em;">Третье поле - полное имя пакета с версией.</p>
+
+
+	<p>Слот:</p>
+
+
+	<p style="padding-left:4em;">Четвертое поле, после двоеточия - слот пакета. По умолчанию это <strong>0</strong>. Для обнаружения всех пакетов с несколькими установленными слотами используйте опцию <strong>--duplicates</strong>.</p>
+
+
+	<p><strong>Примечание:</strong> Для определения расположения, статуса маскировки и слота пакета требуется дополнительное время; если вам не нужна развернутая информация, вы можете глобально передать утилите <strong>equery</strong> опцию <strong>--quiet</strong>, чтобы ускорить обработку.</p>
+
+
+	<p><strong>Примечание:</strong> Если при использовании опции --quiet не было найдено соответствий запросу, модуль *equery list* не сообщает об ошибке, а завершает работу и возвращает 3.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+equery list '*'
+
+	<p style="padding-left:4em;">Выводить все установленные пакеты. В версиях <strong>Gentoolkit</strong> ниже 0.3.0 этот запрос эквивалентен '<strong>equery list</strong>'.</p>
+
+
+	<p>equery list -op mozilla-firefox</p>
+
+
+	<p style="padding-left:4em;">Выводить все доступные версии пакета, точно соответствующие 'mozilla-firefox'. В версиях <strong>Gentoolkit</strong> ниже 0.3.0 этот запрос эквивалентен '<strong>equery list --exact-name -o -p mozilla-firefox</strong>'.</p>
+
+
+equery list '*zilla*'
+
+	<p style="padding-left:4em;">Выводить все пакеты, которые содержат 'zilla' (нечеткий поиск). В версиях <strong>Gentoolkit</strong> ниже 0.3.0 этот запрос эквивалентен '<strong>equery list zilla</strong>'.</p>
+
+
+equery list 'www-client/*'
+
+	<p style="padding-left:4em;">Выводить все пакеты из категории <strong>www-client</strong>. В версиях <strong>Gentoolkit</strong> ниже 0.3.0 этот запрос эквивалентен '<strong>equery list --category=www-client</strong>'.</p>
+
+
+equery list --duplicates '*'
+
+	<p style="padding-left:4em;">Выводить все пакеты с несколькими установленными версиями. В версиях <strong>Gentoolkit</strong> ниже 0.3.0 этот запрос эквивалентен '<strong>equery list --duplicates</strong>'.</p>
+
+
+equery list -F '$cp:$slot' '*'
+
+	<p style="padding-left:4em;">Получить список атомов слотов для всех установленных пакетов.</p>
+
+
+equery list -po -F '[$location] [$mask] $cpv:$slot [$repo]' '*'
+
+	<p style="padding-left:4em;">Выводит все пакеты в формате по умолчанию (подробно), а также имя репозитария, который их предоставляет.</p>
+
+
+	<h3 id="-meta-m-ОПЦИИ-ПАКЕТ"> meta (m) [ОПЦИИ]  ПАКЕТ<a href="#-meta-m-ОПЦИИ-ПАКЕТ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Отображает метаданные о <em>ПАКЕТе</em>.</p>
+
+
+	<p><strong>meta</strong> считывает файл metadata.xml, который должен сопровождать все пакеты из дерева портежей. <strong>meta</strong> не считывает ебилды и потому может возвращать только мета-данные, не зависящие от версии. Поскольку до недавнего времени просматривать metadata.xml было довольно затруднительно, а также потому, что мейнтейнеры пакетов должны заполнять лишь небольшую часть файла, для очень многих пакетов подробные мета-данные до сих пор отсутствуют. Подробнее о metadata.xml см.: <br /> <noindex><a class="external" href="http://www.gentoo.org/proj/en/devrel/handbook/handbook.xml?part=2&#38;chap=4" ref="nofollow">http://www.gentoo.org/proj/en/devrel/handbook/handbook.xml?part=2&#38;chap=4</a></noindex></p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-d, --description</strong></p>
+
+
+	<p style="padding-left:4em;">Выводить развернутое описание пакета.</p>
+
+
+	<p><strong>-H, --herd</strong></p>
+
+
+	<p style="padding-left:4em;">Отображать группу/-ы сопровождения для пакета. Если не используются каналы и <strong>--quiet</strong> не передается как глобальная опция, будет показан также адрес группы (по умолчанию).</p>
+
+
+	<p><strong>-k, --keywords</strong></p>
+
+
+	<p style="padding-left:4em;">Показывать ключевые слова для всех удовлетворяющих запросу версий. <strong>keywords</strong> не выводит все ключевые слова для всех версий, а фильтрует список, чтобы легче было выявить версии, которые должны быть заменены новыми или могут быть удалены из дерева. Фильтрование производится по слоту. Например: <br />Keywords:    1.35.0-r3:<strong>0</strong>:<br />Keywords:    1.35.0-r5:<strong>0</strong>: amd64 hppa ppc x86 ~alpha ~arm ~ia64 ~mips ~ppc64 ~s390 ~sh ~sparc<br />В приведенном выводе <strong>equery meta boost</strong> -r5 является последней доступной версией в слоте 0, поэтому перечислены все ключевые слова. Для -r3 действительны ключевые слова "~amd64 ~hppa ~ppc ~x86", но, поскольку более высокая версия в том же слоте помечена теми же ключевыми словами или как более стабильная, они не будут показаны. Вместе с тем ключевые слова для маскировки архитектуры (-*) отображаются всегда.</p>
+
+
+	<p><strong>-m, --maintainer</strong></p>
+
+
+	<p style="padding-left:4em;">Показать электронный адрес мейнтейнера/-ов пакета. Если доступны мета-данные, будет также отображено имя мейнтейнера и/или описание его работы (по умолчанию).</p>
+
+
+	<p><strong>-u, --useflags</strong></p>
+
+
+	<p style="padding-left:4em;">Выводить описания USE-флагов каждого пакета. Такие описания иногда добавляются в файл metadata.xml - в случае если флаг необычным образом изменяет пакет или если он слишком редок, чтобы фигурировать в глобальном файле описаний. Теперь <strong>equery uses</strong> умеет выводить и локальные описания, так что эта опция по-прежнему доступна в <strong>meta</strong> только для полноты.</p>
+
+
+	<p><strong>-U, --upstream</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести информацию о ключевом разработчике пакета, включая его электронную почту, багтрекер и документацию. На момент написания данного руководства большинство мейнтейнеров не предоставляли такой информации (по умолчанию).</p>
+
+
+	<p><strong>-x, --xml</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести обычный XML-файл на экран.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+	<p>equery meta gnucash</p>
+
+
+	<p style="padding-left:4em;">Показать общие сведения о поддержке, в том числе о группе сопровождения, мейнтейнерах и ключевых разработчиках.</p>
+
+
+equery meta --description screen
+
+	<p style="padding-left:4em;">Выяснить, предоставляет ли мейнтейнер пакета развернутое описание.</p>
+
+
+equery -N meta -H gnome |grep -o --color=never '[^( ]*@gentoo.org'
+
+	<p style="padding-left:4em;">Извлечь электронный адрес группы сопровождения (может быть, вы хотите отправить им письмо с благодарностью). Не забывайте о том, что сообщения об ошибках следует направлять не по этому адресу, а размещать на сайте bugs.gentoo.org. В приведенном примере будет извлечен один или (если есть) несколько адресов; если установлено значение <strong>no-herd</strong>, утилита не возвратит ничего.</p>
+
+
+	<h3 id="-size-s-ОПЦИИ-ПАКЕТ"> size (s) [ОПЦИИ]  ПАКЕТ<a href="#-size-s-ОПЦИИ-ПАКЕТ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Выводит суммарный размер файлов, составляющих запрошенный <em>ПАКЕТ</em>.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-b, --bytes</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести размер пакета в байтах.</p>
+
+
+	<p><strong>-f, --full-regex</strong></p>
+
+
+	<p style="padding-left:4em;">Аргументом запроса является регулярное выражение.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+equery -q size 'www-client/*'
+
+	<p style="padding-left:4em;">Получить одностроковой отчет о количестве файлов и их суммарном размере (в байтах), для каждого установленного пакета в категории.</p>
+
+
+	<h3 id="-uses-u-ОПЦИИ-ПАКЕТ"> uses (u) [ОПЦИИ]  ПАКЕТ<a href="#-uses-u-ОПЦИИ-ПАКЕТ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Позволяет просмотреть состояние и описания USE-флагов для запрошенного <em>ПАКЕТА</em>.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-a, --all</strong></p>
+
+
+	<p style="padding-left:4em;">Вывести все версии пакета. Если эта опция не используется, <strong>equery</strong> выведет лучшую доступную версию.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+	<p>equery uses app-misc/beagle</p>
+
+
+	<p style="padding-left:4em;">Выяснить, какие USE-флаги включены для пакета.</p>
+
+
+	<p>USE="perl"; for PKG in $(equery -q hasuse $USE); do echo $PKG: $(equery -q uses $PKG |grep $USE); done</p>
+
+
+	<p style="padding-left:4em;">Эта одностроковая команда Bash вызывает <strong>hasuse</strong>, чтобы вывести список пакетов с заданным USE-флагом, и <strong>uses</strong>, чтобы проверить, включен флаг или выключен. Для изменения запроса используйте другое значение <strong>USE="perl"</strong>.</p>
+
+
+	<h3 id="-which-w-ОПЦИИ-ПАКЕТ"> which (w) [ОПЦИИ]  ПАКЕТ<a href="#-which-w-ОПЦИИ-ПАКЕТ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Выводит путь к ебилду, который будет использован Portage с текущими настройками.</p>
+
+
+	<p><em>ЛОКАЛЬНЫЕ ОПЦИИ:</em></p>
+
+
+	<p><strong>-m, --include-masked</strong></p>
+
+
+	<p style="padding-left:4em;">Просмотреть путь к последней опубликованной версии ебилда.</p>
+
+
+	<p><em>ПРИМЕРЫ:</em></p>
+
+
+	<p>less $(equery which xorg-server)</p>
+
+
+	<p style="padding-left:4em;">Найти последний опубликованный ебилд из доступных для установки.</p>
+
+
+	<h2 id="ОШИБКИ">ОШИБКИ<a href="#ОШИБКИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Об обнаруженных ошибках сообщайте на <noindex><a class="external" href="http://bugs.gentoo.org" ref="nofollow">http://bugs.gentoo.org</a></noindex>.</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Karl Trygve Kalleberg &lt;<a class="email" href="mailto:karltk@gentoo.org">karltk@gentoo.org</a>&gt;, 2003 </li>
+		<li>Katerina Barone-Adesi &lt;<a class="email" href="mailto:katerinab@gmail.com">katerinab@gmail.com</a>&gt;, 2004 </li>
+		<li>Douglas Anderson &lt;<a class="email" href="mailto:douglasjanderson@gmail.com">douglasjanderson@gmail.com</a>&gt;, 2009</li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Август 2009</p>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>configuring scanner epson perfection 1670</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-сканера-Epson-Perfection-1670">Настройка сканера Epson Perfection 1670<a href="#Настройка-сканера-Epson-Perfection-1670" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Установка-SANE">Установка SANE<a href="#Установка-SANE" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для работы сканеров в GNU\Linux необходим API, разрабатываемый проектом <noindex><a href="http://www.sane-project.org/" rel="nofollow" target="_blank" class="external">SANE</a></noindex>. На сайте проекта находится страница со всеми <noindex><a href="http://www.sane-project.org/sane-mfgs.html" rel="nofollow" target="_blank" class="external">поддерживаемыми устройствами</a></noindex> ; там же описано качество работы конкретных устройств, указан backend, осуществляющий поддержку. Поддержка нашей модели осуществляется backend'ом <em>snapscan</em>.<br />В <a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a> SANE и XSANE (графический интерфейс к SANE) установлены по умолчанию, но если в вашей системе данные программы отсутствуют, воспользуйтесь следующими командами:</p>
+
+
+<pre>
+emerge sane-backends xsane
+</pre>
+
+	<p>(пользователям kde4 может пригодиться пакет <em>libksane</em>, предоставляющий интеграцию среды с интерфейсом sane)</p>
+
+
+	<h2 id="Определение-сканера">Определение сканера<a href="#Определение-сканера" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Удостоверимся, что сканер определился системой. Воспользуемся командой<br /><pre>
+lsusb
+</pre><br />(потребуются права администратора)<br />Ответом на данную команду должен быть список устройств, подключенных по usb, среди которых должна быть строка с названием нашего сканера:<br /><pre>
+Bus 001 Device 002: ID 04b8:011f Seiko Epson Corp. Perfection 1670
+</pre></p>
+
+
+	<p>В противном случае смотрим, что нам скажет команда:<br /><pre>
+dmesg | grep error
+</pre><br />Если обнаруживаются строки вроде этиx:<br /><pre>
+usb 2-9: device descriptor read/64, error -71
+usb 2-9: device not accepting address 9, error -71
+</pre><br />- проверьте кабель. Некоторые устройства требуют подключения к контроллеру USB 2.0 через скоростной кабель.</p>
+
+
+	<p>Также воспользуемся утилитой <em>sane-find-scanner</em>, которая должна вывести список опознанных сканеров. В выводе мы должны увидеть строку:<br /><pre>
+found USB scanner (vendor=0x04b8 [EPSON], product=0x011f [EPSON Scanner]) at libusb:001:002
+</pre><br />Естественно шина usb (libusb:001:002) у вас может быть другая.</p>
+
+
+	<h2 id="Установка-прошивки">Установка прошивки<a href="#Установка-прошивки" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Определенные модели не смогут работать без фирменного программного обеспечения (прошивки). Нам также потребуется прошивка. Прошивки не включаются в дистрибутив SANE из-за лицензионных соглашений, но в большинстве случаев доступны на сайте производителя или находятся на диске, который идет в комплекте со сканером. Иными словами, нам понадобятся драйверы для windows. Я скачивал драйверы с <noindex><a href="http://support.epson.ru/driver_list.asp?product=338&#38;uos=35" rel="nofollow" target="_blank" class="external">официального сайта</a></noindex>. В архиве с драйверами находим файл ModUsb.cab - здесь нам понадобится утилита <em>cabextract</em>:<br /><pre>
+emerge cabextract
+</pre><br />Переходим в каталог с драйверами и выполняем команду<br /><pre>
+cabextract ModUsb.cab
+</pre><br />Среди распакованных файлов находим <em>esfw30.bin</em> - это и есть наша прошивка.</p>
+
+
+	<h2 id="Настройка-SANE">Настройка SANE<a href="#Настройка-SANE" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Далее скопируем файл прошивки в каталог <code>/usr/share/sane/snapscan/</code> и отредактируем файл конфигурации необходимого нам backend'а. Откроем файл <code>/etc/sane.d/snapscan.conf</code> и поправим строку с адресом прошивки:<br /><pre>
+firmware /usr/share/sane/snapscan/Esfw30.bin
+</pre></p>
+
+
+	<p>Затем выключим сканер, отключим от него usb-кабель, заново подключим к usb и включим питание сканера. Настало время запустить XSANE, для начала от пользователя <em>root</em>. Если у вас установлен только сканер и нет другого оборудования (тюнер или вебкамера), то перед вами при запуске xsane предстанет диалог выбора устройства. Нас интересует наш сканер, так что выбираем "EPSON Scanner1" и нажимаем "OK". Немного подумав, должна запуститься <em>xsane</em>. Если этого не произошло, то, вероятней всего, вы увидите окошко с ошибкой. Сообщение "Invalid argument" означает что у нас что-то с прошивкой. Текст ошибки, содержащий "I/O", скорее всего означает, что у нас проблеммы с обращением к устройству. Если же всё нормально, откроется окно программы сканирования - можно проверить сканер в действии!</p>
+
+
+	<p>Но работа от пользователя root - не лучший способ, поэтому нам нужно добавить пользователей, которым необходим доступ к сканеру, в группу <em>scanner</em>:<br /><pre>
+gpasswd -a user1,user2 scanner
+</pre></p>
+</body>
+</html>

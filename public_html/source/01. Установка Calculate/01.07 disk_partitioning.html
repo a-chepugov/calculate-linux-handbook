@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>disk partitioning</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Разбиение-диска">Разбиение диска<a href="#Разбиение-диска" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Общая-схема">Общая схема<a href="#Общая-схема" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><a href="Calculate Linux.html" class="wiki-page">Calculate Linux</a> можно переустановить без каких-либо дополнительных параметров при следующем разбиении диска:<br /><pre>
+/dev/sda1 swap
+/dev/sda2 10-20Gb Linux (/)
+/dev/sda3 10-20Gb Linux (/)
+/dev/sda4 Extended
+/dev/sda5 Linux (/home)
+... (другие диски и разделы)
+</pre></p>
+
+
+	<p>Если система загружена с раздела ''sda2'', то при переустановке системы установщик предложит ''sda3'', и наоборот. Программа установки помнит, с какого раздела производилась установка системы, и в дальнейшем предложит выполнить обновление в предыдущий раздел.</p>
+
+
+	<p>В настольной версии системы ''swap''-раздел может отсутствовать вовсе при достаточном количестве оперативной памяти (2 Гб и выше). В этом случае ядро практически не будет "свопить", интенсивнее высвобождая память.</p>
+
+
+	<h2 id="Преимущества-общей-схемы">Преимущества общей схемы<a href="#Преимущества-общей-схемы" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li><strong>защищённость</strong> - пользовательские данные, размещенные на отдельном разделе, никогда не пострадают при переустановке системы;</li>
+		<li><strong>свободное место</strong> - у вас всегда будет свободное место на диске, т.к. вероятность, что какому-то разделу (например, <code>/boot</code>) не хватит места, сведена к минимуму;</li>
+		<li><strong>обновление системы</strong> - вы сможете выполнять обновление, продолжая работать в системе;</li>
+		<li><strong>надёжность</strong> - вы всегда сможете загрузиться в предыдущую систему, если новая по какой-либо причине будет работать нестабильно.</li>
+	</ul>
+
+
+	<h2 id="Настройки">Настройки<a href="#Настройки" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для подключения дополнительных разделов к системе используйте файл <code>/etc/fstab</code>.</p>
+
+
+	<p>Для монтирования раздела в директорию <code>/home</code> достаточно в конец файла <code>/etc/fstab</code> вписать строку примерно следующего содержания:<br /><pre>
+/dev/sda5   /home   ext4   noatime   0 0
+</pre></p>
+
+
+	<p>В приведенном примере раздел <em>sda5</em> с файловой системой <em>ext4</em> монтируется в директорию <code>/home</code>.</p>
+
+
+	<p>Для подключения раздела выполните:<br /><pre>
+mount /home
+</pre></p>
+
+
+	<p>Прописанный таким образом раздел будет автоматически монтироваться во время загрузки системы.</p>
+
+
+	<p>При переустановке системы <em>Calculate</em> будет переносить точки монтирования из файла <code>/etc/fstab</code> в новую систему.</p>
+
+
+	<h2 id="Разбиение-диска-для-сервера">Разбиение диска для сервера<a href="#Разбиение-диска-для-сервера" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для разбиения диска под <a href="Calculate Directory Server.html" class="wiki-page">Calculate Directory Server</a> мы предлагаем использовать следующую схему:<br /><pre>
+/dev/sda1 swap
+/dev/sda2 20Gb Linux (/, ext4)
+/dev/sda3 20Gb Linux (/, ext4)
+/dev/sda4 Extended
+/dev/sda5 Linux (/var/calculate, xfs)
+</pre></p>
+
+
+	<p>Размер диска подкачки (swap) следует выбрать произвольно, исходя из объема оперативной памяти и предполагаемой нагрузки. Как правило, рекомендуют использовать в 2 раза больше, чем объём оперативной памяти.</p>
+
+
+	<p>По мере необходимости вы можете расширить ёмкость разделов, подключив дополнительные диски:<br /><pre>
+/dev/sdb1 Linux (/var/calculate/server-data, xfs)
+/dev/sdc1 Linux (/var/calculate/server-data/samba/share, xfs)
+</pre></p>
+
+
+	<p>Различные файловые системы имеют свои преимущества и недостатки. Мы можем оставить здесь лишь рекомендацию на основе личного опыта. В качестве файловой системы для корневого раздела хорошо зарекомендовала себя ''ext4'', а вот для хранения файлов, благодаря активному использованию кэша, идеальной, на наш взгляд, является ''xfs''.</p>
+
+
+	<h2 id="Разбиение-диска-для-Linux-десктопа">Разбиение диска для Linux-десктопа<a href="#Разбиение-диска-для-Linux-десктопа" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Настраивая <a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a> для работы в качестве клиента сервера <a href="CDS.html" class="wiki-page">CDS</a>, мы рекомендуем разбить жесткий диск следующим образом:<br /><pre>
+/dev/sda1 swap
+/dev/sda2 10Gb Linux (/, ext4)
+/dev/sda3 10Gb Linux (/, ext4)
+/dev/sda4 Extended
+/dev/sda5 Linux (/var/calculate, ext4)
+</pre></p>
+
+
+	<p>Обратите внимание, что свободный раздел монтируется в <code>/var/calculate</code>. Таким образом, настройки подключения к серверу сохраняются в отдельном разделе, упрощая переустановку системы.</p>
+
+
+	<p>Содержимое раздела <code>/home</code> не будет теряться при переустановке, т.к. после входа в домен CDS, директория <code>/home</code> располагается в <code>/var/calculate/home</code> (монтируется через <em>bind</em>). Сохранять данные имеет смысл только для кэширования.</p>
+
+
+	<h2 id="Переустановка-системы">Переустановка системы<a href="#Переустановка-системы" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>При любом разбиении диска архивы с обновлениями удобно хранить в отдельном разделе - пусть это будет, например, <code>/home</code> (если он вынесен на отдельный раздел).<br />Подключить такой диск можно, используя следующую запись в <code>/etc/fstab</code>:<br /><pre>
+/home/calculate /usr/calculate/share none bind 0 0
+</pre></p>
+</body>
+</html>

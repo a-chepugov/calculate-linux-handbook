@@ -1,0 +1,1018 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>makeconf</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="MAKECONF">MAKE.CONF<a href="#MAKECONF" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+make.conf - пользовательские настройки Portage 
+
+	<h2 id="ПАРАМЕТРЫ">ПАРАМЕТРЫ<a href="#ПАРАМЕТРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/etc/make.conf</strong> и <strong>/etc/portage/make.conf</strong></p>
+
+
+	<h2 id="DESCRIPTION">DESCRIPTION<a href="#DESCRIPTION" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Этот файл содержит различные переменные, используемые Portage. В поиске настроек Portage в первую очередь проверяет текущие значения переменных окружения; если они не содержат искомых настроек, Portage обращается к файлам make.conf. При этом будет проверен как /etc/make.conf, так и /etc/portage/make.conf (если присутствует в системе), причем настройки, содержащиеся в /etc/portage/make.conf, имеют приоритет над настройками из /etc/make.conf. Если и обращение к файлам make.conf оказалось безрезультатным, Portage проверяет make.globals. Последним по порядку обращения стоит файл /etc/make.profile/make.defaults. Заметьте, что любые пользовательские настройки следует либо конфигурировать в окружении, либо вносить в файлы make.conf - именно они предназначены для редактирования пользователем. <br />Исключение составляют инкрементные переменные USE, CONFIG_PROTECT*, и ACCEPT_KEYWORDS. Инкрементные переменные обрабатываются в обратном порядке: make.defaults - make.globals - make.conf - конфигурация окружения. Обнуление этих переменных требует полной инициализации: export USE="-*" <br />Если вы хотите сопоставить пакетам различные настройки, см. раздел <strong>package.env</strong> в руководстве по <strong><a href=".html" class="wiki-page">portage</a></strong>(5).</p>
+
+
+	<h2 id="ПЕРЕМЕННЫЕ">ПЕРЕМЕННЫЕ<a href="#ПЕРЕМЕННЫЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>ACCEPT_CHOSTS</strong> = <em>[значения CHOST, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Содержит приемлемые значения <strong>CHOST</strong>. Поддерживается синтаксис регулярных выражений, поэтому необходимо использовать управляющие знаки для символов <strong>CHOST</strong>, имеющих особое значение в регулярных выражениях.<br />По умолчанию принимает значение $CHOST.</p>
+
+
+	<p><strong>ACCEPT_KEYWORDS</strong> = <em>[KEYWORDS, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Разрешает установку для тестирования ебилдов, которые пока не имеют статуса стабильных. Если архитектура вашей системы x86, установите значение '~x86', если же вы пользователь ppc, значение будет '~ppc'. Это инкрементная переменная; определяется только как ~arch.<br />По умолчанию принимает значение $ARCH.</p>
+
+
+	<p><strong>ACCEPT_LICENSE</strong> = <em>[список лицензий или групп, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная используется для маскировки пакетов по лицензии. Она может содержать имена как лицензии, так и группы, причем имена групп имеют префикс @. Группы лицензий определяются в файле <em>license_groups</em> (см. <strong><a href=".html" class="wiki-page">portage</a></strong>(5)). Помимо имен лицензий и групп лицензий, поддерживаются также подстановочные знаки  <em>*</em> и <em>-*</em>. Подробности см. в GLEP 23: <em><noindex><a class="external" href="http://www.gentoo.org/proj/en/glep/glep-0023.html" ref="nofollow">http://www.gentoo.org/proj/en/glep/glep-0023.html</a></noindex></em>.<br />По умолчанию принимает значение * -@EULA. <br /><em>Примеры:</em> <br /><pre style="margin-left:4.0em;">
+# Принимать любую лицензию
+ACCEPT_LICENSE="*" 
+# Принимать любую лицензию, кроме public-domain" 
+ACCEPT_LICENSE="* -public-domain" 
+# Принимать лицензию только из группы FSF-APPROVED
+ACCEPT_LICENSE="-* @FSF-APPROVED" 
+</pre></p>
+
+
+	<p><strong>ACCEPT_PROPERTIES</strong> = <em>[параметры, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная используется для маскировки пакетов по PROPERTIES. Помимо собственно названий параметров, можно использовать подстановочные знаки <em>*</em> и <em>-*</em>. Временно изменять стандартное значение этой переменной можно, используя опцию <strong>--accept-properties</strong> при запуске <strong><a href=".html" class="wiki-page">emerge</a></strong>(1). Подробнее о PROPERTIES см. в руководстве по <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5). <br />По умолчанию принимает значение *. <br /><em>Примеры:</em> <br /><pre style="margin-left:4.0em;">
+# Принимать любые параметры 
+ACCEPT_PROPERTIES="*" 
+# Принимать любые параметры, кроме interactive 
+ACCEPT_PROPERTIES="* -interactive" 
+</pre></p>
+
+
+	<p><strong>CBUILD</strong></p>
+
+
+	<p style="padding-left:4em;">Эта переменная передается <em>сценариями ebuild</em> действию <em>configure</em> как <em>--build=${CBUILD}</em> только в том случае, если она определена. Не редактируйте ее значение, если не вполне уверены в том, что делаете.</p>
+
+
+	<p><strong>CCACHE_DIR</strong> = <em>[путь]</em></p>
+
+
+	<p style="padding-left:4em;">Определяет расположение рабочего каталога ccache.  Подробнее см. в man-руководстве по <strong>ccache</strong>(1). <br />По умолчанию это каталог /var/tmp/ccache.</p>
+
+
+	<p><strong>CCACHE_SIZE</strong> = <em>"размер"</em></p>
+
+
+	<p style="padding-left:4em;">Ограничивает объем пространства, используемого ccache.  По умолчанию - 2 гигабайта ('2G'). В качестве величины измерения можно использовать гигабайты ('G'), мегабайты ('M') и килобайты ('K').</p>
+
+
+	<p><strong>CFLAGS</strong>, <strong>CXXFLAGS</strong></p>
+
+
+	<p style="padding-left:4em;">Используйте эти переменные, чтобы выставить по вашему желанию настройки оптимизации/инструкции процессору для компилируемых приложений. Данные переменные передаются соответственно компиляторам C и C++. (CXX обозначает компилятор C++ на многих системах сборки.) Файлы ебилдов практически всегда учитывают пользовательские настройки, благодаря чему ваша система Gentoo Linux полностью оптимизирована под ваши требования. Тем не менее советуем не экспериментировать с ненадежными настройками в погоне за оптимизацией: их использование может привести к тому, что отдельные пакеты не скомпилируются или не будут работать.</p>
+
+
+	<p style="padding-left:4em;">Почитать об этом подробнее можно в разделе <em>Invoking GCC</em> ("Вызов GCC") man-руководства по gcc: <br /><noindex><a class="external" href="http://gcc.gnu.org/onlinedocs/" ref="nofollow">http://gcc.gnu.org/onlinedocs/</a></noindex></p>
+
+
+	<p><strong>CHOST</strong></p>
+
+
+	<p style="padding-left:4em;">Эта переменная передается <em>сценариями ebuild</em> действию <em>configure</em> как <em>--host=${CHOST}</em>. Тем самым вы можете принудительно вызвать хост сборки.</p>
+
+
+	<p style="padding-left:4em;">Дополнительно см.:<br /><noindex><a class="external" href="http://gcc.gnu.org/onlinedocs/gcc-4.1.1/gcc/Submodel-Options.html" ref="nofollow">http://gcc.gnu.org/onlinedocs/gcc-4.1.1/gcc/Submodel-Options.html</a></noindex> <br /><noindex><a class="external" href="http://gcc.gnu.org/onlinedocs/gcc-3.3/gcc/Submodel-Options.html" ref="nofollow">http://gcc.gnu.org/onlinedocs/gcc-3.3/gcc/Submodel-Options.html</a></noindex> <br /><noindex><a class="external" href="http://gcc.gnu.org/onlinedocs/gcc-3.2/gcc/Submodel-Options.html" ref="nofollow">http://gcc.gnu.org/onlinedocs/gcc-3.2/gcc/Submodel-Options.html</a></noindex> <br /><noindex><a class="external" href="http://gcc.gnu.org/onlinedocs/gcc-2.95.3/gcc_2.html" ref="nofollow">http://gcc.gnu.org/onlinedocs/gcc-2.95.3/gcc_2.html</a></noindex></p>
+
+
+	<p><strong>CLEAN_DELAY</strong> = <em>целое число</em></p>
+
+
+	<p style="padding-left:4em;">Определяет продолжительность обратного отсчета после запуска `emerge --unmerge`, прежде чем начнется удаление. <br />По умолчанию - 5 секунд.</p>
+
+
+	<p><strong>COLLISION_IGNORE</strong> = <em>[файлы и/или каталоги, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Через эту переменную пользователь может отключить <em>collision-protect</em> и <em>protect-owned</em> для отдельных файлов и/или каталогов. <br />По умолчанию они отключены только для /lib/modules.</p>
+
+
+	<p><strong>CONFIG_PROTECT</strong> = <em>[файлы и/или каталоги, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Ко всем указанным здесь файлам и/или каталогам будет применена т.н. "защита конфигурационных файлов". Подробнее об этом см. в разделе <strong>КОНФИГУРАЦИОННЫЕ ФАЙЛЫ</strong> руководства по <strong><a href=".html" class="wiki-page">emerge</a></strong>(1).</p>
+
+
+	<p><strong>CONFIG_PROTECT_MASK</strong> = <em>[файлы и/или каталоги, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Для всех указанных здесь файлов и/или каталогов защита конфигурационных файлов будет отключена. Подробнее об этом см. в разделе <strong>КОНФИГУРАЦИОННЫЕ ФАЙЛЫ</strong> руководства по <strong><a href=".html" class="wiki-page">emerge</a></strong>(1).</p>
+
+
+	<p><strong>CTARGET</strong></p>
+
+
+	<p style="padding-left:4em;">Эта переменная передается <em>сценариями ebuild</em> действию <em>configure</em> как <em>--target=${CTARGET}</em> только если она определена.</p>
+
+
+	<p><strong>DISTDIR</strong> = <em>[путь]</em></p>
+
+
+	<p style="padding-left:4em;">Определяет расположение вашего локального репозитория исходных кодов. После того, как пакеты собраны, можно безопасно удалить любые файлы из этого каталога, так как они будут загружены автоматически по требованию для данной сборки. Чтобы удалить файлы из каталога выборочно, см. <strong><a href=".html" class="wiki-page">eclean</a></strong>(1) из пакета gentoolkit.</p>
+
+
+	<p style="padding-left:4em;">Используйте переменную <strong>PORTAGE_RO_DISTDIRS</strong>, чтобы определить один или несколько каталогов только для чтения, содержащих исходные коды.</p>
+
+
+	<p style="padding-left:4em;">Имейте в виду, что размещение данных в каталоге /usr/portage может оказаться небезопасным. Более подробную информацию об этом вы найдете в описании переменной <strong>PORTDIR</strong>. <br />По умолчанию это каталог /usr/portage/distfiles.</p>
+
+
+	<p><strong>DOC_SYMLINKS_DIR</strong></p>
+
+
+	<p style="padding-left:4em;">Если эта переменная содержит каталог, символическая ссылка на html-документацию будет помещена в него.</p>
+
+
+	<p><strong>EBEEP_IGNORE</strong></p>
+
+
+	<p style="padding-left:4em;">Определяет, следует ли игнорировать звуковые сигналы при отображении важных информационных сообщений. По умолчанию эта переменная сброшена.</p>
+
+
+	<p><strong>EMERGE_DEFAULT_OPTS</strong></p>
+
+
+	<p style="padding-left:4em;">Позволяет указать опции, которые будут добавлены к каждому вызову <strong><a href=".html" class="wiki-page">emerge</a></strong>(1) в командной строке. Если определено значение --ignore-default-opts, эти опции добавляться не будут.</p>
+
+
+	<p><strong>EMERGE_LOG_DIR</strong></p>
+
+
+	<p style="padding-left:4em;">Управляет расположением emerge.log и emerge-fetch.log. <br />По умолчанию они расположены в каталоге /var/log.</p>
+
+
+	<p><strong>EMERGE_WARNING_DELAY</strong> = <em>целое число</em></p>
+
+
+	<p style="padding-left:4em;">Определяет продолжительность обратного отсчета после запуска `emerge --unmerge`, прежде чем начнется удаление системных пакетов. <br />Время по умолчанию - 10 секунд.</p>
+
+
+	<p><strong>EPAUSE_IGNORE</strong></p>
+
+
+	<p style="padding-left:4em;">Определяет, следует ли игнорировать краткие паузы, возникающие при отображении важных информационных сообщений. По умолчанию эта переменная сброшена. Установка ее на любое значение вызовет игнорирование пауз.</p>
+
+
+	<p><strong>EXTRA_ECONF</strong> = <em>[строка опций configure]</em></p>
+
+
+	<p style="padding-left:4em;">Содержит дополнительные опции, которые <strong>econf</strong> добавит к аргументам сценария configure (см. <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5)).</p>
+
+
+	<p><strong>FEATURES</strong> = <em>"sandbox"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет стандартные действия portage. Это инкрементная переменная. Большинство этих настроек предназначены для разработчиков, но некоторые могут быть полезны и обычному пользователю. Функция <strong>sandbox</strong> очень важна и не должна быть отключена по умолчанию.</p>
+
+
+	<p style="padding-left:4em;"><strong>assume-digests</strong></p>
+
+
+	<p style="padding-left:8em;">При коммитах в cvs с использованием <strong><a href=".html" class="wiki-page">repoman</a></strong>(1) принимать, что все существующие обзоры SRC_URI корректны. Эта функция также влияет на то, как генерируют обзоры <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1) и <strong><a href=".html" class="wiki-page">emerge</a></strong>(1) (emerge делает это только при условии, что включена функция  <em>digest</em>). Для файлов, отсутствующих в ${DISTDIR}, существующие обзоры принимаются автоматически, даже если функция <em>assume-digests</em> отключена. Если же файл присутствует в ${DISTDIR}, но его размер не соответствует существующему обзору, обзор будет создан заново, независимо от того, включена ли <em>assume-digests</em>. Команда <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1) <strong>digest</strong> имеет опцию <strong>--force</strong>, которая может использоваться для принудительного пересоздания обзоров.</p>
+
+
+	<p style="padding-left:4em;"><strong>binpkg-logs</strong></p>
+
+
+	<p style="padding-left:8em;">Сохранять журналы успешной установки бинарных пакетов. Это имеет смысл только в том случае, если установлена переменная <strong>PORT_LOGDIR</strong>.</p>
+
+
+	<p style="padding-left:4em;"><strong>buildpkg</strong></p>
+
+
+	<p style="padding-left:8em;">Для всех устанавливаемых пакетов будут создаваться бинарные. См. также <strong><a href=".html" class="wiki-page">quickpkg</a></strong>(1) и <strong><a href=".html" class="wiki-page">emerge</a></strong>(1), опции <strong>--buildpkg</strong> и <strong>--buildpkgonly</strong>.</p>
+
+
+	<p style="padding-left:4em;"><strong>buildsyspkg</strong></p>
+
+
+	<p style="padding-left:8em;">Бинарные пакеты будут создаваться только для сета system.</p>
+
+
+	<p style="padding-left:4em;"><strong>candy</strong></p>
+
+
+	<p style="padding-left:8em;">Использовать особый индикатор выполнения действия, когда <strong><a href=".html" class="wiki-page">emerge</a></strong>(1) ищет зависимости.</p>
+
+
+	<p style="padding-left:4em;"><strong>ccache</strong></p>
+
+
+	<p style="padding-left:8em;">Включить поддержку пакета ccache для portage. Если каталога ccache нет в пользовательской среде, то portage будет по умолчанию использовать ${PORTAGE_TMPDIR}/ccache.</p>
+
+
+	<p style="padding-left:8em;"><strong>Внимание</strong>: Как известно, эта функция может вызывать множественные отказы компиляции. Иногда ccache сохраняет устаревшие объекты кода или поврежденные файлы, что может привести к невозможности установить пакет. В таком случае (если вы получаете сообщение об ошибке типа "File not recognized: File truncated" ("Файл не распознан: усеченный файл")), сначала попытайтесь перекомпилировать приложение с отключенным ccache и только потом обращайтесь на багтрекер. Если вы не занимаетесь разработкой, не включайте ccache.</p>
+
+
+	<p style="padding-left:4em;"><strong>clean-logs</strong></p>
+
+
+	<p style="padding-left:8em;">Автоматически выполнять команду, назначенную переменной PORT_LOGDIR_CLEAN. По умолчанию PORT_LOGDIR_CLEAN удалит все файлы из каталога PORT_LOGDIR, которые были изменены за последние 7 дней.</p>
+
+
+	<p style="padding-left:4em;"><strong>collision-protect</strong></p>
+
+
+	<p style="padding-left:8em;">QA-Функция, которая гарантирует, что пакет не перезапишет файлы, которые ему не принадлежат. Для выборочного отключения ее можно использавать переменную COLLISION_IGNORE. См. также связанную функцию <em>protect-owned</em>.</p>
+
+
+	<p style="padding-left:4em;"><strong>compress-build-logs</strong></p>
+
+
+	<p style="padding-left:8em;">Все журналы сборки будут сжаты в процессе записи; их имена будут иметь соответствующие типу сжатия расширения. В настоящее время поддерживается только сжатие с помощью <strong>gzip</strong>(1), соответственно, если данная опция включена, журналы будут иметь расширение '.gz'.</p>
+
+
+	<p style="padding-left:4em;"><strong>digest</strong></p>
+
+
+	<p style="padding-left:8em;">При вызове команд <strong><a href=".html" class="wiki-page">emerge</a></strong>(1), <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1) или <strong><a href=".html" class="wiki-page">repoman</a></strong>(1) будут автоматически создаваться обзоры пакетов. Если включена также функция  <em>assume-digests</em>, существующие обзоры SRC_URI будут использованы всякий раз, когда они доступны.</p>
+
+
+	<p style="padding-left:4em;"><strong>distcc</strong></p>
+
+
+	<p style="padding-left:8em;">Включить поддержку distcc пакета для portage.</p>
+
+
+	<p style="padding-left:4em;"><strong>distcc-pump</strong></p>
+
+
+	<p style="padding-left:8em;">Включить поддержку distcc пакета для portage, с pump-режимом.</p>
+
+
+	<p style="padding-left:4em;"><strong>distlocks</strong></p>
+
+
+	<p style="padding-left:8em;">Portage будет использовать lockfiles, чтобы гарантировать, что конкурирующие экземпляры не затрут файлы друг друга. Эта функция включена по умолчанию, но может вызвать проблемы на менее интеллектуальных удаленных файловых системах, например, NFSv2, и некоторых специфически конфигурированных Samba-серверах (oplocks off, NFS re-export). Их можно разрешить, используя утилиту /usr/lib/portage/bin/clean_locks для обработки блокировок (возникающих чаще всего после отказа системы или отключения).</p>
+
+
+	<p style="padding-left:4em;"><strong>ebuild-locks</strong></p>
+
+
+	<p style="padding-left:8em;">Использовать блокировку, чтобы фазы сборки без sandbox никогда не выполнялись корректно. См. также <em>parallel-install</em>.</p>
+
+
+	<p style="padding-left:4em;"><strong>fakeroot</strong></p>
+
+
+	<p style="padding-left:8em;">Включить fakeroot для установки и фаз установки пакетов, когда команду <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1) запускает обычный пользователь.</p>
+
+
+	<p style="padding-left:4em;"><strong>fail-clean</strong></p>
+
+
+	<p style="padding-left:8em;">Удалить временные файлы после неудачной сборки. Это особенно полезно, если ваша <strong>PORTAGE_TMPDIR</strong> на tmpfs. Если эта функция включена, вероятно, имеет смысл включить и <strong>PORT_LOGDIR</strong>, чтобы сохранялись журналы сборки. Команда <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1) и функция <em>noclean</em> автоматически отключают <em>fail-clean</em>.</p>
+
+
+	<p style="padding-left:4em;"><strong>getbinpkg</strong></p>
+
+
+	<p style="padding-left:8em;">Принудительно предпринимать попытку получить файлы от <em>PORTAGE_BINHOST</em>. Подробнее об этом см. <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5).
+
+p((((. *installsources* 
+
+p((((((((. Устанавливает исходные коды в /usr/src/debug/${CATEGORY}/${PF} (см. также <strong>splitdebug</strong>). Эта функция работает только при условии, что установлен debugedit, а CFLAGS включает вывод отладочной информации (например, с флагом -ggdb).</p>
+
+
+	<p style="padding-left:4em;"><strong>keeptemp</strong></p>
+
+
+	<p style="padding-left:8em;">Не удалять каталог ${T} по завершении процесса установки.</p>
+
+
+	<p style="padding-left:4em;"><strong>keepwork</strong></p>
+
+
+	<p style="padding-left:8em;">Не удалять каталог ${WORKDIR} после установки пакетов. В этом случае ${WORKDIR} может быть использован повторно, поскольку данная функция фактически отключает очистку, которая обыкновенно выполняется перед каждой сборкой. Из-за отсутствия надлежащей очистки эта функция может препятствовать нормальной отработке команды emerge, и поэтому ее не следует включать надолго.</p>
+
+
+	<p style="padding-left:4em;"><strong>fixlafiles</strong></p>
+
+
+	<p style="padding-left:8em;">Изменяет файлы с расширением .la, чтобы не включать другие .la-файлы и некоторые другие исправления (порядок флагов, дубли записей и др.)</p>
+
+
+	<p style="padding-left:4em;"><strong>force-mirror</strong></p>
+
+
+	<p style="padding-left:8em;">Забирать файлы только с настроенных зеркал, игнорируя <strong>SRC_URI</strong>, за исключением тех случаев, когда в переменной <strong>RESTRICT</strong> <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5) указано <em>mirror</em>.</p>
+
+
+	<p style="padding-left:4em;"><strong>lmirror</strong></p>
+
+
+	<p style="padding-left:8em;">Загружать файлы, когда в <strong>FEATURES</strong> включена функция <em>mirror</em>, даже если <em>mirror</em> выставлено в переменной <strong>RESTRICT</strong> <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5) . <strong>НЕ ИСПОЛЬЗУЙТЕ</strong> функцию <em>lmirror</em> для клиентов, которые должны иметь приоритет над установленным значением <strong>RESTRICT</strong> при скачивании с локального зеркала; вместо этого используйте настройку зеркала как локального (local) в файле <em>/etc/portage/mirrors</em>, как описано в руководстве <strong><a href=".html" class="wiki-page">portage</a></strong>(5).</p>
+
+
+	<p style="padding-left:4em;"><strong>metadata-transfer</strong></p>
+
+
+	<p style="padding-left:8em;">Автоматически выполнять передачу метаданных при запуске `emerge --sync`. В версиях portage выше 2.1.5, эта функция отключена по умолчанию. Если передача метаданных отключена, будет использоваться кэш метаданных непосредственно из каталога ${PORTDIR}/metadata/cache/ (при наличии); еклассы в ${PORTDIR}/eclass/ могут быть изменены исключительно в результате операции `emerge --sync`, поскольку механизм проверки кэша не распознает модификации еклассов. Как правило, с этим сталкиваются только пользователи rsync-дерева, поскольку дерево cvs не содержит каталога metadata/cache/. Если вы работаете с деревом rsync и хотите изменить дополнительные классы, пользуйтесь <strong>PORTDIR_OVERLAY</strong> для корректной проверки кэша.</p>
+
+
+	<p style="padding-left:4em;"><strong>mirror</strong></p>
+
+
+	<p style="padding-left:8em;">Обращаться по всем адресам <strong>SRC_URI</strong> независимо от настроек <strong>USE</strong>, если только переменная <strong>RESTRICT</strong> не содержит <em>mirror</em> - в таком случае вообще не забирать файлы.</p>
+
+
+	<p style="padding-left:4em;"><strong>multilib-strict</strong></p>
+
+
+	<p style="padding-left:8em;">Для многих Makefiles подразумевается, что их библиотеки находятся в каталоге /usr/lib либо $(prefix)/lib. Если /usr/lib - не ссылка, указывающая на /usr/lib64, это может стать причиной серьезных проблем. В этом случае для обнаружения сбоящих пакетов portage обращается к функции <em>multilib-strict</em>. Если она используется, emerge всегда будет помещать 64-битные библиотеки в каталог (/usr)/lib64.</p>
+
+
+	<p style="padding-left:4em;"><strong>news</strong></p>
+
+
+	<p style="padding-left:8em;">Включить поддержку новостей GLEP 42. См. <em><noindex><a class="external" href="http://www.gentoo.org/proj/en/glep/glep-0042.html" ref="nofollow">http://www.gentoo.org/proj/en/glep/glep-0042.html</a></noindex></em>.</p>
+
+
+	<p style="padding-left:4em;"><strong>noauto</strong></p>
+
+
+	<p style="padding-left:8em;">При использовании <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1) просто запускает запрошенную функцию.</p>
+
+
+	<p style="padding-left:4em;"><strong>noclean</strong></p>
+
+
+	<p style="padding-left:8em;">По завершении установки не удалять исходные коды и временные файлы.</p>
+
+
+	<p style="padding-left:4em;"><strong>nodoc</strong></p>
+
+
+	<p style="padding-left:8em;">Не устанавливать файлы документации (/usr/share/doc).</p>
+
+
+	<p style="padding-left:4em;"><strong>noinfo</strong></p>
+
+
+	<p style="padding-left:8em;">Не устанавливать info-страницы.</p>
+
+
+	<p style="padding-left:4em;"><strong>noman</strong></p>
+
+
+	<p style="padding-left:8em;">Не устанавливать man-руководства.</p>
+
+
+	<p style="padding-left:4em;"><strong>nostrip</strong></p>
+
+
+	<p style="padding-left:8em;">Не удалять отладочную информацию из бинарных файлов, устанавливаемых в рабочей файловой системе.</p>
+
+
+	<p style="padding-left:4em;"><strong>notitles</strong></p>
+
+
+	<p style="padding-left:8em;">Отключает обновление строки заголовка в xterm (содержит информацию о состоянии).</p>
+
+
+	<p style="padding-left:4em;"><strong>parallel-fetch</strong></p>
+
+
+	<p style="padding-left:8em;">Загрузка файлов в фоновом режиме при компиляции. Для наблюдения за ходом этого процесса запустите `tail -f /var/log/emerge-fetch.log` в другом терминале.</p>
+
+
+	<p style="padding-left:4em;"><strong>parallel-install</strong></p>
+
+
+	<p style="padding-left:8em;">При установке пакетов использует более тонкую блокировку, чтобы увеличить количество выполняемых потоков. Для дополнительного распараллеливания используйте <em>ebuild-locks</em>.</p>
+
+
+	<p style="padding-left:4em;"><strong>parse-eapi-ebuild-head</strong></p>
+
+
+	<p style="padding-left:8em;">Анализировать <strong>EAPI</strong> начиная от заголовка ебилда(первые 30 строк). Это экспериментальная опция; в нормальных условиях ее не следует включать.</p>
+
+
+	<p style="padding-left:4em;"><strong>prelink-checksums</strong></p>
+
+
+	<p style="padding-left:8em;">Если установлена утилита <strong>prelink</strong>(8), она будет использована для отмены предварительного связывания файлов перед вычислением контрольных сумм для установки и удаления. Эта функция полезна только в том случае, если установлен <strong>prelink</strong>(8) и по какой-либо причине требуются (несмотря на предварительное связывание) точные контрольные суммы  - например, для проверки целостности установленных файлов или при отключенной функции <em>unmerge-orphans</em>.</p>
+
+
+	<p style="padding-left:8em;">Заметьте, что при нормальной установке пакетов с компиляцией из исходного кода контрольные суммы вычисляются до связывания, поэтому здесь данная функция также не нужна. Отказ от предварительного связывания при установке требуется только при использовании таких инструментов как <strong><a href=".html" class="wiki-page">quickpkg</a></strong>(1), которые могут запустить установку уже связанных файлов.</p>
+
+
+	<p style="padding-left:4em;"><strong>preserve-libs</strong></p>
+
+
+	<p style="padding-left:8em;">Сохранять библиотеки при изменении, в ходе обновления или отката, имен .so-файлов. Библиотеки будут сохранены только в том случае, если обнаружены использующие их пакеты.</p>
+
+
+	<p style="padding-left:4em;"><strong>protect-owned</strong></p>
+
+
+	<p style="padding-left:8em;">Данная функция аналогична <em>collision-protect</em>, с той разницей, что если файлы не прописаны явно в устанавливаемом пакете, они могут быть перезаписаны. Это особенно удобно для систем, содержащих большое количество неиспользуемых файлов, оставшихся от устаревших версий portage, где функция <em>unmerge-orphans</em> еще не поддерживалась. Для выборочного отключения данной функции, аналогично <em>collision-protect</em>, может быть использована переменная <em>COLLISION_IGNORE</em>. Рекомендуется всегда оставлять включенной либо <em>protect-owned</em>, либо <em>collision-protect</em>, поскольку в противном случае конфликты между файлами пакетов могут привести к несвоевременной перезаписи или удалению файлов. Если включена опция <em>collision-protect</em>, она будет иметь приоритет над <em>protect-owned</em>.</p>
+
+
+	<p style="padding-left:4em;"><strong>python-trace</strong></p>
+
+
+	<p style="padding-left:8em;">Выводить подробный отчет о выполнении операций python на stderr, если для команды включена опция --debug.</p>
+
+
+	<p style="padding-left:4em;"><strong>sandbox</strong></p>
+
+
+	<p style="padding-left:8em;">Включить sandbox при запуске <strong><a href=".html" class="wiki-page">emerge</a></strong>(1) и <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1).</p>
+
+
+	<p style="padding-left:4em;"><strong>sesandbox</strong></p>
+
+
+	<p style="padding-left:8em;">Включить sandbox для SELinux. Не изменяйте вручную эту функцию <strong>FEATURE</strong>.</p>
+
+
+	<p style="padding-left:4em;"><strong>sfperms</strong></p>
+
+
+	<p style="padding-left:8em;">Расшифровывается как Smart Filesystem Permissions ("умное управление правами в файловой системе"). Перед установкой пакетов в рабочей файловой системе автоматически осуществляет поиск и установку прав доступа к файлам setuid и setgid. У setuid-файлов будут сняты права на чтение для группы и остальных пользователей, а для setgid-файлов - только для остальных пользователей. См. также ниже описание_suidctl_.</p>
+
+
+	<p style="padding-left:4em;"><strong>sign</strong></p>
+
+
+	<p style="padding-left:8em;">При коммитах в cvs с использованием <strong><a href=".html" class="wiki-page">repoman</a></strong>(1) подписывать Manifest-файл ключом GPG. О переменной <em>PORTAGE_GPG_KEY</em> см. в <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5).</p>
+
+
+	<p style="padding-left:4em;"><strong>skiprocheck</strong></p>
+
+
+	<p style="padding-left:8em;">Пропустить проверку доступа на запись к <strong>DISTDIR</strong> при загрузке файлов. Это полезно, если используются переменные <strong>FETCHCOMMAND</strong> и <strong>RESUMECOMMAND</strong>, обеспечивая перенаправление запросов на загрузку серверу, который предоставляет <strong>DISTDIR</strong> как общий ресурс NFS только для чтения. <strong>DISTDIR</strong>, доступный только для чтения, несовместим с опцией <em>distlocks</em>, поэтому рекомендуется добавить "-distlocks" в переменную <strong>FEATURES</strong>, чтобы избежать появления предупреждений, вызванных этой несовместимостью.</p>
+
+
+	<p style="padding-left:4em;"><strong>split-elog</strong></p>
+
+
+	<p style="padding-left:8em;">Сохранять журналы, создаваемые <strong>PORTAGE_ELOG_SYSTEM="save"</strong> в подкаталогах категорий каталога <strong>PORT_LOGDIR/elog</strong>, а не непосредственно в <strong>PORT_LOGDIR/elog</strong>.</p>
+
+
+	<p style="padding-left:4em;"><strong>split-log</strong></p>
+
+
+	<p style="padding-left:8em;">Хранить журналы сборки в подкаталогах категорий каталога <strong>PORT_LOGDIR/build</strong>, а не непосредственно в <strong>PORT_LOGDIR</strong>.</p>
+
+
+	<p style="padding-left:4em;"><strong>splitdebug</strong></p>
+
+
+	<p style="padding-left:8em;">Прежде чем отладочная информация будет удалена из файлов ELF etdyn и etexec, она сохраняется, чтобы в дальнейшем при необходимости к ней мог был обратиться отладчик. Эту функцию можно отключить опцией <strong>nostrip</strong>. Для установки исходных кодов см. <strong>installsources</strong>.</p>
+
+
+	<p style="padding-left:4em;"><strong>strict</strong></p>
+
+
+	<p style="padding-left:8em;">portage будет категорично реагировать на ситуации, которые могут представлять опасность (например, отсутствие или ошибки digest-файлов ебилдов).</p>
+
+
+	<p style="padding-left:4em;"><strong>stricter</strong></p>
+
+
+	<p style="padding-left:8em;">portage будет категорично реагировать на ситуации, которые могут создавать конфликт настроек системы безопасности (например, text relocation, исполняемый стек). О переменных <em>QA_STRICT_*</em> variables см. в руководстве по <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5).</p>
+
+
+	<p style="padding-left:4em;"><strong>suidctl</strong></p>
+
+
+	<p style="padding-left:8em;">Прежде чем устанавливать пакеты в рабочей файловой системе, автоматически удаляет данные о setuid из любого файла, не фигурирующего в <em>/etc/portage/suidctl.conf</em>.</p>
+
+
+	<p style="padding-left:4em;"><strong>test</strong></p>
+
+
+	<p style="padding-left:8em;">Запускать для пакетов специфичные тесты при каждой сборке, дабы убедиться, что пакет был скомпилирован без ошибок. См. <em>test</em> в <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1) и <em>src_test()</em> в <strong>ebuild</strong>(5). Эта функция подразумевает, что включен <strong>USE-флаг</strong> test.</p>
+
+
+	<p style="padding-left:4em;"><strong>test-fail-continue</strong></p>
+
+
+	<p style="padding-left:8em;">Если переменная <strong>FEATURES</strong> содержит значение "test", а фаза проверки ебилда завершается с ошибкой, продолжать выполнение оставшихся фаз, как если бы ошибки не было. Обратите внимание, что фазу проверки можно отключить выборочно для отдельных пакетов, замаскировав <strong>USE-флаг</strong> в файле <strong>package.use.mask</strong> (см. <strong><a href=".html" class="wiki-page">portage</a></strong>(5)).</p>
+
+
+	<p style="padding-left:4em;"><strong>unmerge-logs</strong></p>
+
+
+	<p style="padding-left:8em;">Сохранять журналы успешных удалений. Это имеет смысл только в том случае, если установлена переменная <strong>PORT_LOGDIR</strong>.</p>
+
+
+	<p style="padding-left:4em;"><strong>unmerge-orphans</strong></p>
+
+
+	<p style="padding-left:8em;">Если файл не требуется другим пакетом в том же слоте и не защищен согласно <em>CONFIG_PROTECT</em>, удалить его даже в том случае, если время последнего изменения или контрольная сумма отличаются от соответственных параметров изначально установленного файла.</p>
+
+
+	<p style="padding-left:4em;"><strong>unknown-features-filter</strong></p>
+
+
+	<p style="padding-left:8em;">Отфильтровать все неизвестные значения в переменной FEATURES.</p>
+
+
+	<p style="padding-left:4em;"><strong>unknown-features-warn</strong></p>
+
+
+	<p style="padding-left:8em;">Предупреждать, если переменная FEATURES содержит одно или несколько неизвестных значений.</p>
+
+
+	<p style="padding-left:4em;"><strong>userfetch</strong></p>
+
+
+	<p style="padding-left:8em;">При запуске portage от имени пользователя root на время загрузки исходных кодов пакетов передавать права portage:portage.</p>
+
+
+	<p style="padding-left:4em;"><strong>userpriv</strong></p>
+
+
+	<p style="padding-left:8em;">Разрешить portage отказаться от прав root и компилировать пакеты как portage:portage, без sandbox (если только одновременно не включена функция <em>usersandbox</em>).</p>
+
+
+	<p style="padding-left:4em;"><strong>usersandbox</strong></p>
+
+
+	<p style="padding-left:8em;">Включить sandbox в фазу компиляции при работе без прав root (<em>userpriv</em>).</p>
+
+
+	<p style="padding-left:4em;"><strong>usersync</strong></p>
+
+
+	<p style="padding-left:8em;">Предоставить владельцу <strong>PORTDIR</strong> права для выполнения <strong>emerge --sync</strong>.</p>
+
+
+	<p style="padding-left:4em;"><strong>webrsync-gpg</strong></p>
+
+
+	<p style="padding-left:8em;">Включить проверку GPG при использовании <em>emerge-webrsync</em>.</p>
+
+
+	<p><strong>FETCHCOMMAND</strong></p>
+
+
+	<p style="padding-left:4em;">Эта переменная содержит команду, используемую для получения исходных кодов пакетов из Интернета. Она должна содержать полный путь доступа к исполняемому файлу, а также подстановочные \${DISTDIR}, \${FILE} и \${URI}. Запись команды должна обеспечивать помещение загруженного файла по адресу \${DISTDIR}/\${FILE}. См. также <strong>RESUMECOMMAND</strong>.</p>
+
+
+	<p><strong>FFLAGS</strong>, <strong>FCFLAGS</strong></p>
+
+
+	<p style="padding-left:4em;">Используйте эти переменные, чтобы выставить по вашему желанию настройки оптимизации/инструкции процессору для приложений, собираемых компилятором FORTRAN. Переменная FFLAGS обычно передается компилятору FORTRAN 77, тогда как переменная FCFLAGS используется на более современных системах сборки с любым компилятором FORTRAN.</p>
+
+
+	<p style="padding-left:4em;">Почитать об этом подробнее можно в разделе <em>Invoking GCC</em> ("Вызов GCC") man-руководства по gcc: <br /><noindex><a class="external" href="http://gcc.gnu.org/onlinedocs/" ref="nofollow">http://gcc.gnu.org/onlinedocs/</a></noindex></p>
+
+
+	<p><strong>GENTOO_MIRRORS</strong> = <em>[список URI]</em></p>
+
+
+	<p style="padding-left:4em;">Вставьте здесь, через пробел, список локальных зеркал. Они будут использоваться для загрузки файлов, имея приоритет перед перечисленными в <em>сценариях ebuild</em>. Полезной может оказаться утилита mirrorselect.  Записи в данной переменной, не имеющие протокола и начинающиеся с разделителя пути '/', могут быть использованы для определения подмонтированных зеркал файловой системы.</p>
+
+
+	<p><strong>http_proxy</strong>, <strong>ftp_proxy</strong> = <em>[протокол://хост:порт]</em></p>
+
+
+	<p style="padding-left:4em;">Эти переменные используются в том случае, исходные коды должны доставляться из Сети с помощью <strong>wget</strong>(1). Это необходимо лишь в том случае, если для выхода в Интернет вы используете прокси-сервер.</p>
+
+
+	<p><strong>INSTALL_MASK</strong> = <em>[файлы, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Используйте эту переменную для выборочного запрета копирования файлов в ваше дерево файловой системы. Заметьте, что обрабатываться при этом будут только сами файлы, но не ссылки на них. Данная возможность полезна, в частности, в том случае, если вам необходимо отфильтровать файлы HACKING.gz и TODO.gz. Переменная <strong>INSTALL_MASK</strong> обрабатывается непосредственно перед установкой пакета. Поддерживается также переменная <strong>PKG_INSTALL_MASK</strong>, которая работает аналогично <strong>INSTALL_MASK</strong>, но обрабатывается непосредственно перед созданием бинарного пакета.</p>
+
+
+	<p><strong>LDFLAGS</strong></p>
+
+
+	<p style="padding-left:4em;">Список флагов, которые будут переданы компилятору при вызове компоновщика. Флаги компоновщика см. в справке по <strong>ld</strong>(1); имейте в виду, что эти флаги будут переданы непосредственно компилятору. Поэтому следует использовать опцию '-Wl', чтобы избежать использования флагов, которые распознает только компоновщик (см. <strong>gcc</strong>(1)).</p>
+
+
+	<p style="padding-left:4em;"><strong>***внимание***</strong> <br />Установка этой и других переменных *FLAGS может вызвать отказ выполнения или компиляции. Если вы размещаете заявку на багтерекере, используя нестандартные значения данных опций, она может быть закрыта как недопустимая (INVALID).</p>
+
+
+	<p><strong>MAKEOPTS</strong></p>
+
+
+	<p style="padding-left:4em;">Используйте эту переменную для параллельной сборки. Например, если у вас двухъядерный процессор, вы можете установить ее значение на "-j2" или "-j3" для оптимизации сборки нескольких пакетов. Рекомендуемые значения находятся в диапазоне от <em>число процессоров+1</em> до <em>2*число процессоров+1</em>. Во избежание чрезмерной многопоточности следует использовать опцию <strong>--load-average</strong>. Подробнее см. <strong>make</strong>(1). См. также сведения  об аналогичных опциях <strong>--jobs</strong> и <strong>--load-average</strong> в справочном руководстве по <strong><a href=".html" class="wiki-page">emerge</a></strong>(1)
+
+*NOCOLOR* = _["true" | "false"]_
+
+p((((. Определяет, отключен ли по умолчанию цветной вывод. 
+По умолчанию - "ложно" (false). 
+
+*PKGDIR* = _[путь]_
+
+p((((. Определяет каталог, в который будут помещены созданные бинарные пакеты .tbz2 binary, если включена опция *<a href=".html" class="wiki-page">emerge</a>*&lt;nt&gt;(1) &lt;/nt&gt;*&lt;nt&gt;--buildpkg&lt;/nt&gt;*. По умолчанию каждый пакет помещается в подкаталог, соответствующий его категории. Тем не менее для обратной совместимости с расположением, используемым более ранними версиями portage, если каталог _${PKGDIR}/All_ существует, все пакеты будут храниться в нем, а символические ссылки на пакеты будут созданы в подкаталогах категорий. Учтите, что подкаталоги /usr/portage могут оказаться небезопасны для хранения данных. Подробнее см. в справочном описании *PORTDIR*. 
+По умолчанию это каталог /usr/portage/packages. 
+
+*PORT_LOGDIR* 
+
+p((((. Эта переменная определяет каталог, в котором хранятся журналы ебилдов; если переменная не определена, журналы создаваться не будут. Каждый журнал представляет собой файл формата ${CATEGORY}:${PF}:YYYYMMDD-HHMMSS.log, лежащий в указанном каталоге. Если каталог не существует, он будет создан автоматически и получит права группы. Если каталог уже существует, права доступа к нему не будут изменены. 
+
+*PORT_LOGDIR_CLEAN* 
+
+p((((. Эта переменная должна содержать команду, с помощью которой portage очистит PORT_LOGDIR. Строка команды должна содержать подстановочный \${PORT_LOGDIR}, который будет заменен значением данной переменной. Переменная будет рабочей только в том случае, если в *FEATURES* назначена функция *clean-logs*. 
+
+*PORTAGE_BINHOST* = _[список URI, через пробел]_
+
+p((((. Это список хостов, с которых portage будет забирать прекомпилированные, бинарные пакеты. Каждый элемент списка должен представлять собой полной адрес каталога для работы с tbz2-архивами в вашей системе. Используется только в том случае, если *emerge* передаются опции, обеспечивающие выборку бинарных пакетов. Более подробная информация содержится в руководстве по *<a href=".html" class="wiki-page">emerge</a>*(1). В версиях portage ниже 2.1.6 эта переменная указывает на каталог All на хосте, который создает бинарные пакеты, а не на корневой каталог *PKGDIR*. Начиная с portage-2.1.6 она должна указывать на каталог, содержащий индексный файл Packages. Если файл ${PORTAGE_BINHOST}/Packages не существует, portage попытается использовать более ранний протокол.
+
+*PORTAGE_BINHOST_HEADER_URI* = _"ftp://login:pass@grp.mirror.site/pub/grp/i686/athlon-xp/"_
+
+p((((. Эта переменная имеет смысл только в системе, которая будет выступать в качестве binhost и собирать пакеты для клиентов. Она определяет поле заголовка URI для индексного файла пакетов, который расположен по адресу ${PKGDIR}/Packages. Клиенты с правильным настройками <strong>PORTAGE_BINHOST</strong> смогут извлечь индекс и будут использовать поле заголовка URI для доставки бинарных пакетов. Если поле заголовка URI не определено, клиент будет использовать ${PORTAGE_BINHOST}, настроенный как основной URI.</p>
+
+
+	<p><strong>PORTAGE_BINPKG_TAR_OPTS</strong></p>
+
+
+	<p style="padding-left:4em;">Эта переменная содержит опции, которые будут передаваться команде tar для создания бинарных пакетов.</p>
+
+
+	<p><strong>PORTAGE_BUNZIP2_COMMAND</strong> = <em>[строка команд bunzip2]</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная должна содержать команду, с помощью которой portage будет производить извлечение файлов из bzip2-архива.</p>
+
+
+	<p><strong>PORTAGE_BZIP2_COMMAND</strong> = <em>[строка команд bzip2]</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная должна содержать команду, с помощью которой portage будет производить сжатие в архив bzip2. <strong>PORTAGE_BZIP2_COMMAND</strong> будет вызываться и для извлечения архива (для этого необходимо использовать опцию -d), при условии, что не установлена переменная <strong>PORTAGE_BUNZIP2_COMMAND</strong>.</p>
+
+
+	<p><strong>PORTAGE_COMPRESS</strong> = <em>"bzip2"</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная содержит команду, используемую для сжатия файлов документации во время фазы установки.</p>
+
+
+	<p><strong>PORTAGE_COMPRESS_FLAGS</strong> = <em>"-9"</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная содержит флаги, передаваемые команде <strong>PORTAGE_COMPRESS</strong>.</p>
+
+
+	<p><strong>PORTAGE_COMPRESS_EXCLUDE_SUFFIXES</strong> = <em>"gif htm[l]? jp[e]?g pdf png"</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная содержит, через пробел, перечень шаблонов суффиксов, по которым происходит исключение файлов при вызове команды <strong>PORTAGE_COMPRESS</strong>. Поддерживаются регулярные выражения; поиск соответствий осуществляется только по фрагменту имени файла, следующего за последним символом точки.</p>
+
+
+	<p><strong>PORTAGE_ELOG_CLASSES</strong></p>
+
+
+	<p><strong>PORTAGE_ELOG_SYSTEM</strong></p>
+
+
+	<p><strong>PORTAGE_ELOG_COMMAND</strong></p>
+
+
+	<p><strong>PORTAGE_ELOG_MAILURI</strong></p>
+
+
+	<p><strong>PORTAGE_ELOG_MAILFROM</strong></p>
+
+
+	<p><strong>PORTAGE_ELOG_MAILSUBJECT</strong></p>
+
+
+	<p style="padding-left:4em;">Обратитесь к справке по elog в файле /usr/share/portage/config/make.conf.example.</p>
+
+
+	<p><strong>PORTAGE_FETCH_CHECKSUM_TRY_MIRRORS</strong> = <em>5</em></p>
+
+
+	<p style="padding-left:4em;">Число зеркал, с которых будет предпринята попытка повторного скачивания, если у загруженного файла ошибочная контрольная сумма.</p>
+
+
+	<p><strong>PORTAGE_FETCH_RESUME_MIN_SIZE</strong> = <em>350K</em></p>
+
+
+	<p style="padding-left:4em;">Минимальный размер существующего файла, к которому обращается <strong>RESUMECOMMAND</strong>. Файлы размером меньше заданного будут удалены, будет вызван <strong>FETCHCOMMAND</strong>, а файлы будут загружены вновь, с самого начала. Это позволяет легко избавляться от небольших мусорных файлов - например, от html-страниц с ошибкой 404. Значением данной переменной должно быть целое число байтов, с суффиксом K (килобайты), M (мегабайты) или G (гигабайты).</p>
+
+
+	<p><strong>PORTAGE_GPG_DIR</strong></p>
+
+
+	<p style="padding-left:4em;">Домашний каталог <strong>gpg</strong>(1), используемый утилитой <strong><a href=".html" class="wiki-page">repoman</a></strong>(1), если в <strong>FEATURES</strong> выставлена опция <strong>sign</strong>.<br />По умолчанию это $HOME/.gnupg.</p>
+
+
+	<p><strong>PORTAGE_GPG_KEY</strong></p>
+
+
+	<p style="padding-left:4em;">Ключ <strong>gpg</strong>(1), используемый утилитой <strong><a href=".html" class="wiki-page">repoman</a></strong>(1) для подписи manifest-файлов, если в *FEATURES* выставлена опция <strong>sign</strong>.</p>
+
+
+	<p><strong>PORTAGE_GPG_SIGNING_COMMAND</strong></p>
+
+
+	<p style="padding-left:4em;">Команда, используемая утилитой <strong><a href=".html" class="wiki-page">repoman</a></strong>(1) для подписи manifest-файлов, если в *FEATURES* выставлена опция <strong>sign</strong>.</p>
+
+
+	<p><strong>PORTAGE_IONICE_COMMAND</strong> = <em>[строка команд ionice]</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная должна содержать команду, которую portage будет вызывать для регулировки IO-приоритета самого portage и его подпроцессов. Строка команд должна  содержать подстановочный \${PID}, которому соответствует целое PID. Так, значение "ionice -c 3 -p \${PID}" устанавливает приоритет ожидания ввода-вывода. Подробнее об ionice см. <strong>ionice</strong>(1). Данная переменная не установлена по умолчанию.</p>
+
+
+	<p><strong>PORTAGE_NICENESS</strong> = <em>[число]</em></p>
+
+
+	<p style="padding-left:4em;">Значение этой переменной будет добавлено к текущему nice-уровню, на котором работает emerge. Иными словами, она не устанавливает nice-уровень, а повышает его. Для получения дополнительной информации о nice-уровнях и допустимых значениях, см. <strong>nice</strong>(1).</p>
+
+
+	<p><strong>PORTAGE_RO_DISTDIRS</strong> = <em>[каталоги, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Если тот или иной файл не существует в каталоге <strong>DISTDIR</strong>, система будет искать его в каталогах из этого списка. Поиск по списку осуществляется слева направо. Обратите внимание, что текущая реализация работает путем создания символической ссылки в каталоге <strong>DISTDIR</strong>, но в будущем это может измениться.</p>
+
+
+	<p><strong>PORTAGE_RSYNC_INITIAL_TIMEOUT</strong> = <em>целое_число</em></p>
+
+
+	<p style="padding-left:4em;">Определяет время ожидания перед первоначальным соединением с rsync-сервером при выполнении команды <strong>emerge --sync</strong>. <br />По умолчанию - 15 секунд.</p>
+
+
+	<p><strong>PORTAGE_RSYNC_EXTRA_OPTS</strong> = <em>[rsync options string]</em></p>
+
+
+	<p style="padding-left:4em;">Дополнительные опции rsync, которые будут передаваться команде <strong>emerge --sync</strong>. <br />Значение по умолчанию отсутствует.</p>
+
+
+	<p><strong>PORTAGE_RSYNC_OPTS</strong> = <em>[строка опций rsync]</em></p>
+
+
+	<p style="padding-left:4em;">Определяет стандартные опции rsync, которые будут передаваться команде <strong>emerge --sync</strong>. <br /><strong>Не редактируйте значение этой переменной, если не уверены в своих действиях!</strong><br />По умолчанию - "--recursive --links --safe-links --perms --times --compress --force --whole-file --delete --stats --timeout=180 --exclude='/distfiles' --exclude='/local' --exclude='/packages'"</p>
+
+
+	<p><strong>PORTAGE_RSYNC_RETRIES</strong> = <em>[число]</em></p>
+
+
+	<p style="padding-left:4em;">Определяет максимальное количество повторных попыток соединения при синхронизации. Если выставить значением переменной отрицательное число, попытки соединения будут повторяться до тех пор, пока не будут исчерпаны все возможные адреса.<br />Значение по умолчанию составляет -1.</p>
+
+
+	<p><strong>PORTAGE_SYNC_STALE</strong> = <em>[число]</em></p>
+
+
+	<p style="padding-left:4em;">Определяет число дней после последнего выполнения `emerge --sync`, по истечении которых будет выводиться предупреждение. Если выставить значением переменной 0, предупреждения будут отключены.<br />Значение по умолчанию - 30.</p>
+
+
+	<p><strong>PORTAGE_TMPDIR</strong> = <em>[путь]</em></p>
+
+
+	<p style="padding-left:4em;">Определяет расположение временных каталогов сборки. <br />По умолчанию это каталог /var/tmp.</p>
+
+
+	<p><strong>PORTAGE_WORKDIR_MODE</strong> = <em>"0700"</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная управляет правами доступа к каталогу <em>WORKDIR</em> (см. <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5)).</p>
+
+
+	<p><strong>PORTDIR</strong> = <em>[путь]</em></p>
+
+
+	<p style="padding-left:4em;">Определяет расположение дерева портежей - репозитория, где хранится вся информация о профиле и все ебилды. Если вы меняете значение этой переменной, вы должны соответственно изменить и символическую ссылку /etc/make.profile. <br />По умолчанию это каталог /usr/portage. <br /><strong>***Внимание***</strong> <br />Данные, хранящиеся в <strong>PORTDIR</strong>, могут быть затерты или удалены при выполнении команды emerge --sync. Значение по умолчанию переменной <strong>PORTAGE_RSYNC_OPTS</strong> гарантирует, что сохранятся стандартные значения <strong>DISTDIR</strong> и <strong>PKGDIR</strong>, но пользователи должны отдавать себе отчет в том, что другие подкаталоги <strong>PORTDIR</strong> могут оказаться небезопасны для хранения данных. Не следует помещать иные данные (например, оверлеи) в каталог <strong>PORTDIR</strong>.  <strong>Portage будет обходить структуру каталогов и может добавить произвольные нерабочие категории как пакеты.</strong></p>
+
+
+	<p><strong>PORTDIR_OVERLAY</strong> = <em>"[путь] [другой-путь] [и т.д.]"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет каталоги, в которых могут храниться ебилды, созданные пользователем, дабы они не перезаписывались при запуске `emerge --sync`. Список каталогов, через пробел.<br />Значение по умолчанию отсутствует.</p>
+
+
+	<p><strong>QA_STRICT_EXECSTACK = </strong><em>"set"</em></p>
+
+
+	<p style="padding-left:4em;">Заставляет portage игнорировать любые настройки переопределения <em>QA_EXECSTACK</em> из ебилдов.  См. также <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5).</p>
+
+
+	<p><strong>QA_STRICT_WX_LOAD = </strong><em>"set"</em></p>
+
+
+	<p style="padding-left:4em;">Заставляет portage игнорировать любые настройки переопределения <em>QA_WX_LOAD</em> из ебилдов.  См. также <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5).</p>
+
+
+	<p><strong>QA_STRICT_TEXTRELS = </strong><em>"set"</em></p>
+
+
+	<p style="padding-left:4em;">Заставляет portage игнорировать любые настройки переопределения <em>QA_TEXTREL</em> из ебилдов.  См. также <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5).</p>
+
+
+	<p><strong>QA_STRICT_DT_HASH = </strong><em>"set"</em></p>
+
+
+	<p style="padding-left:4em;">Заставляет portage игнорировать любые настройки переопределения <em>QA_DT_HASH</em> из ебилдов.  См. также <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5).</p>
+
+
+	<p><strong>QA_STRICT_PRESTRIPPED = </strong><em>"set"</em></p>
+
+
+	<p style="padding-left:4em;">Заставляет portage игнорировать любые настройки переопределения <em>QA_PRESTRIPPED</em> из ебилдов.  См. также <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5).</p>
+
+
+	<p><strong>RESUMECOMMAND</strong></p>
+
+
+	<p style="padding-left:4em;">Эта переменная содержит команду, которая используется для возобновления частично выполненной загрузки исходных кодов. Она должна быть определена в том же формате, что и <strong>FETCHCOMMAND</strong>, и включать все дополнительные опции, которые могут понадобиться, чтобы докачать частично загруженный файл, расположенный в каталоге \${DISTDIR}/\${FILE}.</p>
+
+
+	<p><strong>ROOT</strong> = <em>[путь]</em></p>
+
+
+	<p style="padding-left:4em;">Используйте переменную <strong>ROOT</strong> для определения целевой корневой файловой системы, которая будет использоваться для установки пакетов или ебилдов. Все <strong>RDEPEND</strong> и <strong>PDEPEND</strong> будут установлены в каталог <strong>ROOT</strong>, в то время как <strong>DEPEND</strong> - в каталог /. Обычно этот параметр устанавливается в окружении, а не непосредственно в файле <em>/etc/make.conf</em>; это удобно при создании нового образа сборки. Удостоверьтесь, что вы используете абсолютный путь.<br />Значение по умолчанию - корневой каталог, /.</p>
+
+
+	<p><strong>RPMDIR</strong> = <em>[путь]</em></p>
+
+
+	<p style="padding-left:4em;">Определяет каталог, в который будут помещаться создаваемые RPM-пакеты. <br />По умолчанию это ${PORTDIR}/rpm.</p>
+
+
+	<p><strong>SYNC</strong> = <em>[RSYNC]</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная определяет предпочитаемое зеркало rsync. Указанный здесь rsync-сервер используется для синхронизации локального дерева портежей при запуске `emerge --sync`.<br />Значение по умолчанию - rsync://rsync.gentoo.org/gentoo-portage</p>
+
+
+	<p><strong>USE</strong> = <em>[элементы USE, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Эта переменная содержит опции, которые управляют сборкой ряда пакетов. Более подробную информацию см. в справке по <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5). Список возможных значений USE имеется в файле <em>/usr/portage/profiles/use.desc</em>.</p>
+
+
+	<p><strong>USE_EXPAND</strong> = <em>[имена переменных, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Любая переменная из этого списка будет использована для наращивания USE путем выставления нового флага для каждого элемента значения данной переменной; таким образом, результатом назначений USE_EXPAND="FOO" и FOO="bar bla" будет USE="foo_bar foo_bla".</p>
+
+
+	<p><strong>USE_EXPAND_HIDDEN</strong> = <em>[имена переменных, через пробел]</em></p>
+
+
+	<p style="padding-left:4em;">Имена переменных <strong>USE_EXPAND</strong>, которые не должны отображаться в подробном выводе команды <strong><a href=".html" class="wiki-page">emerge</a></strong>(1).</p>
+
+
+	<p><strong>USE_ORDER</strong> = <em>"env:pkg:conf:defaults:pkginternal:repo:env.d"</em></p>
+
+
+	<p style="padding-left:4em;">Определяет порядок слоев в наращиваемом стеке переменной USE. Приоритет уменьшается слева направо: таким образом, значение env выше pkg, pkg выше conf, и так далее.</p>
+
+
+	<p style="padding-left:4em;"><strong>***внимание***</strong> <br />Если вы не разработчик и не уверены в том, что делаете, не изменяйте эту величину. Если вы это сделаете и возникнут неполадки, мы вам не поможем.</p>
+
+
+	<p style="padding-left:4em;"><strong>env</strong></p>
+
+
+	<p style="padding-left:8em;">USE из текущих переменных окружения (USE и перечисленные в USE_EXPAND)</p>
+
+
+	<p style="padding-left:4em;"><strong>pkg</strong></p>
+
+
+	<p style="padding-left:8em;">USE для определенных пакетов из <strong>/etc/portage/package.use</strong> (см. <strong><a href=".html" class="wiki-page">portage</a></strong>(5))</p>
+
+
+	<p style="padding-left:4em;"><strong>conf</strong></p>
+
+
+	<p style="padding-left:8em;">USE из make.conf</p>
+
+
+	<p style="padding-left:4em;"><strong>defaults</strong></p>
+
+
+	<p style="padding-left:8em;">USE из make.defaults и package.use профиля (см. <strong><a href=".html" class="wiki-page">portage</a></strong>(5))</p>
+
+
+	<p style="padding-left:4em;"><strong>pkginternal</strong></p>
+
+
+	<p style="padding-left:8em;">USE из стандартных IUSE-настроек <strong>ebuild</strong>(5)</p>
+
+
+	<p style="padding-left:4em;"><strong>repo</strong></p>
+
+
+	<p style="padding-left:8em;">USE из make.defaults и package.use репозитория (см. <strong><a href=".html" class="wiki-page">portage</a></strong>(5))</p>
+
+
+	<p style="padding-left:4em;"><strong>env.d</strong></p>
+
+
+	<p style="padding-left:8em;">USE из переменных окружения, например, LINGUAS, определяемые файлами в каталоге <em>/etc/env.d/</em></p>
+
+
+	<h2 id="БАГТРЕКЕР">БАГТРЕКЕР<a href="#БАГТРЕКЕР" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Об обнаруженных ошибках сообщайте на <noindex><a class="external" href="http://bugs.gentoo.org/" ref="nofollow">http://bugs.gentoo.org/</a></noindex></p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Daniel Robbins &lt;<a class="email" href="mailto:drobbins@gentoo.org">drobbins@gentoo.org</a>&gt;</li>
+		<li>Nicholas Jones &lt;<a class="email" href="mailto:carpaski@gentoo.org">carpaski@gentoo.org</a>&gt;</li>
+		<li>Mike Frysinger &lt;<a class="email" href="mailto:vapier@gentoo.org">vapier@gentoo.org</a>&gt;</li>
+		<li>Saleem Abdulrasool &lt;<a class="email" href="mailto:compnerd@gentoo.org">compnerd@gentoo.org</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ФАЙЛЫ">ФАЙЛЫ<a href="#ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/etc/make.conf</strong> и <strong>/etc/portage/make.conf</strong></p>
+
+
+	<p style="padding-left:4em;">Содержат переменные сборки, имеющие приоритет над переменными в make.defaults.</p>
+
+
+	<p><strong>/usr/share/portage/config/make.globals</strong></p>
+
+
+	<p style="padding-left:4em;">Содержит стандартные переменные сборки; редактируйте не этот файл, а <em>/etc/make.conf</em>.</p>
+
+
+	<p><strong>/etc/portage/color.map</strong></p>
+
+
+	<p style="padding-left:4em;">Содержит переменные для пользовательских настроек цвета.</p>
+
+
+	<p><strong>/usr/portage/profiles/use.desc</strong></p>
+
+
+	<p style="padding-left:4em;">Содержит полный список глобальных USE-переменных.</p>
+
+
+	<p><strong>/usr/portage/profiles/use.local.desc</strong></p>
+
+
+	<p style="padding-left:4em;">Содержит полный список локальных USE-переменных.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">emerge</a></strong>(1), <strong><a href=".html" class="wiki-page">portage</a></strong>(5), <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(1), <strong><a href="ebuild.html" class="wiki-page">ebuild</a></strong>(5)</p>
+
+
+	<p>Сценарий <em>/usr/sbin/ebuild.sh</em>.</p>
+
+
+	<p>Вспомогательные приложения в каталоге <em>/usr/lib/portage/bin</em>.</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Август 2011</p>
+</body>
+</html>

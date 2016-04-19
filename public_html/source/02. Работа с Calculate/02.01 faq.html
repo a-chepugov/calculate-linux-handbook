@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>faq</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Часто-задаваемые-вопросы-FAQ">Часто задаваемые вопросы (FAQ)<a href="#Часто-задаваемые-вопросы-FAQ" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Часто-задаваемые-вопросы-FAQ">Часто задаваемые вопросы (FAQ)</a></li>
+<li class="heading2"><a href="#Языковые-настройки-и-параметры-клавиатуры">Языковые настройки и параметры клавиатуры.</a></li>
+<li class="heading3"><a href="#Переключение-языка">Переключение языка</a></li>
+<li class="heading3"><a href="#Как-поменять-язык-установленной-системы">Как поменять язык установленной системы?</a></li>
+<li class="heading3"><a href="#Как-отключить-NumLock-при-входе-в-систему">Как отключить NumLock при входе в систему?</a></li>
+<li class="heading2"><a href="#Настройка-звуковой-карты">Настройка звуковой карты</a></li>
+<li class="heading2"><a href="#Создание-пользователей">Создание пользователей</a></li>
+<li class="heading2"><a href="#Установка-программ">Установка программ</a></li>
+<li class="heading2"><a href="#Настройка-маршрутизации-пакетов-из-локальной-сети">Настройка маршрутизации пакетов из локальной сети</a></li>
+<li class="heading2"><a href="#Добавление-программ-на-нижнюю-панель-KDE">Добавление программ на нижнюю панель KDE</a></li>
+</ul>
+
+
+	<p>На этой странице собраны рекомендации по эффективной работе в Calculate Linux.</p>
+
+
+	<h2 id="Языковые-настройки-и-параметры-клавиатуры">Языковые настройки и параметры клавиатуры.<a href="#Языковые-настройки-и-параметры-клавиатуры" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Переключение-языка">Переключение языка<a href="#Переключение-языка" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>В русской локализации Calculate Linux переключение языка выполняется клавишей <em>Caps Lock</em>, а фиксация верхнего регистра - сочетанием <em>Shift+CapsLock</em> (по аналогии с печатной машинкой).</p>
+
+
+	<h3 id="Как-поменять-язык-установленной-системы">Как поменять язык установленной системы?<a href="#Как-поменять-язык-установленной-системы" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Если во время загрузки LiveCD вы не выбрали свой язык, по умолчанию интерфейс будет англоязычным. Подробности см. в документации утилит Calculate.</p>
+
+
+	<h3 id="Как-отключить-NumLock-при-входе-в-систему">Как отключить NumLock при входе в систему?<a href="#Как-отключить-NumLock-при-входе-в-систему" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Выполните с правами рута в консоли:</p>
+
+
+	<pre><code>rc-update del numlock</code></pre>
+
+
+	<p>Чтобы вернуть включение NumLock при старте системы, выполните:</p>
+
+
+	<pre><code>rc-update add numlock default</code></pre>
+
+
+	<p><a href="http://www.calculate-linux.ru/main/ru/initscripts" class="external">Читать</a> подробнее о сценариях инициализации и о <a href="http://www.calculate-linux.ru/main/ru/initscripts#Использование-rc-update" class="external">rc-update</a> в частности.</p>
+
+
+	<h2 id="Настройка-звуковой-карты">Настройка звуковой карты<a href="#Настройка-звуковой-карты" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Если у вас не определилась звуковая карта или вы не слышите звука в динамиках, от имени пользователя <em>root</em> выполните команду</p>
+
+
+	<pre><code>alsaconf</code></pre>
+
+
+	<p>с помощью которой определяются и настраиваются звуковые карты.</p>
+
+
+	<h2 id="Создание-пользователей">Создание пользователей<a href="#Создание-пользователей" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>По умолчанию в <a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a> существует пользователь <em>guest</em>. Вы можете использовать эту учетную запись для знакомства с системой, а также для предоставления гостевого входа своим знакомым. Для создания новых учетных записей воспользуйтесь следующим <a href="руководством.html" class="wiki-page">руководством</a>.</p>
+
+
+	<h2 id="Установка-программ">Установка программ<a href="#Установка-программ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>При помощи нескольких <a href="простых команд.html" class="wiki-page">простых команд</a> вы можете обновлять или устанавливать новое программное обеспечение.</p>
+
+
+	<p>На компьютере хранится локальное дерево портежей со списком всех программ. Перед установкой или обновлением программ стоит обновить его с помощью команды</p>
+
+
+	<pre><code>eix-sync</code></pre>
+
+
+	<p>Ее нужно выполнять с правами пользователя <em>root</em>.<br />После этого можно установить новый пакет командой:</p>
+
+
+	<pre><code>emerge имя_пакета</code></pre>
+
+
+	<p>Узнать точное название пакета можно с помощью программы <em>eix</em>, выполнив:</p>
+
+
+	<pre><code>eix часть_названия</code></pre>
+
+
+	<h2 id="Настройка-маршрутизации-пакетов-из-локальной-сети">Настройка маршрутизации пакетов из локальной сети<a href="#Настройка-маршрутизации-пакетов-из-локальной-сети" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Если вам необходимо настроить Calculate Linux в качестве маршрутизатора для доступа в интернет локальных машин (192.168.0.0/24), выполните следующие команды:</p>
+
+
+	<pre><code>sysctl -w net.ipv4.ip_forward=1<br />iptables -t nat -I POSTROUTING -s 192.168.0.0/24 -j MASQUERADE</code></pre>
+
+
+	<p>Сохранить измененное значение <code>net.ipv4.ip_forward</code> можно в файле <code>/etc/sysctl.conf</code>.</p>
+
+
+	<h2 id="Добавление-программ-на-нижнюю-панель-KDE">Добавление программ на нижнюю панель KDE<a href="#Добавление-программ-на-нижнюю-панель-KDE" class="wiki-anchor">&para;</a></h2>
+
+
+	<ol>
+	<li>Разблокируйте изменение виджетов, кликнув правой кнопкой на рабочем столе;</li>
+		<li>Кликните правой кнопкой на иконке меню слева вверху, выберите пункт "Редактировать меню";</li>
+		<li>Выберите и перетащите иконку приложения в нижнюю панель.</li>
+	</ol>
+</body>
+</html>

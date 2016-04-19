@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>use flags</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="USE-флаги">USE-флаги<a href="#USE-флаги" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#USE-флаги">USE-флаги</a></li>
+<li class="heading2"><a href="#Что-такое-USE-флаги">Что такое USE-флаги?</a></li>
+<li class="heading3"><a href="#Смысл-USE-флагов">Смысл USE-флагов</a></li>
+<li class="heading3"><a href="#Определение-USE-флагов">Определение USE-флагов</a></li>
+<li class="heading3"><a href="#Какие-USE-флаги-существуют">Какие USE-флаги существуют?</a></li>
+<li class="heading2"><a href="#Использование-USE-флагов">Использование USE-флагов</a></li>
+<li class="heading3"><a href="#Объявление-постоянных-USE-флагов">Объявление постоянных USE-флагов</a></li>
+<li class="heading3"><a href="#Объявление-USE-флагов-для-отдельных-пакетов">Объявление USE-флагов для отдельных пакетов</a></li>
+<li class="heading3"><a href="#Объявление-временных-USE-флагов">Объявление временных USE-флагов</a></li>
+<li class="heading3"><a href="#Наследование">Наследование</a></li>
+<li class="heading3"><a href="#Адаптация-всей-системы-под-новые-USE-флаги">Адаптация всей системы под новые USE-флаги</a></li>
+<li class="heading2"><a href="#USE-флаги-отдельных-пакетов">USE-флаги отдельных пакетов</a></li>
+<li class="heading3"><a href="#Просмотр-доступных-USE-флагов">Просмотр доступных USE-флагов</a></li>
+</ul>
+
+
+	<h2 id="Что-такое-USE-флаги">Что такое USE-флаги?<a href="#Что-такое-USE-флаги" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Смысл-USE-флагов">Смысл USE-флагов<a href="#Смысл-USE-флагов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Устанавливая Calculate (или любой другой дистрибутив), вы выбираете те или иные возможности в зависимости от среды, с которой работаете. Установка сервера отличается от установки рабочей станции, а установка игровой станции - от платформы 3D-рендеринга.</p>
+
+
+	<p>Это касается не только того, какие пакеты устанавливать, но и какие функции определенных пакетов должны поддерживаться. Если вам не нужен OpenGL, то зачем вам его ставить и встраивать поддержку OpenGL в большинство программ? Если вы не собираетесь использовать KDE, зачем собирать пакеты с его поддержкой, если они работают и без этого?</p>
+
+
+	<p>USE флаги - простой способ описания рабочей среды, чтобы помочь пользователям в выборе того, что устанавливать/активировать, а что - нет. Это позволяет пользователю решить, что же ему на самом деле надо, и облегчить работу с Portage - системой управления пакетами.</p>
+
+
+	<h3 id="Определение-USE-флагов">Определение USE-флагов<a href="#Определение-USE-флагов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Рассмотрим USE-флаги. USE-флаг - это ключевое слово, включающее сведения о поддержке и зависимостях определенного понятия или функции. При определении какого-либо USE-флага, Portage узнает, что вам нужна поддержка соответствующей функции. Конечно, это также влияет на сведения о зависимостях пакета.</p>
+
+
+	<p>Давайте рассмотрим конкретный пример - ключевое слово <span class="bluecode" >kde</span>. Если в вашей переменной <span class="bluecode" >USE</span> нет этого слова, то все пакеты, где поддержка KDE является необязательной, собираются без нее. Все пакеты, где зависимость от KDE является необязательной, устанавливаются без установки библиотек KDE (по зависимости). Если же вы определите ключевое слово <span class="bluecode" >kde</span>, то эти пакеты будут собираться с поддержкой KDE, а KDE будет установлен в качестве необходимого.</p>
+
+
+	<p>Правильно определяя ключевые слова, вы создаете систему, подогнанную специально для ваших нужд.</p>
+
+
+	<h3 id="Какие-USE-флаги-существуют">Какие USE-флаги существуют?<a href="#Какие-USE-флаги-существуют" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Есть два типа USE-флагов: глобальные и локальные.</p>
+
+
+	<ul>
+	<li><em>Глобальный</em> USE-флаг используется несколькими пакетами и является системным. Это то, что большинство видит в качестве USE-флагов.</li>
+		<li><em>Локальный</em> USE-флаг используется единичным пакетом для настройки определенных параметров самого пакета.</li>
+	</ul>
+
+
+	<p>Список доступных глобальных USE-флагов можно найти <noindex><a href="/packages/flags">здесь</a></noindex> или локально в <code>/usr/portage/profiles/use.desc</code>.</p>
+
+
+	<p>Список локальных USE-флагов находится в вашей системе в <code>/usr/portage/profiles/use.local.desc</code>.</p>
+
+
+	<h2 id="Использование-USE-флагов">Использование USE-флагов<a href="#Использование-USE-флагов" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Объявление-постоянных-USE-флагов">Объявление постоянных USE-флагов<a href="#Объявление-постоянных-USE-флагов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Как сказано ранее, все USE-флаги объявляются в переменной <span class="bluecode" >USE</span>. Каждый дистрибутив Calculate Linux имеет свой набор USE-флагов, оптимизированный под конкретные задачи.</p>
+
+
+	<p>Профиль, на который ориентируется ваша система, указывается символьной ссылкой <code>/etc/make.profile</code>. Каждый профиль основывается на предыдущем, более крупном, а итоговый складывается из всех профилей. Верхним является базовый профиль (<code>/usr/portage/profiles/base</code>).</p>
+
+
+	<p>В качестве примера можно посмотреть значение USE флагов профиля Calculate Directory Server:</p>
+
+
+	<p><code>...<br />USE="acl amd64 bash-completion berkdb bittorrent bzip2 cli cracklib crypt cups cxx dri exif foomaticdb fortran ftp gdbm gif gpm iconv imap ipv6 jpeg jpeg2k ldap logrotate maildir mmx modules mudflap multilib ncurses nfs nls nptl nptlonly openmp pam pcre perl png pppd python radius readline samba session sse sse2 ssl sysfs tcpd tiff truetype unicode userlocales xorg zlib" ...</code></p>
+
+
+	<p>Как видите, эта переменная уже содержит достаточно много ключевых слов.</p>
+
+
+	<p>Для изменения значения по умолчанию, нужно добавлять или удалять ключевые слова из переменной <span class="bluecode" >USE</span>. Это делается глобально, определением переменной <span class="bluecode" >USE</span> в <a href="/etc/make.conf.html" class="wiki-page">/etc/make.conf</a>. В эту переменную можно добавить нужные вам USE-флаги, или удалить ненужные. Для удаления флага, его надо указывать со знаком минус в виде приставки («-»).</p>
+
+
+	<p>Например, чтобы убрать поддержку KDE и QT, но добавить поддержку ldap, можно определить в <code>/etc/make.conf</code> переменную <span class="bluecode" >USE</span> следующего вида:</p>
+
+
+	<pre><code>USE="-kde -qt ldap"</code></pre>
+
+
+	<p>Дистрибутивы Calculate Linux по умолчанию используют бинарный профиль, игнорирующий Ваши изменения USE флагов. Чтобы использовать изменения, во время установки или обновления пакетов используйте флаг <span class="bluecode" >-N</span> (или <span class="bluecode" >--newuse</span>)". Пример:</p>
+
+
+	<pre><code>emerge -uN world</code></pre>
+
+
+	<h3 id="Объявление-USE-флагов-для-отдельных-пакетов">Объявление USE-флагов для отдельных пакетов<a href="#Объявление-USE-флагов-для-отдельных-пакетов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Иногда нужно определить некоторые USE-флаги только для одного или нескольких пакетов, не трогая системных настроек. Для этого необходимо создать файл в каталоге <code>/etc/portage/package.use/</code> и отредактировать его значение. Имя файла может быть любым, удобным для вас.</p>
+
+
+	<p>Например, вам не нужна глобальная поддержка <span class="bluecode" >berkdb</span>, но она необходима в <span class="bluecode" >mysql</span>. Пример файла <code>/etc/portage/package.use/mysql</code>:</p>
+
+
+	<pre><code>dev-db/mysql berkdb</code></pre>
+
+
+	<p>Естественно, можно в явном виде <em>отключить</em> USE-флаги для определенного пакета. Например, если вам не нужна поддержка <span class="bluecode" >java</span> в PHP. Пример файла <code>/etc/portage/package.use/nojava</code>:</p>
+
+
+	<pre><code>dev-php/php -java</code></pre>
+
+
+	<h3 id="Объявление-временных-USE-флагов">Объявление временных USE-флагов<a href="#Объявление-временных-USE-флагов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Иногда необходимо установить какой-то USE-флаг только на один раз. Вместо того, чтобы дважды редактировать <code>/etc/make.conf</code> (сначала добавить изменения USE, а потом удалить), можно просто объявить USE как переменную среды. Помните, что при переустановке или обновлении приложения (явном или в составе обновления системы) ваши изменения будут утеряны!</p>
+
+
+	<p>Например, уберем java из значения USE на время установки firefox:</p>
+
+
+	<pre><code>USE="-java" emerge firefox</code></pre>
+
+
+	<h3 id="Наследование">Наследование<a href="#Наследование" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Конечно же, существует определенная последовательность формирования значения USE. Вы же не хотите объявить <span class="bluecode" >USE="-java"</span> только для того, чтобы узнать, что <span class="bluecode" >java</span> все еще включена из-за значения с более высоким приоритетом. Последовательность установки значения USE в порядке приоритета (от меньшего к большему) такова:</p>
+
+
+	<ul>
+	<li>значение USE по умолчанию, объявленное в файлах make.defaults в составе вашего профиля</li>
+		<li>значение, определенное пользователем в /etc/make.conf</li>
+		<li>значение, указанное пользователем в файлах /etc/portage/package.use/</li>
+		<li>значение, определенное пользователям в переменной среды</li>
+	</ul>
+
+
+	<p>Чтобы узнать, какие же настройки <span class="bluecode" >USE</span> в конечном счете видит Portage, запустите <span class="bluecode" >`emerge --info`</span>. Эта команда выводит значения всех переменных (включая <span class="bluecode" >USE</span>), используемые Portage:</p>
+
+
+	<pre><code>emerge --info</code></pre>
+
+
+	<h3 id="Адаптация-всей-системы-под-новые-USE-флаги">Адаптация всей системы под новые USE-флаги<a href="#Адаптация-всей-системы-под-новые-USE-флаги" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Если вы изменили свои USE-флаги и хотите обновить всю систему в соответствии с новым значением USE, запустите <span class="bluecode" >emerge</span> с параметром <span class="bluecode" >--newuse</span>:</p>
+
+
+	<p>Пример пересборки всей системы:</p>
+
+
+	<pre><code>emerge -uDN world</code></pre>
+
+
+	<p>Теперь запустите функцию Portage depclean, чтобы удалить условные зависимости, присутствующие в "старой" системе, но больше не нужные при новом составе USE-флагов.</p>
+
+
+	<p>Предупреждение: Запуск <span class="bluecode" >emerge -c</span> (или <span class="bluecode" >--depclean</span>) является опасной операцией, которую следует использовать с осторожностью. Дважды проверьте список «ненужных» пакетов и убедитесь, что не удалятся нужные пакеты. В следующем примере мы добавляем ключ <span class="bluecode" >-a</span>, чтобы depclean потребовал подтверждения перед удалением.</p>
+
+
+	<p>Удаление ненужных пакетов:</p>
+
+
+	<pre><code>emerge -ac</code></pre>
+
+
+	<p>Когда depclean закончит свою работу, запустите <span class="bluecode" >revdep-rebuild</span>, чтобы пересобрать программы, динамически связанные с библиотеками, входящими в потенциально удаленные пакеты:</p>
+
+
+	<pre><code>revdep-rebuild</code></pre>
+
+
+	<p>После выполнения всех этих действий, ваша система будет полностью использовать новые значения USE-флагов.</p>
+
+
+	<h2 id="USE-флаги-отдельных-пакетов">USE-флаги отдельных пакетов<a href="#USE-флаги-отдельных-пакетов" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Просмотр-доступных-USE-флагов">Просмотр доступных USE-флагов<a href="#Просмотр-доступных-USE-флагов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Возьмем, к примеру, <span class="bluecode" >firefox</span> - какие USE-флаги он может использовать? Чтобы это выяснить, запустим emerge с параметрами <span class="bluecode" >-p</span> (или <span class="bluecode" >--pretend</span>) и <span class="bluecode" >-v</span> (или <span class="bluecode" >--verbose</span>). Пример:</p>
+
+
+<pre>
+# emerge -pv firefox
+These are the packages that would be merged, in order:
+
+Calculating dependencies... done!
+[ebuild  N     ] www-client/firefox-3.6.13  USE="alsa bindist custom-optimization dbus ipc libnotify -gnome -java -startup-notification -system-sqlite -wifi" LINGUAS="bg de en es fr it pl pt_BR ru uk -af -ar -as -be -bn -bn_BD -bn_IN -ca -cs -cy -da -el -en_GB -en_US -eo -es_AR -es_CL -es_ES -es_MX -et -eu -fa -fi -fy -fy_NL -ga -ga_IE -gl -gu -gu_IN -he -hi -hi_IN -hr -hu -id -is -ja -ka -kk -kn -ko -ku -lt -lv -mk -ml -mr -nb -nb_NO -nl -nn -nn_NO -oc -or -pa -pa_IN -pt -pt_PT -rm -ro -si -sk -sl -sq -sr -sv -sv_SE -ta -ta_LK -te -th -tr -vi -zh_CN -zh_TW" 0 kB
+</pre>
+
+	<p><span class="bluecode" >emerge</span> - не единственное средство для решения этой задачи. Существует программа <span class="bluecode" >equery</span>, специально предназначенная для вывода информация о пакетах. Для просмотра USE-флагов какого-нибудь пакета запустим <span class="bluecode" >equery</span> с аргументом <span class="bluecode" >uses</span>. Пусть это будет пакет <span class="bluecode" >gnumeric</span>:</p>
+
+
+<pre>
+# equery uses app-office/gnumeric-1.10.13 -a
+[ Searching for packages matching app-office/gnumeric-1.10.13... ]
+[ Colour Code : set unset ]
+[ Legend : Left column  (U) - USE flags from make.conf              ]
+[        : Right column (I) - USE flags packages was installed with ]
+[ Found these USE variables for app-office/gnumeric-1.10.13 ]
+ U I
+ - - gnome  : Adds GNOME support
+ + + perl   : Adds support/bindings for the Perl language
+ + + python : Adds support/bindings for the Python language
+</pre>
+</body>
+</html>

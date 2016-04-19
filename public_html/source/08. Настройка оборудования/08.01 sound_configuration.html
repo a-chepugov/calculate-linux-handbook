@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>sound configuration</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-звука">Настройка звука<a href="#Настройка-звука" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>За вывод звука в Calculate Linux отвечает звуковой драйвер ALSA. Во время первой загрузки, установщик Calculate Linux устанавливает громкость на каналах в 70%. Тем не менее в некоторых случаях звук в динамиках может отсутствовать. Для обнаружения вашей звуковой карты воспользуйтесь консольной утилитой <code>alsaconf</code>.</p>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/129" alt="" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 1. Окно приветствия программы Alsaconf.</p>
+
+
+	<p>Далее нажмите OK, чтобы перейти к диалоговому окну выбора звуковой карты.</p>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/130" alt="" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 2. Выбор звуковой карты.</p>
+
+
+	<p>Выберите вашу карту и нажмите OK. Последующий диалог попросит подтвердить ваш выбор, после чего настройки звуковой карты будут сохранены.</p>
+
+
+	<p>Управлять громкостью на каналах можно как при помощи утилит, входящих в оконные менеджеры KDE, XFCE, Gnome и др., так и при помощи консольной утилиты <code>alsamixer</code>.</p>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/131" alt="" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 3. Вывод окна Alsamixer.</p>
+
+
+	<p>Проверить правильность подключения ваших колонок можно при помощи утилиты <code>speaker-test</code>. Для звука ''5.1'' выполните в консоли команду:</p>
+
+
+	<pre><code>speaker-test -Dplug:surround51 -c6</code></pre>
+</body>
+</html>

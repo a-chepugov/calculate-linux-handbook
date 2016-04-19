@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>configuration of pxe</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-PXE">Настройка PXE<a href="#Настройка-PXE" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Введение">Введение<a href="#Введение" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>PXE — среда для загрузки компьютеров с помощью сетевой карты без использования жёстких дисков, компакт-дисков и других устройств, применяемых при загрузке операционной системы. PXE-код, прописанный в сетевой карте, получает загрузчик из сети, после чего передаёт ему управление.</p>
+
+
+	<p>Для организации загрузки системы в PXE используются протоколы IP, UDP, DHCP и TFTP. Система, загружаемая по сети, является аналогом загрузки с liveCD.</p>
+
+
+	<h2 id="Основные-требования">Основные требования<a href="#Основные-требования" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Настройка PXE может быть выполнена на <a href="Calculate Directory Server.html" class="wiki-page">Calculate Directory Server</a> с пакетом <code>sys-apps/calculate-install</code> версии 3.1.8 или выше.</p>
+
+
+	<h2 id="Настройка">Настройка<a href="#Настройка" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Перед настройкой PXE на сервере должен быть настроен <a href="DHCP сервис.html" class="wiki-page">DHCP сервис</a>.</p>
+
+
+	<p>Настройка PXE выполняется при помощи команды <code>cl-install-pxe</code>:</p>
+
+
+<pre>
+# установка iso образа
+cl-install-pxe --iso /var/calculate/linux/cld-13.6.2-i686.iso
+</pre>
+
+	<p>Образ дистрибутива развертывается в каталог <code>/var/calculate/pxe</code>, настраиваются необходимые службы <code>TFTP</code>, <code>NFS</code> и <code>DHCP</code>. Поддерживается одновременное использование только одной версии дистрибутива.</p>
+
+
+	<p>После завершения установки все машины в сети смогут воспользоваться PXE загрузкой.</p>
+
+
+	<h2 id="Настройка-параметров-по-умолчанию">Настройка параметров по умолчанию<a href="#Настройка-параметров-по-умолчанию" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Вы можете изменить настройки загрузки PXE образа, такие как язык, часовой пояс, видео карта и другие при помощи параметра <code>DEFAULTPARAM</code> в файле <code>/var/calculate/pxe/pxelinux.cfg/default</code>. Запись должна быть добавлена после строки <code>DEFAULT calcmenu.c32</code>.</p>
+
+
+	<p><strong>Поддерживаемые параметры</strong></p>
+
+
+	<ul>
+	<li>Язык (для получения списка, выполните <code>cl-install -v --filter os_lang</code>) - <code>DEFAULTPARAM calculate=lang:ro_RO</code></li>
+		<li>Раскладка клавиатуры - <code>DEFAULTPARAM calculate=keymap:ru_RU</code></li>
+		<li>Часовой пояс - <code>DEFAULTPARAM calculate=timezone:Europe/Istanbul</code></li>
+		<li>Разрешение экрана - <code>DEFAULTPARAM calculate=resolution:2560x1600</code></li>
+		<li>Видео драйвер - <code>DEFAULTPARAM calculate=video:nvidia</code></li>
+		<li>Графическое ускорение (on/off) - <code>DEFAULTPARAM calculate=composite:on</code></li>
+		<li>Домен - <code>DEFAULTPARAM calculate=domain:192.168.2.3</code></li>
+		<li>Пароль для домена - <code>DEFAULTPARAM calculate=domain_pw:secret</code></li>
+	</ul>
+
+
+	<p>В качестве разделителя используется запятая. Пример: <code>DEFAULTPARAM calculate=domain:192.168.2.3,domain_pw:secret</code></p>
+
+
+	<p>Примечание. Если указать только домен, пароль будет запрошен во время загрузки.</p>
+</body>
+</html>

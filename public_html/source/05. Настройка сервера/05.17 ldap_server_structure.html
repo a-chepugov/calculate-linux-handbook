@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>ldap server structure</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Обзор-структуры-LDAP-сервера">Обзор структуры LDAP сервера<a href="#Обзор-структуры-LDAP-сервера" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Введение">Введение<a href="#Введение" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Записи LDAP сервера состоят из одного или нескольких атрибутов и обладают уникальным именем (DN — <em>Distinguished Name</em>). Уникальное имя может выглядеть, например, следующим образом: <em>"cn=Иван Петров,ou=Сотрудники,dc=example,dc=com"</em>.</p>
+
+
+	<p>Уникальное имя состоит из одного или нескольких <em>относительных уникальных имен</em> (RDN — <em>Relative Distinguished Name</em>), разделённых запятой. Относительное уникальное имя имеет вид <em>"ИмяАтрибута=значение"</em>. На одном уровне каталога не может существовать двух записей с одинаковыми относительными уникальными именами. В силу такой структуры уникального имени записи в каталоге можно легко представить в виде дерева, где записи будут ветвями, а в роли листьев будут выступать атрибуты данных записей. В качестве корня дерева (<em>корневой ветки</em>) выступает запись которой подчинены другие записи, а сама она никому не подчинена.</p>
+
+
+	<h2 id="Общее-описание-структуры-LDAP-Calculate-сервера">Общее описание структуры LDAP Calculate сервера<a href="#Общее-описание-структуры-LDAP-Calculate-сервера" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Корневая ветка <em>"dc=calculate"</em> содержит следующие записи ("ветки"):<br /><pre>
+cn=ldapadmin
+</pre><br />содержит DN и пароль для подключения к LDAP серверу c полными правами.<br /><pre>
+cn=proxyuser
+</pre><br />содержит DN и пароль подключения к LDAP серверу c правами только для чтения, так же недоступны будут такие поля как userPassword и т.д.<br /><pre>
+ou=Services
+</pre><br />содержит в себе ветки сервисов, установленные посредством утилит <em>Calculate 2</em>.</p>
+
+
+	<p>Таким образом ветка <em>"ou=Services"</em> содержит набор ветвей описания сервисов <em>ou=Unix, ou=Mail, ou=Samba, ou=Ftp</em> и <em>ou=Jabber</em>. Каждая ветка сервиса является <em>DN</em> и может хранить пароль подключения к LDAP с доступом к их данным и может содержать дочерние ветки: <em>"ou=Users"</em> (учетные записи), <em>"ou=Groups"</em> (группы), <em>"ou=Computers"</em> (компьютеры).</p>
+
+
+	<h2 id="Просмотр-структуры-LDAP">Просмотр структуры LDAP<a href="#Просмотр-структуры-LDAP" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для просмотра структуры LDAP сервера вы можете воспользоваться любым LDAP браузером.</p>
+
+
+	<p>Для подключения к базе с полными правами требуется пароль администратора LDAP базы. Узнать его можно в файле <em>/etc/calculate/calculate.ldap</em> на сервере. Файл разбит на области, названия которых соответствуют названиям сервисов. В каждой секции находится запись <em>DN</em> и пароль для подключения. Учетная запись администратора находится в секции <em>[admin]</em>.</p>
+
+
+	<h3 id="Просмотр-структуры-LDAP-на-примере-программы-Luma">Просмотр структуры LDAP на примере программы Luma<a href="#Просмотр-структуры-LDAP-на-примере-программы-Luma" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>После запуска программы Luma откроется окно:</p>
+
+
+	<p><img src="/attachments/download/134" alt="" /></p>
+
+
+Создадим подключение к LDAP базе сервера с полным доступом, для этого
+	<ul>
+	<li>Выбираем пункт меню <em>Settings->Edit Server List</em> или нажимем <em>Ctrl+E</em>, после чего откроется окно для управления <br />подключениями к LDAP серверам:</li>
+	</ul>
+
+
+	<p><img src="/attachments/download/132" alt="" /></p>
+
+
+	<ul>
+	<li>нажимаем кнопку <em>Add</em> и в появившееся поле для ввода вписываем произвольное название подключения, например <em>proxy@newserver</em></li>
+		<li>нажимаем на появившееся название в списке Server, и откроются ветки настройки подключения к LDAP серверу</li>
+		<li>щелкаем ветку <em>Network options</em> и в появившихся настройках справа вписываем <em>Hostname</em> сервера</li>
+		<li>переходим к ветке <em>Authentification</em> и снимаем пометку Anonymous bind</li>
+		<li>оставляем <em>Mechanism</em> со значением <em>Simple</em></li>
+		<li>вписываем в <em>Bind as</em> значение <em>DN</em> - <em>"cn=ldapadmin,dc=calculate"</em>, а в <em>Password</em> содержимое поля <em>PASS</em>, файла <em>/etc/calculate/calculate.ldap</em>, нажимаем ОК</li>
+	</ul>
+
+
+	<p>Выбираем плагин <em>Browser</em> и в открывшемся окне смотрим структуру LDAP сервера:</p>
+
+
+	<p><img src="/attachments/download/133" alt="" /></p>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>calculate install</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Установка-Calculate-Linux-на-жёсткий-диск">Установка Calculate Linux на жёсткий диск<a href="#Установка-Calculate-Linux-на-жёсткий-диск" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Установка-Calculate-Linux-на-жёсткий-диск">Установка Calculate Linux на жёсткий диск</a></li>
+<li class="heading2"><a href="#Графическая-установка-системы">Графическая установка системы</a></li>
+<li class="heading3"><a href="#Язык-и-локаль">Язык и локаль</a></li>
+<li class="heading3"><a href="#Выбор-дистрибутива">Выбор дистрибутива</a></li>
+<li class="heading3"><a href="#Распределение-места-на-диске">Распределение места на диске</a></li>
+<li class="heading3"><a href="#Точки-монтирования">Точки монтирования</a></li>
+<li class="heading3"><a href="#Сетевые-настройки">Сетевые настройки</a></li>
+<li class="heading3"><a href="#Пользователи">Пользователи</a></li>
+<li class="heading3"><a href="#Видео">Видео</a></li>
+<li class="heading3"><a href="#Начать-установку">Начать установку</a></li>
+<li class="heading2"><a href="#Установка-системы-из-консоли">Установка системы из консоли</a></li>
+<li class="heading2"><a href="#Помощь">Помощь</a></li>
+</ul>
+
+
+	<h2 id="Графическая-установка-системы">Графическая установка системы<a href="#Графическая-установка-системы" class="wiki-anchor">&para;</a></h2>
+
+
+Для установки системы с помощью <a href="графического клиента.html" class="wiki-page">графического клиента</a> утилит Calculate выполните одно из действий:
+	<ul>
+	<li>запустите <code>cl-console-gui</code> и в категории <strong>Установка</strong> выберите пункт <strong>Установка системы</strong>;</li>
+		<li>запустите <code>cl-console-gui --method install</code> для открытия отдельного окна с установкой системы.</li>
+	</ul>
+
+
+	<p>Необходимые ярлыки запуска программы можно найти на рабочем столе LiveDVD или в меню.</p>
+
+
+<strong>Установка Calculate Linux состоит из следующих шагов:</strong>
+	<ol>
+	<li>Язык и локаль;</li>
+		<li>Выбор дистрибутива;</li>
+		<li>Распределение места на диске;</li>
+		<li>Точки монтирования;</li>
+		<li>Сетевые настройки;</li>
+		<li>Пользователи;</li>
+		<li>Настройка видео;</li>
+		<li>Установка на жёсткий диск.</li>
+	</ol>
+
+
+	<p>Пользователь может перемещаться по шагам с помощью кнопок <em>Назад</em> и <em>Далее</em>, а также выбрав нужный пункт в левом меню. Во втором случае, если пропущен обязательный шаг или где-то была допущена ошибка, то перед установкой пользователю будет предложено исправить ошибку.</p>
+
+
+	<h3 id="Язык-и-локаль">Язык и локаль<a href="#Язык-и-локаль" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Первым пунктом установки является выбор языка и часового пояса. Выберите необходимые параметры из выпадающих списков.</p>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/2398" title="Язык и локаль" alt="Язык и локаль" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 1 Настройка языка и локали</p>
+
+
+	<h3 id="Выбор-дистрибутива">Выбор дистрибутива<a href="#Выбор-дистрибутива" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>По умолчанию для установки будет использоваться дистрибутив, с которого был записан ваш DVD или USB-Flash. Программа установки сканирует директории <code>/var/calculate/linux</code> и <code>/var/calculate/remote/linux</code> и в случае нахождения там ISO образов с Calculate Linux, отобразит их в списке <em>Установочный образ</em>.</p>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/2399" title="Выбор дистрибутива" alt="Выбор дистрибутива" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 2 Выбор дистрибутива</p>
+
+
+	<p>Если у вас есть другие дистрибутивы Calculate Linux, вы можете использовать их для установки, указав путь к файлу образа. Среди дополнительных параметров доступны фильтр по дистрибутиву и фильтр по архитектуре процессора.</p>
+
+
+	<h3 id="Распределение-места-на-диске">Распределение места на диске<a href="#Распределение-места-на-диске" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>В данной версии программы установки вы не можете изменить существующие разделы. Для этого, в зависимости от того, какой дистрибутив вы используете, можно воспользоваться программой GParted или PartitionManager, либо cfdisk, fdisk или gdisk, работающими из консоли во всех версиях Calculate Linux.</p>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/2400" title="Распределение места на диске" alt="Распределение места на диске" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 3 Распределение места на диске</p>
+
+
+	<p>Если вы готовы использовать весь жёсткий диск под систему, воспользуйтесь авторазметкой, либо выберите пункт "использовать существующие разделы" для указания одного или нескольких разделов жёсткого диска для установки.</p>
+
+
+При выборе авторазметки вы можете воспользоваться дополнительными параметрами:
+	<ul>
+	<li><em>Параметры авторазметки</em> - здесь вы можете указать, на сколько разделов будет разбит ваш жёсткий диск;</li>
+		<li><em>Устройства для установки</em> - выбор устройств для установки;</li>
+		<li><em>Таблица разделов</em> - выбор типа таблицы разделов ("DOS-type Partition Table" или "GUID Partition Table (GPT)");</li>
+		<li><em>Размер корневого раздела</em> - размер корневого раздела в мегабайтах (размеру 20 Гб будет соответствовать значение <code>20480</code>).</li>
+	</ul>
+
+
+	<h3 id="Точки-монтирования">Точки монтирования<a href="#Точки-монтирования" class="wiki-anchor">&para;</a></h3>
+
+
+При выборе авторазметки на шаге <em>Распределение места на диске</em> данный шаг будет <strong>недоступен для редактирования</strong>.<br />Основным параметром является выбор точек монтирование в виде таблицы <em>"Разметка"</em>:
+	<ul>
+	<li>для изменения значения в строке нажмите на неё и в открывшемся окне введите необходимые значения;</li>
+		<li>для добавления новой точки монтирования нажмите на кнопку "+" (плюс) над таблицей;</li>
+		<li>для удаления точек монтирования установите флажки слева от необходимых строк и нажмите на кнопку "-" (минус) над таблицей;</li>
+		<li>для восстановления первоначальных значений ячеек таблицы нажмите на третью кнопку "возврата" (стрелка) над таблицей;</li>
+		<li>для очистки всей таблицы нажмите на четвёртую кнопку "очистки" над таблицей.</li>
+	</ul>
+
+
+	<p>В столбце <em>"Диск или директория"</em> указывается диск (директория) для монтирования. Во втором столбце <em>"Точка монтирования"</em> указывается куда этот диск (директория) будут примонтированы. В третьем столбце <em>"Файловая система"</em> указывается, какую файловую систему необходимо использовать для данного диска. В столбце <em>"Форматировать"</em> указывается, следует ли форматировать диск. Если указанная файловая система не совпадает с текущей, то диск будет отформатирован. В последнем столбце <em>"Размер"</em> указан размер выбранного диска (директории).</p>
+
+
+Среди дополнительных параметров можно:
+	<ul>
+	<li>установить режим сборки;</li>
+		<li>установить использование UUID-дисков;</li>
+		<li>выбрать тип установки (Жёсткий диск, USB Flash или USB жёсткий диск);</li>
+		<li>выбрать загрузочный диск;</li>
+		<li>выбрать I/O планировщик (Deadline, CFQ, No-op).</li>
+	</ul>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/2401" title="Точки монтирования" alt="Точки монтирования" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 4 Выбор точек монтирования</p>
+
+
+	<h3 id="Сетевые-настройки">Сетевые настройки<a href="#Сетевые-настройки" class="wiki-anchor">&para;</a></h3>
+
+
+Для настроек сети необходимо:
+	<ul>
+	<li>выбрать менеджер сети (NetworkManager или OpenRC);</li>
+		<li>настроить адреса для интерфейсов в виде таблицы со столбцами:</li>
+	<ol>
+	<li>использование DHCP;</li>
+		<li>IP-адрес для сетевого интерфейса;</li>
+		<li>маска сети;</li>
+	</ul></li>
+	</ol>
+
+
+	<ul>
+	<li>ввести имя хоста (короткое или полное);</li>
+		<li>ввести сервер времени.</li>
+	</ul>
+
+
+Также с помощью дополнительных параметров можно указать:
+	<ul>
+	<li>сервер доменных имён;</li>
+		<li>домены для поиска;</li>
+		<li>таблицу маршрутизации в виде таблицы со столбцами:</li>
+	<ol>
+	<li>сеть;</li>
+		<li>шлюз;</li>
+		<li>интерфейс;</li>
+		<li>исходный IP.</li>
+	</ul></li>
+	</ol>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/2402" title="Сетевые настройки" alt="Сетевые настройки" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 5 Сетевые настройки</p>
+
+
+	<h3 id="Пользователи">Пользователи<a href="#Пользователи" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Настройка пользователей осуществляется изменением таблицы <em>"Переносимые пользователи"</em> со столбцами <em>"Логин"</em> и <em>"Пароль"</em>. Работа с таблицей <em>"Переносимые пользователи"</em> аналогична работе с таблицей <em>"Разметка"</em> на шаге <em>"Точки монтирования"</em>, рассмотренной выше.<br />Особенностью является ввод пароля для пользователей, который требует повторного ввода и не отображается в явном виде.</p>
+
+
+	<p>Также из выпадающего списка можно выбрать пользователя для автовхода.</p>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/2431" title="Пользователи" alt="Пользователи" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 6 Настройка пользователей</p>
+
+
+	<h3 id="Видео">Видео<a href="#Видео" class="wiki-anchor">&para;</a></h3>
+
+
+Настройка видео состоит из четырёх параметров:
+	<ol>
+	<li>Выбор видеодрайвера Xorg из списка (если необходимый драйвер отсутствует в списке, впишите его название);</li>
+		<li>Включение композита;</li>
+		<li>Установка разрешения экрана (если необходимое значение отсутствует в списке, впишите его);</li>
+		<li>Установка разрешения фреймбуфера (если необходимое значение отсутствует в списке, впишите его);</li>
+	</ol>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/2396" title="Видео" alt="Видео" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 7 Настройка видео</p>
+
+
+	<h3 id="Начать-установку">Начать установку<a href="#Начать-установку" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Последний шаг является информационным и отображает значения всех параметров, которые будут использоваться при установке.<br />Для начала установки нажмите на кнопку <em>"Установка"</em>.</p>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/2397" title="Начать установку" alt="Начать установку" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 8 Просмотр параметров и начало установки</p>
+
+
+	<h2 id="Установка-системы-из-консоли">Установка системы из консоли<a href="#Установка-системы-из-консоли" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для установки системы из консоли используйте команду:<br /><pre>
+cl-install
+</pre></p>
+
+
+	<p>cl-install представляет собой символическую ссылку на метод <a href="сервера утилит.html" class="wiki-page">сервера утилит</a>:<br /><pre>
+cl-core --method install
+</pre></p>
+
+
+	<p>Символические ссылки на методы можно создать с помощью команды <span class="bluecode" >cl-core --create-symlink</span>.</p>
+
+
+	<p>В этом случае система предложит установить систему с параметрами по умолчанию.</p>
+
+
+Для просмотра всех доступных параметров установки системы используйте команду<br /><pre>
+cl-install --help
+</pre><br />Все доступные параметры разделены на группы (дублируют шаги в графическом клиенте):
+	<ul>
+	<li>Язык и локаль</li>
+		<li>Выбор дистрибутива</li>
+		<li>Распределение места на диске</li>
+		<li>Точки монтирования</li>
+		<li>Сетевые настройки</li>
+		<li>Пользователи</li>
+		<li>Видео</li>
+	</ul>
+
+
+	<h4>Язык и локаль</h4>
+
+
+Доступные параметры:
+	<ul>
+	<li><code>-l LANG, --lang LANG</code> - установка языка</li>
+		<li><code>--timezone TIMEZONE</code>  - установка часового пояса</li>
+	</ul>
+
+
+	<p>Пример:<br /><pre>
+cl-install -l ru_RU --timezone Europe/Moscow
+</pre></p>
+
+
+	<h4>Выбор дистрибутива</h4>
+
+
+Доступные параметры:
+	<ul>
+	<li><code>--iso IMAGE</code>            - ISO образ для установки</li>
+		<li><code>-s SYSTEM, --os SYSTEM</code> - выбор операционной системы (CDS,CLDG,CLD,CLDX,CLS,CMC,CSS или Gentoo)</li>
+		<li><code>--march ARCH</code>           - выбор архитектуры процессора (auto,i686 или x86_64)</li>
+	</ul>
+
+
+	<p>Пример:<br /><pre>
+cl-install --iso /var/calculate/linux/cld-20110904-x86_64.iso
+cl-install -s CLDX --march i686
+</pre></p>
+
+
+	<p>В первом примере выбран конкретный образ дистрибутива, а во втором сервер утилит будет искать 32-битный образ CLDX среди доступных.</p>
+
+
+	<h4>Распределение места на диске</h4>
+
+
+Доступные параметры:
+	<ul>
+	<li><code>--autopartition</code>            - использовать авторазметку;</li>
+		<li><code>--auto-scheme AUTOPARTOPTS</code> - параметры авторазметки (swap,root,data,home,boot,uefi,grub или lvm);</li>
+		<li><code>-D DEVICE</code>                  - установить диск для авторазметки;</li>
+		<li><code>--partition-table TABLE</code>    - установить таблицу разделов для авторазметки (dos или gpt);</li>
+		<li><code>--root-size SIZE</code>           - установить размер корневого раздела для авторазметки.</li>
+		<li><code>--swap-size SIZE</code>           - установить размер раздела подкачки для авторазметки.</li>
+	</ul>
+
+
+	<p>Параметр --auto-scheme, используемый при авторазметке, может принимать одно или несколько значений из swap,root,data,home,boot,lvm,uefi,grub, где<br />swap - использовать раздел подкачки;<br />root - использовать дополнительный корневой раздел;<br />data - использовать раздел /var/calculate;<br />home - подключить /var/calculate/home к /home;<br />boot - использовать отдельный boot раздел;<br />grub - создать bios_grub раздел;<br />uefi - использовать UEFI загрузчик;<br />lvm  - использовать LVM.</p>
+
+
+	<p>Примеры:<br /><pre>
+cl-install --autopartition on --auto-scheme swap,root,data,home -D /dev/sda
+</pre></p>
+
+
+	<p>Для установки будет использован диск /dev/sda с авторазметкой, будут использованы разделы подкачки, /var/calculate, дополнительный корневой раздел и подключён /var/calculate/home к /home.</p>
+
+
+<pre>
+cl-install --autopartition --partition-table dos --root-size 10240
+</pre>
+
+	<p>При установке будет использована авторазметка, таблица разделов для авторазметки установится в значение dos и размер корневого раздела в 10 Гигабайт.</p>
+
+
+	<h4>Точки монтирования</h4>
+
+
+Доступные параметры:
+	<ul>
+	<li><code>-d DISKS, --disk DISKS</code> - установка точки монтирования;</li>
+		<li><code>--build [ON/OFF]</code>       - установка для сборки;</li>
+		<li><code>--uuid [ON/OFF]</code>        - использовать UUID;</li>
+		<li><code>--type DISKTYPE</code>        - тип устройства для устанавливаемой системы (hdd, flash или usb-hdd);</li>
+		<li><code>--mbr MBR</code>              - загрузочный диск для устанавливаемой системы;</li>
+		<li><code>--scheduler SCHEDULER</code>  - установить I/O планировщик (deadline, cfq или noop).</li>
+		<li><code>--uefi [ON/OFF]</code>        - использовать загрузку UEFI</li>
+	</ul>
+
+
+	<p>Пример:<br /><pre>
+cl-install -d /dev/sda2:/:ext4:on -d /dev/sda3:/var/calculate:reiserfs -d /dev/sda1:swap --scheduler cfq
+</pre></p>
+
+
+	<p>Диск /dev/sda2 (первый параметр после ключа -d) будет примонтирован в корень (второй параметр) и будет обязательно отформатирован (четвёртый параметр "on") в файловую систему ext4 (третий параметр).<br />Диск /dev/sda3 будет примонтирован в /var/calculate и отформатирован в файловую систему reiserfs, только если в текущий момент имеет другую файловую систему; если текущая файловая система reiserfs, то форматироваться не будет.<br />Диск /dev/sda1 будет примонтирован для swap.<br />Будет использован I/O планировщик cfq.</p>
+
+
+	<h4>Сетевые настройки</h4>
+
+
+Доступные параметры:
+	<ul>
+	<li><code>--netconf NETMANAGER</code>    - выбор менеджера сети (networkmanager или openrc)</li>
+		<li><code>--iface IFACE_SETTINGS</code>  - установка адреса для сетевого интерфейса</li>
+		<li><code>--hostname HOSTNAME</code>     - установка короткого или полного имени хоста</li>
+		<li><code>--ntp NTP</code>               - установка NTP сервера для системы</li>
+		<li><code>--dns DNS</code>               - установка серверов доменных имен (разделитель - запятая)</li>
+		<li><code>--domain-search DOMAINS</code> - установка доменов для поиска (разделитель - запятая)</li>
+		<li><code>--route NETROUTE</code>        - добавить правило маршрутизации (формат NETWORK:[GATEWAY][:DEV[:SOURCE]])</li>
+	</ul>
+
+
+	<p>Пример:<br /><pre>
+cl-install --netconf openrc --iface eth0:192.168.1.47:24 --hostname iivanov.company.ru --route default:192.168.1.1:eth0:192.168.1.47
+</pre></p>
+
+
+	<p>Данной командой в качестве менеджера сети будет установлен openrc, для сетевого интерфейса eth0 отключится DHCP, установится IP-адрес 192.168.1.47 и маска сети 255.255.255.0. Также будет задано имя хоста iivanov.company.ru и маршрутизация для сетевого интерфейса eth0 по умолчанию через 192.168.1.1.</p>
+
+
+	<h4>Пользователи</h4>
+
+
+Доступные параметры:
+	<ul>
+	<li><code>-u USERS, --users USERS</code>          - добавить пользователя в установленную систему</li>
+		<li><code>-A USER, --autologin USER</code>        - указать пользователя для автовхода в установленную систему</li>
+		<li>@-C [ON/OFF] --crypt-home [ON/OFF] - шифровать пользовательские профили</li>
+	</ul>
+
+
+	<p>Примеры:<br /><pre>
+cl-install -u root -u user1
+</pre></p>
+
+
+	<p>В установленной системе будут пользователи root и user1. Автовход выполняться не будет.</p>
+
+
+<pre>
+cl-install -u root -u user1 -u guest -A user1
+</pre>
+
+	<p>В установленной системе будут пользователи root, guest и user1. Автовход будет установлен для пользователя user1.</p>
+
+
+	<h4>Видео</h4>
+
+
+Доступные параметры:
+	<ul>
+	<li><code>--video VIDEODRV</code>          - установить видео драйвер</li>
+		<li><code>--composite [ON/OFF}</code>      - установить композит</li>
+		<li><code>-X &lt;width&gt;x&lt;height&gt;</code>       - установить разрешение Xorg</li>
+		<li><code>--fb &lt;width&gt;x&lt;height&gt;</code>     - установить разрешение фреймбуфера</li>
+		<li><code>--grub-terminal TERMINAL</code>  - установить grub-терминал (console,gfxterm)</li>
+	</ul>
+
+
+	<p>Пример:<br /><pre>
+cl-install --video nouveau -X 1920x1080 --fb 1920x1080-32 --composite
+</pre></p>
+
+
+	<p>В установленной системе будет использованы драйвер nouveau, разрешение Xorg 1920x1080, разрешение фреймбуфера 1920x1080-32 и композит.</p>
+
+
+	<h2 id="Помощь">Помощь<a href="#Помощь" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Если установка системы вызвала сложности или вы хотите поделиться своим впечатлением, зайдите на <em>IRC</em> канал <em>#calculate-ru</em> (сервер FreeNode) сообщества пользователей Calculate Linux. Для этого кликните на иконке "Сообщество Calculate Linux" на вашем рабочем столе.</p>
+</body>
+</html>

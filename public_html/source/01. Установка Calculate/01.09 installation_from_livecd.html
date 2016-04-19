@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>installation from livecd</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Установка-с-загрузочного-CD-диска">Установка с загрузочного CD-диска<a href="#Установка-с-загрузочного-CD-диска" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Установка-с-загрузочного-CD-диска">Установка с загрузочного CD-диска</a></li>
+<li class="heading2"><a href="#Запись-образа-на-диск">Запись образа на диск</a></li>
+<li class="heading3"><a href="#growisofs">growisofs</a></li>
+<li class="heading3"><a href="#K3B">K3B</a></li>
+<li class="heading2"><a href="#Опции-загрузки">Опции загрузки</a></li>
+<li class="heading2"><a href="#Разбиение-диска">Разбиение диска</a></li>
+</ul>
+
+
+	<p>Если ваш компьютер имеет CD/DVD-привод, то вы можете воспользоваться установкой с загрузочного Live CD/DVD. Загрузочный диск - это точный прообраз устанавливаемой системы, и благодаря ему вы можете оценить работу дистрибутива непосредственно перед установкой на ваш ПК.</p>
+
+
+	<p>Загрузить образ LiveCD  можно <a href="здесь.html" class="wiki-page">здесь</a>, воспользовавшись BitTorrent клиентом либо загрузив файл напрямую с http/ftp-зеркал.</p>
+
+
+	<h2 id="Запись-образа-на-диск">Запись образа на диск<a href="#Запись-образа-на-диск" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В зависимости от объёма данных для записи вам может понадобиться CD или DVD.</p>
+
+
+	<p>Записывать загруженный образ нужно в «сыром» режиме. Использование программ <noindex><a href="http://ru.wikipedia.org/wiki/Growisofs" rel="nofollow" target="_blank" class="external">growisofs</a></noindex> и <noindex><a href="http://www.k3b.org" rel="nofollow" target="_blank" class="external">K3B</a></noindex>, входящих в комплект <a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a>, описано ниже.</p>
+
+
+	<h3 id="growisofs">growisofs<a href="#growisofs" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>При использовании <em>growisofs</em> просто выполните:<br /><pre>
+growisofs -Z /dev/cdrom=/usr/calculate/share/linux/cld-10.0-i686.iso
+</pre><br />В приведенном примере ISO-файл расположен в директории <code>/usr/calculate/share/linux</code>.</p>
+
+
+	<h3 id="K3B">K3B<a href="#K3B" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>При использования <em>K3B</em> выберите <em>Tools » CD » Burn Image (Инструменты » Компакт-диск » Прожечь образ)</em>. Затем в поле <em>Image to Burn (Образ для записи)</em> укажите ISO-файл и нажмите <em>Start (Запуск)</em>.</p>
+
+
+	<p>Загрузка с установочного диска может потребовать выполнения определенных действий. Уберите все компакт-диски из приводов, перезагрузите компьютер и войдите в <em>BIOS</em>. В зависимости от <em>BIOS</em>, для этого обычно нужно нажать <em>DEL</em>, <em>F1</em> или <em>ESC</em>. В <em>BIOS</em> измените порядок загрузки так, чтобы обращение к <em>CD-ROM</em> выполнялось до обращения к жёсткому диску. Этот параметр часто задается в разделе <em>CMOS Setup</em>. Если порядок загрузки невозможно изменить, система просто перезагрузится с жёсткого диска, игнорируя <em>CD-ROM</em>.</p>
+
+
+	<p>Теперь поместите установочный диск в привод <em>CD-ROM</em> и перезагрузитесь. Должно появиться загрузочное приглашение.</p>
+
+
+	<h2 id="Опции-загрузки">Опции загрузки<a href="#Опции-загрузки" class="wiki-anchor">&para;</a></h2>
+
+
+Перед началом загрузки с CD вы увидите меню загрузки. Выполните необходимые установки, воспользовавшись клавишами <strong>F1-F5</strong> для перехода в меню.
+	<ul>
+	<li><strong>F1 Help</strong> - Справка.</li>
+		<li><strong>F2 Language</strong> - Выбор языка. Доступны: <em>русский, украинский, английский, испанский, немецкий, португальский, итальянский, польский и французский</em>.</li>
+		<li><strong>F3 Keymap</strong> - Выбор раскладки клавиатуры. Если вы выбрали язык в предыдущем пункте, то можете этот пункт пропустить.</li>
+		<li><strong>F4 Timezone</strong> - Часовой пояс. Укажите этот параметр, чтобы время в вашем компьютере совпадало с местным.</li>
+		<li><strong>F5 Video</strong> - Разрешение экрана. В большинстве случаев этот параметр можно не менять.</li>
+		<li><strong>Tab Edit options</strong> - Редактирование строки загрузки ядра. Для опытных пользователей.</li>
+	</ul>
+
+
+	<p><em>Указанные при загрузке LiveCD параметры будут использованы в дальнейшем при установке системы.</em></p>
+
+
+	<h2 id="Разбиение-диска">Разбиение диска<a href="#Разбиение-диска" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>В зависимости от выбранного дистрибутива после загрузки компьютера вы можете воспользоваться одной из программ разбиения диска:<br />CDS, CLS: <em>fdisk, cfdisk</em><br />CLD: <em>KDE Partition Manager, fdisk, cfdisk</em><br />CLDX: <em>Gnome Partition Editor, fdisk, cfdisk</em></p>
+</body>
+</html>

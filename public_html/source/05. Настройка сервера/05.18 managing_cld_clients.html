@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>managing cld clients</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Управление-клиентскими-машинами">Управление клиентскими машинами<a href="#Управление-клиентскими-машинами" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="Введение">Введение<a href="#Введение" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Одной из основных задач дистрибутивов Calculate Linux - упростить задачи администрирования большого количества систем. В настоящем руководстве речь пойдет о клиентских машинах - <a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a>, введенных в домен <a href=".html" class="wiki-page new">CDS</a>.</p>
+
+
+	<h2 id="Сетевой-диск-«remote»">Сетевой диск «remote»<a href="#Сетевой-диск-«remote»" class="wiki-anchor">&para;</a></h2>
+
+
+Основные ресурсы системы вынесены в директорию <code>/var/calculate/remote</code>. Здесь можно увидеть директории:
+	<ul>
+	<li><code>assemble</code> - дополнительные ресурсы для сборки системы</li>
+		<li><code>distfiles</code> - исходники программ</li>
+		<li><code>linux</code> - дистрибутивы</li>
+		<li><code>packages</code> - бинарные пакеты программ</li>
+		<li><code>snapshots</code> - архивы портежей</li>
+		<li><code>stages</code> - stage3 образы для компиляции системы</li>
+		<li><code>templates</code> - пользовательские шаблоны</li>
+	</ul>
+
+
+	<p>При <a href="вводе Calculate Linux Desktop в домен.html" class="wiki-page">вводе Calculate Linux Desktop в домен</a> Calculate Directory Server, директория <code>/var/calculate/remote</code> монтируется при помощи сетевой файловой системы <code>cifs</code> с сервера. Обратите внимание, директория монтируется пользователем "client".</p>
+
+
+	<h2 id="Шаблоны-установки">Шаблоны установки<a href="#Шаблоны-установки" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Все дистрибутивы Calculate Linux для настройки системы используют <a href="шаблоны.html" class="wiki-page">шаблоны</a>. Это достаточно простой и эффективный прием для изменения настроек системы под свои нужды. Пользовательские шаблоны расположены в директории <code>/var/calculate/remote/templates</code>. Используя общий ресурс, вы можете менять настройки на всех машинах, либо выборочно, применяя в названии шаблона например сетевое имя машины, либо для всех машин.</p>
+
+
+	<h2 id="Выполнение-команд-на-стороне-клиента">Выполнение команд на стороне клиента<a href="#Выполнение-команд-на-стороне-клиента" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Может возникнуть ситуация, когда вам понадобится выполнить определенные действия на всех машинах локальной сети. Например вы можете захотеть узнать кто работает за системой, как долго работает каждая машина без перезагрузки (uptime), сколько пользователей одновременно зашли в сеанс, не было ли ошибок при инициализации графической сессии и т.д. Для этого вы можете использовать открытый ключ, сгенерированный на сервере и размещенный на клиентских машинах в директории <code>/root</code>. В этом случае вы получаете полный доступ из скрипта на машины клиентов.</p>
+
+
+	<p>Создание открытого ключа описано в статье <a href="Резервное копирование.html" class="wiki-page">Резервное копирование</a>. Не забывайте о шаблонах, при помощи которых можно записывать открытый ключ на компьютеры пользователей.</p>
+
+
+	<p>Вы можете написать скрипт сканирования сети, выявляющий работающие Linux клиенты. Попробуйте использовать следующую команду для поиска:<br /><pre>
+LANG=C nmap -p111 -n -PS111 192.168.0.0/24
+</pre></p>
+
+
+	<p>Выполнить удаленно команду на клиенте можно при помощи следующей команды:<br /><pre>
+ssh -o 'StrictHostKeyChecking=no' root@HOST EXEC
+</pre></p>
+
+
+	<p>Где HOST - сетевое имя либо IP адрес машины, EXEC - команда.</p>
+
+
+	<h2 id="Обновления-из-бинарных-пакетов">Обновления из бинарных пакетов<a href="#Обновления-из-бинарных-пакетов" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>У менеджера пакетов <a href=".html" class="wiki-page">emerge</a> есть замечательная возможность создавать бинарные архивы собираемых программ и устанавливать из них пакеты. Что радует, для установки бинарных программ вовсе не обязательно иметь определенную версию портежей. Фактически вы можете обновлять портежи только на одном клиенте, предоставив ему доступ к записи в директорию <code>/var/calculate/remote/packages</code>.</p>
+
+
+	<p>Для разделения пакетов собираемых в разных системах с разными архитектурами, Calculate Linux модифицирует переменную <code>PKGDIR</code> в профиле дистрибутива.</p>
+
+
+	<p>Для сборки бинарного пакета выполните:<br /><pre>
+emerge --buildpkg PACKAGE
+</pre><br />где PACKAGE имя пакета.</p>
+
+
+	<p>Установить пакет, можно указав его полное имя с версией, используя флаг "--usepkgonly". Обновлять портежи на каждой клиентской машине при этом вовсе не обязательно.</p>
+
+
+	<p>Удобно использовать оба параметра в одной команде:<br /><pre>
+emerge -bk PACKAGE
+</pre></p>
+
+
+	<p>В этом случае пакет будет скомпилирован только при отсутствии бинарного пакета.</p>
+</body>
+</html>

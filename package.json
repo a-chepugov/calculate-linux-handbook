@@ -1,0 +1,22 @@
+{
+  "name": "____________",
+  "version": "0.0.0",
+  "keywords": [
+    "calculate-linux",
+    "handbook",
+    "russian"
+  ],
+  "author": "Alexey Chepugov",
+  "contributors": [],
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^3.2.2",
+    "gulp-hammerdown": "^1.0.1",
+    "gulp-html2md": "^1.1.2",
+    "gulp-markdown": "^1.2.0",
+    "html-md": "^3.0.2",
+    "html2markdown": "^1.1.0"
+  }
+}

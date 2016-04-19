@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>calculate install flash</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Установка-на-Flash">Установка на Flash<a href="#Установка-на-Flash" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Установка-на-Flash">Установка на Flash</a></li>
+<li class="heading2"><a href="#Установка-системы-на-Flash-графическим-клиентом">Установка системы на Flash графическим клиентом</a></li>
+<li class="heading2"><a href="#Установка-системы-на-Flash-консольным-клиентом">Установка системы на Flash консольным клиентом</a></li>
+<li class="heading2"><a href="#Установка-системы-на-Flash-с-помощью-сервера-утилит">Установка системы на Flash с помощью сервера утилит</a></li>
+</ul>
+
+
+	<p><em>Прежде чем приступить к установке, сделайте резервную копию своих данных на флешке.</em></p>
+
+
+	<p>Подключите флешку к вашему компьютеру. Для определения имени устройства вашей флешки выполните в консоли с правами <em>root</em>:<br /><pre>
+fdisk -l
+</pre></p>
+
+
+	<p>Например, если ваш флеш-диск определился как устройство <code>/dev/sdb</code>, установка системы на него производится командой:<br /><pre>
+cl-install -d /dev/sdb1
+</pre></p>
+
+
+	<h2 id="Установка-системы-на-Flash-графическим-клиентом">Установка системы на Flash графическим клиентом<a href="#Установка-системы-на-Flash-графическим-клиентом" class="wiki-anchor">&para;</a></h2>
+
+
+Для установки системы на Flash с помощью <a href="графического клиента утилит Calculate.html" class="wiki-page">графического клиента утилит Calculate</a> выполните одно из действий:
+	<ul>
+	<li>запустите <span class="bluecode" >cl-console-gui</span> и в категории <strong>Установка</strong> выберите пункт <strong>Установка на Flash</strong>;</li>
+		<li>запустите <span class="bluecode" >cl-console-gui --method install_flash</span> для открытия окна с установкой системы.</li>
+	</ul>
+
+
+Для установки Calculate Linux на Flash необходимо указать лишь небольшое количество параметров:
+	<ol>
+	<li>Диск для установки. Как правило, определяется автоматически, иначе необходимо выбрать его из выпадающего списка;</li>
+		<li>Установочный образ;</li>
+		<li>Разметку диска, которая является необязательным параметром.</li>
+	</ol>
+
+
+	<p><div style="float:center;text-align:center"><table align="center" cellpadding="0" cellspacing="0" class="shadow"><tr><td class="shadow_img" rowspan="2" colspan="2"><img src="/attachments/download/2424" title="Установка на Flash" alt="Установка на Flash" /></td><td class="shadow_tr"></td></tr><tr><td class="shadow_r">&nbsp;</td></tr><tr><td class="shadow_bl"></td><td class="shadow_b"></td><td class="shadow_br"></td></tr></table></div></p>
+
+
+	<p style="text-align:center;">Рис. 1 Установка Calculate Linux на Flash</p>
+
+
+	<h2 id="Установка-системы-на-Flash-консольным-клиентом">Установка системы на Flash консольным клиентом<a href="#Установка-системы-на-Flash-консольным-клиентом" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Установка системы на Flash консольным клиентом ничем не отличается от <a href="http://www.calculate-linux.ru/main/ru/calculate_install#Установка-системы-консольным-клиентом" class="external">установки системы на жёсткий диск</a> , за исключением меньшего количества используемых параметров.<br />Для указания раздела для установки используется ключ <code>-d</code>, <code>--disk</code>.<br />Для указания образа дистрибутива для установки используется ключ <code>--iso</code>. Для установки системы не обязательно указывать образ дистрибутива при нахождении его в директориях по умолчанию: <code>/var/calculate/linux</code> и <code>/var/calculate/remote/linux</code>.<br />Например:<br /><pre>
+cl-console --method install -d /dev/sdb1
+</pre></p>
+
+
+	<p>Пример установки системы на Flash с указанием файла образа дистрибутива:<br /><pre>
+cl-console --method install -d /dev/sdb1 --iso /var/calculate/linux/cld-20110904-x86_64.iso
+</pre></p>
+
+
+	<h2 id="Установка-системы-на-Flash-с-помощью-сервера-утилит">Установка системы на Flash с помощью сервера утилит<a href="#Установка-системы-на-Flash-с-помощью-сервера-утилит" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Установка системы на Flash с помощью сервера утилит ничем не отличается от <a href="http://www.calculate-linux.ru/main/ru/calculate_install#Установка-системы-с-помощью-сервера-утилит" class="external">установки системы на жёсткий диск</a> , за исключением меньшего количества используемых параметров.<br />Для указания раздела для установки используется ключ <code>-d</code>, <code>--disk</code>.<br />Для указания образа дистрибутива для установки используется ключ <code>--iso</code>. Для установки системы не обязательно указывать образ дистрибутива при нахождении его в директориях по умолчанию: <code>/var/calculate/linux</code> и <code>/var/calculate/remote/linux</code>.</p>
+
+
+	<p>Для установки используется команда <span class="bluecode" >cl-core --method install</span>:<br /><pre>
+cl-core --method install -d /dev/sdb1
+</pre></p>
+
+
+	<p>или символическая ссылка на неё <span class="bluecode" >cl-install</span>, например</p>
+
+
+<pre>
+cl-install -d /dev/sdb1 --iso /var/calculate/linux/cld-20110904-x86_64.iso
+</pre>
+</body>
+</html>

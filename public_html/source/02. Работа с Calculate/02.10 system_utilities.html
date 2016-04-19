@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>system utilities</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Системные-утилиты">Системные утилиты<a href="#Системные-утилиты" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Системные-утилиты">Системные утилиты</a></li>
+<li class="heading2"><a href="#Управление-ПО">Управление ПО</a></li>
+<li class="heading3"><a href="#Поиск-программ">Поиск программ</a></li>
+<li class="heading3"><a href="#Установка-и-удаление-программ">Установка и удаление программ</a></li>
+<li class="heading3"><a href="#Исправление-зависимостей">Исправление зависимостей</a></li>
+<li class="heading3"><a href="#Настройки-программ">Настройки программ</a></li>
+<li class="heading2"><a href="#Управление-сервисами">Управление сервисами</a></li>
+<li class="heading2"><a href="#Содержимое-пакета">Содержимое пакета</a></li>
+<li class="heading2"><a href="#Обеспечение-безопасности">Обеспечение безопасности</a></li>
+<li class="heading2"><a href="#Полезное">Полезное</a></li>
+<li class="heading3"><a href="#Зависимости-пакетов">Зависимости пакетов</a></li>
+<li class="heading3"><a href="#Экономия-трафика">Экономия трафика</a></li>
+<li class="heading3"><a href="#Чистка-distfiles">Чистка distfiles</a></li>
+<li class="heading3"><a href="#Дефрагментация-дисков">Дефрагментация дисков</a></li>
+<li class="heading3"><a href="#Проверка-жесткого-диска">Проверка жесткого диска</a></li>
+</ul>
+
+
+	<h2 id="Управление-ПО">Управление ПО<a href="#Управление-ПО" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Поиск-программ">Поиск программ<a href="#Поиск-программ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для быстрого поиска программ служит программа <code>eix</code> (пакет <code>app-portage/eix</code>), имеющая собственную базу данных для ускорения поиска.</p>
+
+
+	<p>Пример:<br /><pre>
+eix mozilla
+eix -S browser
+</pre></p>
+
+
+	<p>Отобразить список установленных пакетов можно при помощи команды:<br /><pre>
+qlist -I
+</pre></p>
+
+
+	<p>Отобразить список установленных пакетов с версией:<br /><pre>
+qlist -Iv
+</pre></p>
+
+
+	<p>Отобразить список установленных пакетов с версией и USE флагами:<br /><pre>
+qlist -Uv
+</pre></p>
+
+
+	<p>Если вы не нашли интересующей вас программы в дереве портежей, вы можете поискать ее в оверлеях. Для поиска воспользуйтесь сайтом <noindex><a class="external" href="http://gpo.zugaina.org" ref="nofollow">http://gpo.zugaina.org</a></noindex>. Название оверлея будет справа в нижней строке результата поиска.<br />Прежде чем установить программу, найденную на сайте, подключите оверлей в вашу систему, выполнив:<br /><pre>
+layman -a &lt;оверлей&gt;
+</pre><br />Список оверлеев можно получить командой:<br /><pre>
+layman -L
+</pre></p>
+
+
+	<h3 id="Установка-и-удаление-программ">Установка и удаление программ<a href="#Установка-и-удаление-программ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для <a href="установки и удаления программ.html" class="wiki-page">установки и удаления программ</a> используйте программу <a href=".html" class="wiki-page">emerge</a> (<code>sys-apps/portage)</code>.<br /><pre>
+emerge kde-base/kgoldrunner
+emerge -C mc
+</pre></p>
+
+
+	<p>В приведенном примере будет установлена игра <code>kgoldrunner</code> и удалена программа <code>mc</code> (Midnight Commander).</p>
+
+
+	<p>В случае если программа замаскирована, вы можете воспользоваться опцией <code>--autounmask</code> для вызова справки по размаскировке пакетов.</p>
+
+
+	<p>Пример установки замаскированной версии пакета:<br /><pre>
+emerge --autounmask =www-client/opera-11.10.2092
+</pre></p>
+
+
+	<p>В конце перечня пакетов, подлежащих установке, вы увидите следующие рекомендации:<br /><pre>
+The following keyword changes are necessary to proceed:
+#required by =www-client/opera-11.10.2092 (argument)
+=www-client/opera-11.10.2092 ~amd64
+</pre></p>
+
+
+	<p>Поместите текст под фразой "The following keyword changes are necessary to proceed:" в файл <code>/etc/portage/package.keywords/custom</code> (комментарии можно опустить).</p>
+
+
+<pre>
+echo "=www-client/opera-11.10.2092 ~amd64" &gt;&gt; /etc/portage/package.keywords/custom
+</pre>
+
+	<p>Есть и более простой способ подтверждения размаскировки - использовать <code>dispatch-conf</code> (см. ниже).</p>
+
+
+	<h3 id="Исправление-зависимостей">Исправление зависимостей<a href="#Исправление-зависимостей" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Когда вы вносите изменения в установленные пакеты, может наступить случай нарушения зависимостей. Чтобы выявить и исправить такие нарушения, мы рекомендуем после обновления или удаления какой-либо программы выполнять команду <code>revdep-rebuild</code>.</p>
+
+
+	<p>Пример:<br /><pre>
+revdep-rebuild
+</pre></p>
+
+
+	<h3 id="Настройки-программ">Настройки программ<a href="#Настройки-программ" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Во время обновления программ, для предотвращения ошибок, новые файлы настроек создаются с суффиксом <code>._cfg0000_ </code>. Для некоторых сервисов важно после обновления заменять старые настройки новыми. Иногда старые настройки могут привести в нерабочее состояние установленную программу, например, старые скрипты запуска сервисов, расположенные в директории <code>/etc/init.d</code>.<br />Для своевременной замены конфигурационных файлов используйте программу <code>dispatch-conf</code>.</p>
+
+
+	<p>Пример:<br /><pre>
+dispatch-conf
+</pre></p>
+
+
+	<p>После запуска программа будет показывать отличия новой версии каждого конфигурационного файла от старого. Обратите внимание: если настройки файла были модифицированы Calculate (вы увидите соответствующий комментарий), заменять эти настройки не следует - нажмите клавишу <span class="bluecode" >z</span> для пропуска изменений. Для замены файла новым нажмите клавишу <span class="bluecode" >u</span>.</p>
+
+
+	<h2 id="Управление-сервисами">Управление сервисами<a href="#Управление-сервисами" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для добавления и удаления скрипта из уровня запуска служит скрипт <code>rc-update</code>.</p>
+
+
+	<p>Примеры:<br /><pre>
+# вывести список сервисов
+rc-update show
+# добавить numlock на уровень запуска default
+rc-update add numlock default
+# перестать запускать numlock
+rc-update del numlock
+</pre></p>
+
+
+	<p>Показать запущенные сервисы можно командой:<br /><pre>
+rc-status --all
+</pre></p>
+
+
+	<h2 id="Содержимое-пакета">Содержимое пакета<a href="#Содержимое-пакета" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Получить перечень файлов установленного пакета, а также узнать, какому пакету принадлежит файл в системе, можно при помощи программ <code>qlist</code> и <code>qfile</code> (<code>app-portage/portage-utils</code>).</p>
+
+
+	<p>Пример:</p>
+
+
+<pre>
+# список файлов пакета app-portage/portage-utils
+qlist -ae app-portage/portage-utils
+# узнать пакет в который входит qfile
+qfile qfile
+</pre>
+
+	<p>Вам также может пригодиться программка <code>which</code> (<code>sys-apps/which</code>), показывающая путь к файлу.</p>
+
+
+	<p>Пример:<br /><pre>
+# which equery
+/usr/bin/equery
+</pre></p>
+
+
+	<h2 id="Обеспечение-безопасности">Обеспечение безопасности<a href="#Обеспечение-безопасности" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Постоянное обновление системы - одно из важнейших мероприятий по обеспечению безопасности. <br />Можно следить за обновлениями посредством GLSA - <code>glsa-check</code> (<code>app-portage/gentoolkit</code>).</p>
+
+
+	<p>Просмотреть пакеты, которые необходимо переустановить:<br /><pre>
+glsa-check -p $(glsa-check -t all)
+</pre></p>
+
+
+	<p>Переустановка уязвимых пакетов:<br /><pre>
+glsa-check -f $(glsa-check -t all)
+</pre></p>
+
+
+	<p>Не помешает после этой операции проверить зависимости, см. выше <em>Исправление зависимостей</em>.</p>
+
+
+	<h2 id="Полезное">Полезное<a href="#Полезное" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Зависимости-пакетов">Зависимости пакетов<a href="#Зависимости-пакетов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Получить информацию о зависимостях пакетов можно с помощью программы <code>qdepends</code> (<code>app-portage/portage-utils</code>).</p>
+
+
+	<p>Пример:<br /><pre>
+qdepends -Q python
+</pre></p>
+
+
+	<h3 id="Экономия-трафика">Экономия трафика<a href="#Экономия-трафика" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Если у Вас дорогой или лимитированный трафик, то можно сэкономить с помощью пакета <code>getdelta</code>.</p>
+
+
+	<p>Для его установки, если у вас архитектура <em>i686</em>, выполните:<br /><pre>
+ACCEPT_KEYWORDS=~x86 emerge getdelta
+</pre></p>
+
+
+	<p>если <em>x86_64</em>, то:<br /><pre>
+ACCEPT_KEYWORDS=~amd64 emerge getdelta
+</pre></p>
+
+
+	<p>Необходимо добавить в файл <code>/etc/make.conf</code> строку:<br /><pre>
+FETCHCOMMAND="/usr/bin/getdelta.sh \${URI} \${DISTDIR}/\${FILE}" 
+</pre></p>
+
+
+	<p>Далее все действия не отличаются от обычной установки программ, с той лишь разницей, что качаются дельты исходников, что значительно сокращает объем необходимого на обновление трафика.</p>
+
+
+	<h3 id="Чистка-distfiles">Чистка distfiles<a href="#Чистка-distfiles" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>С течением времени может накопиться достаточно большое количество разных версий пакетов программ. При нехватке дискового пространства вы можете удалить пакеты с устаревшими версиями программ, для этого воспользуйтесь программой <code>eclean-dist</code> (<code>app-portage/gentoolkit</code>):<br /><pre>
+eclean-dist
+</pre></p>
+
+
+	<h3 id="Дефрагментация-дисков">Дефрагментация дисков<a href="#Дефрагментация-дисков" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Современные файловые системы, используемые в Linux, минимизируют фрагментацию дисков, поэтому существует достаточно небольшое количество программ для дефрагментации.</p>
+
+
+	<p>Для файловой системы XFS - пакет <code>sys-fs/xfsdump</code> (утилиты для дефрагментации и настройки XFS).</p>
+
+
+	<p>Пример команды для просмотра текущей фрагментации диска:<br /><pre>
+xfs_db -r -c frag /dev/sdaХ
+</pre><br />где <em>Х</em> - номер раздела.</p>
+
+
+	<p>Пример команды для дефрагментирования:<br /><pre>
+xfs_fsr -v /dev/sdaX
+</pre></p>
+
+
+	<h3 id="Проверка-жесткого-диска">Проверка жесткого диска<a href="#Проверка-жесткого-диска" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для проверки жесткого диска на битые секторы используйте утилиту <code>badblocks</code>.<br /><pre>
+badblocks -svn -o /sda_log.txt -b 4096 -c 256 -p 2 /dev/sda
+</pre></p>
+</body>
+</html>

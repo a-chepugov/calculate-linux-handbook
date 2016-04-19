@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>etc-update</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="ETC-UPDATE">ETC-UPDATE<a href="#ETC-UPDATE" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+etc-update - обработка изменений конфигурационных файлов 
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>etc-update</strong></p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Утилиту <em>etc-update</em> следует запускать после установки новых пакетов для проверки предлагаемых обновлений конфигурационных файлов. Если новый конфигурационный файл может перезаписать имеющийся, <em>etc-update</em> спросит у пользователя, как с ним поступить.</p>
+
+
+	<p><em>etc-update</em> проверяет все каталоги из переменной <em>CONFIG_PROTECT</em>, а конфигурационные файлы из <em>CONFIG_PROTECT_MASK</em> обновляет автоматически. Подробнее об этом  см. в справке по <strong><a href=".html" class="wiki-page">make.conf</a></strong>(5).</p>
+
+
+	<h2 id="ОПЦИИ">ОПЦИИ<a href="#ОПЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Нет.</p>
+
+
+	<h2 id="БАГТРЕКЕР">БАГТРЕКЕР<a href="#БАГТРЕКЕР" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Об обнаруженных ошибках сообщайте на <noindex><a class="external" href="http://bugs.gentoo.org/" ref="nofollow">http://bugs.gentoo.org/</a></noindex></p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Jochem Kossen and Leo Lipelis</li>
+		<li>Karl Trygve Kalleberg &lt;<a class="email" href="mailto:karltk@gentoo.org">karltk@gentoo.org</a>&gt;</li>
+		<li>Mike Frysinger &lt;<a class="email" href="mailto:vapier@gentoo.org">vapier@gentoo.org</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ФАЙЛЫ">ФАЙЛЫ<a href="#ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>/etc/etc-update.conf</strong></p>
+
+
+	<p style="padding-left:4em;">Здесь хранятся настройки <em>etc-update</em>.</p>
+
+
+	<p><strong>/etc/dispatch-conf.conf</strong></p>
+
+
+	<p style="padding-left:4em;">Настройки для обработки конфигурационных файлов перед их изменением (с помощью <em>dispatch-conf</em>).</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong><a href=".html" class="wiki-page">make.conf</a></strong>(5)</p>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+
+
+	<p>Август 2008</p>
+</body>
+</html>

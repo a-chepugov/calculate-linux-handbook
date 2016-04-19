@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>user profile storage settings</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Хранение-настроек-профиля-пользователя">Хранение настроек профиля пользователя<a href="#Хранение-настроек-профиля-пользователя" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Хранение-настроек-профиля-пользователя">Хранение настроек профиля пользователя</a></li>
+<li class="heading2"><a href="#calculateinienv">~/.calculate/ini.env</a></li>
+<li class="heading2"><a href="#calculatedesktopenv">~/.calculate/desktop.env</a></li>
+<li class="heading2"><a href="#calculateserverenv">~/.calculate/server.env</a></li>
+<li class="heading2"><a href="#logout">~/.logout</a></li>
+</ul>
+
+
+	<h2 id="calculateinienv">~/.calculate/ini.env<a href="#calculateinienv" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Файл предназначен для хранения переменных функции <code>ini()</code>. Формат файла - <code>samba</code>.</p>
+
+
+	<p>Пример:</p>
+
+
+<pre>
+[main]
+var1 = test VAR 1
+</pre>
+
+Примечание:
+	<ul>
+	<li>Возможно любое название секции (по умолчанию <code>main</code>);</li>
+		<li>Возможно любое название переменной.</li>
+	</ul>
+
+
+	<h2 id="calculatedesktopenv">~/.calculate/desktop.env<a href="#calculatedesktopenv" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Файл предназначен для хранения параметров клиента. Формат файла - <code>samba</code>.</p>
+
+
+	<p>Пример:</p>
+
+
+<pre>
+[rsync]
+files = &lt;количество_файлов_в_профиле_пользователя&gt;
+exitcode = &lt;код_возврата_rsync_при_ошибке&gt;
+
+[main]
+status = success
+version = 2.1.11
+</pre>
+
+Секции:
+	<ul>
+	<li><code>rsync</code> - cекция относящаяся к rsync</li>
+		<li><code>main</code> - секция общих параметров</li>
+	</ul>
+
+
+Параметры:
+	<ul>
+	<li><code>status</code> - состояние (<code>error</code>, <code>process</code>, <code>success</code>)</li>
+		<li><code>version</code> - версия клиента</li>
+	</ul>
+
+
+	<h2 id="calculateserverenv">~/.calculate/server.env<a href="#calculateserverenv" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Файл предназначен для передачи параметров серверу. Формат файла - <code>plasma</code>.</p>
+
+
+	<p>Пример изменения пароля для пользователя на сервере (сервисы <code>unix</code>, <code>samba</code>):</p>
+
+
+<pre>
+[command][passwd_samba]
+run=on
+unix_hash=&lt;ssha_хеш_нового_пароля_unix&gt;
+samba_lm_hash=&lt;lm_хеш_нового_пароля_samba&gt;
+samba_nt_hash=&lt;nt_хеш_нового_пароля_samba&gt;
+samba_nt_hash_old=&lt;nt_хеш_старого_пароля_samba&gt;
+status=process
+date=YYYY-mm-dd_HH:MM:SS
+</pre>
+
+	<p>Выполнение команды на сервере для создание инкрементального архива:<br /><pre>
+[command][pack_profile]
+run=on
+status=process
+date=YYYY-mm-dd_HH:MM:SS
+</pre></p>
+
+
+	<ul>
+	<li>action - команда создания архива;</li>
+		<li>status - состояние выполнения команды (<code>error</code>, <code>process</code>, <code>success</code>).</li>
+	</ul>
+
+
+	<h2 id="logout">~/.logout<a href="#logout" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Устаревший формат файла. Файл предназначен для хранения состояния клиента (совместимость со старыми версиями сервера и клиента). Возможное содержимое текстового файла (<code>ERROR</code>, <code>PROCESS</code>, <code>SUCCESS</code>).</p>
+
+
+	<p>:Пример:</p>
+
+
+<pre>ERROR</pre>
+
+	<p>Содержимое файла в случае ошибки.</p>
+</body>
+</html>

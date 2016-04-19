@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>files and directories</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Файлы-и-каталоги">Файлы и каталоги<a href="#Файлы-и-каталоги" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Файлы-и-каталоги">Файлы и каталоги</a></li>
+<li class="heading2"><a href="#Файлы-Portage">Файлы Portage</a></li>
+<li class="heading3"><a href="#Директивы-настройки">Директивы настройки</a></li>
+<li class="heading3"><a href="#Конфигурация-определяемая-профилем">Конфигурация, определяемая профилем</a></li>
+<li class="heading3"><a href="#Конфигурация-задаваемая-пользователем">Конфигурация, задаваемая пользователем</a></li>
+<li class="heading3"><a href="#Изменение-файлов-Portage-и-размещения-каталогов">Изменение файлов Portage и размещения каталогов</a></li>
+<li class="heading2"><a href="#Хранение-файлов">Хранение файлов</a></li>
+<li class="heading3"><a href="#Дерево-Portage">Дерево Portage</a></li>
+<li class="heading3"><a href="#Двоичные-пакеты">Двоичные пакеты</a></li>
+<li class="heading3"><a href="#Исходные-коды">Исходные коды</a></li>
+<li class="heading3"><a href="#Файлы-RPM">Файлы RPM</a></li>
+<li class="heading3"><a href="#База-данных-Portage">База данных Portage</a></li>
+<li class="heading3"><a href="#Кэш-Portage">Кэш Portage</a></li>
+<li class="heading2"><a href="#Сборка-программного-обеспечения">Сборка программного обеспечения</a></li>
+<li class="heading3"><a href="#Временные-файлы-Portage">Временные файлы Portage</a></li>
+<li class="heading3"><a href="#Каталог-сборки">Каталог сборки</a></li>
+<li class="heading3"><a href="#Размещение-«живой-файловой-системы»">Размещение «живой файловой системы»</a></li>
+<li class="heading2"><a href="#Ведение-журнала">Ведение журнала</a></li>
+<li class="heading3"><a href="#Журнал-Ebuild">Журнал Ebuild</a></li>
+</ul>
+
+
+	<h2 id="Файлы-Portage">Файлы Portage<a href="#Файлы-Portage" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Директивы-настройки">Директивы настройки<a href="#Директивы-настройки" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Настройки Portage по умолчанию хранятся в <code>/etc/make.globals</code>. Когда вы откроете этот файл, вы увидите, что все настройки представляют собой переменные. Что означает каждая из переменных, описано ниже.</p>
+
+
+	<p>Так как многие директивы отличаются в зависимости от используемой архитектуры, к Portage прилагаются настройки по умолчанию, которые входят в ваш профиль. На ваш профиль указывает символическая ссылка <code>/etc/make.profile</code>. Настройка Portage выполняется c помощью файлов <code>make.defaults</code> вашего профиля и всех родительских профилей. Более подробно о профилях и каталоге <code>/etc/make.profile</code> мы расскажем позже.</p>
+
+
+	<p>Если вы планируете вносить изменения в конфигурационные переменные, <em>не</em> изменяйте <code>/etc/make.globals</code> или <code>make.defaults</code>. Вместо этого пользуйтесь файлом <a href="/etc/make.conf.html" class="wiki-page">/etc/make.conf</a>, который имеет приоритет перед вышеуказанными файлами. Вы также обнаружите файл <code>/etc/make.conf.example</code>. Как понятно из его названия, это просто пример - Portage не использует этот файл.</p>
+
+
+	<p>Переменные Portage также можно устанавливать как переменные среды, но мы не рекомендуем этого делать.</p>
+
+
+	<h3 id="Конфигурация-определяемая-профилем">Конфигурация, определяемая профилем<a href="#Конфигурация-определяемая-профилем" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Мы уже встречались с каталогом <code>/etc/make.profile</code>. На самом деле это не каталог, а символическая ссылка на профиль, по умолчанию на тот, что содержится в <code>/usr/portage/profiles</code>, однако вы можете создавать свои собственные профили где угодно и ссылаться на них. Профиль, указанный ссылкой, является профилем, к которому принадлежит ваша система.</p>
+
+
+	<p>В профиле содержатся сведения для Portage, специфичные для архитектуры, такие как список пакетов, принадлежащих соответствующей системе, список неработоспособных (или замаскированных) пакетов, и т.д.</p>
+
+
+	<h3 id="Конфигурация-задаваемая-пользователем">Конфигурация, задаваемая пользователем<a href="#Конфигурация-задаваемая-пользователем" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Если вам необходимо изменить поведение Portage относительно установки программного обеспечения, вам потребуется отредактировать файлы, находящиеся в <code>/etc/portage</code>. Мы <em>настоятельно рекомендуем</em> вам пользоваться файлами из <code>/etc/portage</code>, не следует настраивать поведение Portage через переменные среды.</p>
+
+
+	<p>Внутри <code>/etc/portage</code> доступны следующие пути:</p>
+
+
+	<ul>
+	<li>директория <code>package.mask</code>, в которой можно создать файлы с перечислением пакетов, которые Portage никогда не следует устанавливать;</li>
+		<li>директория <code>package.unmask</code>, в которой можно создать файлы со списком пакетов, для которых вы хотите иметь возможность установки, даже если разработчики Gentoo отговаривают вас от этого;</li>
+		<li>директория <code>package.keywords</code>, в которой можно создать файлы с перечислением пакетов, которые должны быть доступны для установки, несмотря на то, что они не подходят для вашей системы или архитектуры (пока);</li>
+		<li>директория <code>package.use</code>, в которой можно создать файлы, где перечислены значения USE-флагов, которые необходимо указывать для конкретных пакетов, а не для всей системы.</li>
+	</ul>
+
+
+	<p>Дополнительные сведения о каталоге <code>/etc/portage</code>, а также список всех файлов, которые там можно создавать, находятся на справочной странице Portage, см. <span class="bluecode" >man portage</span>.</p>
+
+
+	<h3 id="Изменение-файлов-Portage-и-размещения-каталогов">Изменение файлов Portage и размещения каталогов<a href="#Изменение-файлов-Portage-и-размещения-каталогов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Ранее упомянутые конфигурационные файлы нельзя хранить где угодно - Portage всегда ищет свои настроечные файлы в строго определенных местах. Однако Portage также использует множество каталогов для других целей: каталог для сборки, место для хранения исходных кодов, место для дерева Portage, и т.д.</p>
+
+
+	<p>Для этих целей существуют хорошо известные каталоги по умолчанию, положение которых можно изменить на свой вкус, внеся изменения в <code>/etc/make.conf</code>. Оставшаяся часть этой главы посвящена описанию того, какие специальные места Portage использует для своих целей, и как изменить их расположение в файловой системе.</p>
+
+
+	<p>Этот документ не претендует на статус справочника. Если вам необходим полный объем информации, пожалуйста, обратитесь к страницам справки по Portage и <code>make.conf</code> (<span class="bluecode" >man portage</span> и <span class="bluecode" >man make.conf</span>).</p>
+
+
+	<h2 id="Хранение-файлов">Хранение файлов<a href="#Хранение-файлов" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Дерево-Portage">Дерево Portage<a href="#Дерево-Portage" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Дерево Portage размещается, по умолчанию, в <code>/usr/portage</code>. Это определяется значением переменной <span class="bluecode" >PORTDIR</span>. Когда вы храните дерево Portage где-либо в другом месте (изменив эту переменную), не забывайте соответственно изменить символическую ссылку <code>/etc/make.profile</code>.</p>
+
+
+	<p>Если вы измените переменную <span class="bluecode" >PORTDIR</span>, вам может потребоваться изменить и следующие переменные: <span class="bluecode" >PKGDIR</span>, <span class="bluecode" >DISTDIR</span>, <span class="bluecode" >RPMDIR</span>, так как они не замечают изменений <span class="bluecode" >PORTDIR</span>. Это связано с особенностями их обработки Portage.</p>
+
+
+	<h3 id="Двоичные-пакеты">Двоичные пакеты<a href="#Двоичные-пакеты" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Несмотря на то, что Portage по умолчанию не использует прекомпилированное программное обеспечение, для него предусмотрена очень мощная поддержка. Если вы укажете Portage работать с прекомпилированными пакетами, они будут разыскиваться в <code>/var/calculate/remote/packages</code>. Это расположение определяется переменной <span class="bluecode" >PKGDIR</span>.</p>
+
+
+	<h3 id="Исходные-коды">Исходные коды<a href="#Исходные-коды" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Исходные коды приложений хранятся в <code>/var/calculate/remote/distfiles</code> по умолчанию. Это определяется переменной <span class="bluecode" >DISTDIR</span>.</p>
+
+
+	<h3 id="Файлы-RPM">Файлы RPM<a href="#Файлы-RPM" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Несмотря на то, что Portage не может использовать RPM-файлы, есть возможность их создания командой <span class="bluecode" >ebuild</span> (см.  <a href="Использование ebuild.html" class="wiki-page">Использование ebuild</a>). По умолчанию Portage хранит RPM файлы в каталоге <code>/usr/portage/rpm</code>, как определяется переменной <span class="bluecode" >RPMDIR</span>.</p>
+
+
+	<h3 id="База-данных-Portage">База данных Portage<a href="#База-данных-Portage" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Portage хранит состояние вашей системы (какие пакеты установлены, какие файлы относятся к определенным пакетам и т. п.) в <code>/var/db/pkg</code>. <em>Не изменяйте</em> эти файлы вручную! Это может разрушить знание вашей системы Portage.</p>
+
+
+	<h3 id="Кэш-Portage">Кэш Portage<a href="#Кэш-Portage" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Кэш Portage (включая сведения о времени изменения, виртуальные пакеты, информацию дерева зависимостей и т. д.) хранится в <code>/var/cache/edb</code>. Это место действительно является кэшем: вы можете его очистить в любой момент, когда не запущены приложения, связанные с Portage.</p>
+
+
+	<h2 id="Сборка-программного-обеспечения">Сборка программного обеспечения<a href="#Сборка-программного-обеспечения" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Временные-файлы-Portage">Временные файлы Portage<a href="#Временные-файлы-Portage" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>По умолчанию Portage хранит временные файлы в <code>/var/tmp</code>. За это отвечает переменная <span class="bluecode" >PORTAGE_TMPDIR</span>.</p>
+
+
+	<p>Если вы измените переменную <span class="bluecode" >PORTAGE_TMPDIR</span>, вам может потребоваться изменить и переменную <span class="bluecode" >BUILD_PREFIX</span>, так как она не замечает изменений <span class="bluecode" >PORTAGE_TMPDIR</span>. Это связано с особенностями ее обработки Portage.</p>
+
+
+	<h3 id="Каталог-сборки">Каталог сборки<a href="#Каталог-сборки" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Portage создает специфичные каталоги сборки для каждого пакета внутри <code>/var/tmp/portage</code>. Это расположение задается переменной <span class="bluecode" >BUILD_PREFIX</span>.</p>
+
+
+	<h3 id="Размещение-«живой-файловой-системы»">Размещение «живой файловой системы»<a href="#Размещение-«живой-файловой-системы»" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>По умолчанию Portage устанавливает все файлы в текущую файловую систему (/), но это можно изменить, установив переменную окружения <span class="bluecode" >ROOT</span>. Это может оказаться полезным при построении новых образов системы.</p>
+
+
+	<h2 id="Ведение-журнала">Ведение журнала<a href="#Ведение-журнала" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Журнал-Ebuild">Журнал Ebuild<a href="#Журнал-Ebuild" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Portage может создавать отдельные файлы журнала для каждого файла ebuild, но только тогда, когда переменная <span class="bluecode" >PORT_LOGDIR</span> указывает на место, доступное для записи для Portage (пользователя portage). По умолчанию эта переменная не установлена.</p>
+</body>
+</html>

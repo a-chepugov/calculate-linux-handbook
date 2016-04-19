@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>qemu</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Система-виртуализации-QEMU">Система виртуализации QEMU<a href="#Система-виртуализации-QEMU" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Система-виртуализации-QEMU">Система виртуализации QEMU</a></li>
+<li class="heading3"><a href="#Установка-пакетов">Установка пакетов</a></li>
+<li class="heading3"><a href="#Настроим-параметры-qemu">Настроим параметры qemu</a></li>
+<li class="heading3"><a href="#Создание-виртуальной-машины">Создание виртуальной машины</a></li>
+<li class="heading3"><a href="#Virtio-mdash-что-это-и-с-чем-это-едят">Virtio &mdash; что это и с чем это едят</a></li>
+<li class="heading3"><a href="#Команды-изменение-привода">Команды изменение привода</a></li>
+<li class="heading3"><a href="#Настройка-сети">Настройка сети</a></li>
+</ul>
+
+
+	<p><strong>KVM</strong> (или <strong>Kernel-based Virtual Machine</strong>) — это программное решение, обеспечивающее виртуализацию в среде Linux, которая поддерживает аппаратную виртуализацию на базе <strong>Intel VT</strong> (<strong>Virtualization Technology</strong>) либо <strong>AMD SVM</strong> (<strong>Secure Virtual Machine</strong>)</p>
+
+
+	<p><strong>QEMU</strong> — свободная программа с открытым исходным кодом для эмуляции аппаратного обеспечения различных платформ, которая может работать и без использования <strong>KVM</strong>, но использование аппаратной виртуализации значительно ускоряет работу гостевых систем, поэтому использование KVM в QEMU (<strong>-enable-kvm</strong>) является предпочтительным вариантом.</p>
+
+
+	<p>Первоначально разработка велась в рамках проекта <strong>Linux KVM</strong> (Kernel-based Virtual Machine), в котором, помимо собственно KVM (поддержки технологий аппаратной виртуализации x86-совместимых процессоров на уровне ядра Linux), разрабатывались патчи для QEMU, позволяющие QEMU использовать функциональность KVM. Однако недавно разработчики QEMU в содружестве с разработчиками KVM приняли решение интегрировать поддержку KVM в основную ветку QEMU (mainline).</p>
+
+
+	<p>Используя KVM, вы может запустить несколько виртуальных машин с немодифицированными образами Linux и Windows. Каждая виртуальная машина имеет собственную приватную среду, в которой она работает: сетевую карту, диск, графический адаптер и т.д.</p>
+
+
+	<p>Поддержка KVM вошла в ядро Linux начиная с версии 2.6.20.</p>
+
+
+	<p><strong>libvirt</strong> &mdash; это интерфейс и демон для управления виртуальными машинами различных технологий(qemu/kvm, xen, virtualbox), он позволяет удобно настраивать и манипулировать виртуальными машинами. Также к нему есть много разных сторонних приложений для управления, web-интерфейсов и т.д. Например, весьма полезным может быть графический интерфейс управления виртуальными машинами <span class="bluecode" >virt-manager</span>.</p>
+
+
+	<p style="text-align:center;"><img src="/attachments/download/3622" alt="" /></p>
+
+
+	<h3 id="Установка-пакетов">Установка пакетов<a href="#Установка-пакетов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Внесем изменения в make.conf для поддержки архитектур гостевых машин. Если вам необходимы другие нестандартные архитектуры, то добавьте их в этот список:</p>
+
+
+<pre>
+echo 'QEMU_SOFTMMU_TARGETS="i386 x86_64" 
+QEMU_USER_TARGETS="i386 x86_64"' &gt;&gt; /etc/portage/make.conf/custom
+</pre>
+
+	<p>Для настройки <strong>KVM</strong> в <strong>Calculate Linux</strong> нам понадобятся несколько пакетов со своими зависимостями. Аналогично данные рекомендации могут быть применимы и для <strong>Gentoo</strong>.</p>
+
+
+	<p>Если вы планируете использовать KVM не только для тестирования, то следует для <span class="bluecode" >app-emulation/qemu</span> еще добавить USE-флаги <span class="bluecode" >sasl</span> и <span class="bluecode" >tls</span> для настройки безопасного подключения.</p>
+
+
+<pre>
+echo "&gt;=net-dns/dnsmasq-2.72 script
+app-emulation/qemu png virtfs xattr vnc
+app-emulation/libvirt qemu udev virt-network" &gt;&gt; /etc/portage/package.use/custom
+emerge -a app-emulation/libvirt app-emulation/qemu
+</pre>
+
+	<h3 id="Настроим-параметры-qemu">Настроим параметры qemu<a href="#Настроим-параметры-qemu" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>/etc/libvirt/qemu.conf</p>
+
+
+	<p>Позволит vnc слушать на всех адресах<br /><pre>
+vnc_listen = "0.0.0.0" 
+</pre></p>
+
+
+	<p>Отключим tls(если виртуальны машины используются не для тестирования, то лучше tls включить и настроить)<br /><pre>
+vnc_tls = 0
+</pre></p>
+
+
+	<p>Пароль по умолчанию для vnc &mdash; он будет использоваться в том случае, если для виртуальной машины не указан свой пароль<br /><pre>
+vnc_password = "XYZ12345" 
+</pre></p>
+
+
+	<p>Пользователь от которого будет запускаться qemu<br /><pre>
+user = "root" 
+</pre></p>
+
+
+	<p>Группа от которой будет запускаться qemu<br /><pre>
+group = "root" 
+</pre></p>
+
+
+	<p>Формат сохранения и дампов, gzip или другое сжатие позволит уменьшить место, занимаемое образами, но притом увеличит время сохранения образов.<br /><pre>
+save_image_format = "gzip" 
+dump_image_format = "gzip" 
+</pre></p>
+
+
+	<p>Запустим демон libvirt и добавим его в автозапуск</p>
+
+
+<pre>
+/etc/init.d/libvirtd start
+rc-update add libvirtd default
+</pre>
+
+	<p>Также для виртуальной сети нам необходим загруженный модуль tun и vhost_net<br /><pre>
+modprobe -a tun vhost_net
+echo "tun
+vhost_net" &gt;&gt; /etc/modules-load.d/kvm.conf
+</pre></p>
+
+
+	<h3 id="Создание-виртуальной-машины">Создание виртуальной машины<a href="#Создание-виртуальной-машины" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для начала нам нужно создать образ для жесткого диска, по умолчанию он создается динамически расширяемым<br /><pre>
+qemu-img create -f qcow2 /var/calculate/vbox/hdd.qcow2 20G
+</pre></p>
+
+
+	<p>Если вы хотите выделить сразу же все место, то вам нужно использовать следующую команду<br /><pre>
+qemu-img create -f qcow2 -o preallocation=metadata hdd.qcow2 20G
+</pre></p>
+
+
+	<p>Если вы выделяете сразу же все место, то работать виртуальная машина будет быстрее, т.к. ей не надо будет выделять его в процессе работы.</p>
+
+
+	<p>Пример конфигурации виртуальной машины <span class="bluecode" >testkvm.xml</span>. В данном примере используется следующая конфигурация 1Гб оперативной памяти, 1 ядро процессора, система 64 бита, установочный образ <strong>Calculate Scratch Server</strong> 14.12.1, vnc-сервер на порту 5910:</p>
+
+
+<pre>
+&lt;domain type='kvm' id='1'&gt;
+  &lt;features&gt;&lt;acpi/&gt;&lt;/features&gt;
+  &lt;name&gt;testkvm&lt;/name&gt;
+  &lt;description&gt;Description of server&lt;/description&gt;
+  &lt;memory unit='KiB'&gt;1048576&lt;/memory&gt;
+  &lt;vcpu placement='static'&gt;1&lt;/vcpu&gt;
+  &lt;os&gt;
+    &lt;type arch='x86_64' machine='pc-1.3'&gt;hvm&lt;/type&gt;
+    &lt;boot dev='cdrom' /&gt;
+    &lt;boot dev='hd' /&gt;
+    &lt;bootmenu enable='yes'/&gt;
+  &lt;/os&gt;
+  &lt;devices&gt;
+    &lt;emulator&gt;/usr/bin/qemu-system-x86_64&lt;/emulator&gt;
+    &lt;disk type='file' device='disk'&gt;
+      &lt;driver name='qemu' type='qcow2' cache='writeback' io='threads'/&gt;
+      &lt;source file='/var/calculate/vbox/hdd.qcow2'/&gt;
+      &lt;target dev='vda' bus='virtio'/&gt;
+    &lt;/disk&gt;
+    &lt;disk type='file' device='cdrom'&gt;
+      &lt;driver name='qemu' type='raw'/&gt;
+      &lt;source file='/var/calculate/linux/css-14.12.1-x86_64.iso '/&gt;
+      &lt;target dev='vdd' bus='virtio'/&gt;
+      &lt;readonly/&gt;
+    &lt;/disk&gt;
+    &lt;interface type='network'&gt;
+      &lt;source network='default'/&gt;
+    &lt;/interface&gt;
+    &lt;graphics type='vnc' port='5910' autoport='no'&gt;
+      &lt;listen type='address'/&gt;
+    &lt;/graphics&gt;
+  &lt;/devices&gt;
+&lt;/domain&gt;
+</pre>
+
+	<p>Выделяемая для машины оперативная память задается строкой:</p>
+
+
+<pre>
+&lt;memory unit='KiB'&gt;1026608&lt;/memory&gt;
+</pre>
+
+	<p>Количество выделяемых CPU:</p>
+
+
+<pre>
+&lt;vcpu placement='static'&gt;1&lt;/vcpu&gt;
+</pre>
+
+	<p>Загрузочные устройства указываются в секции <span class="bluecode" >&lt;os&gt;</span>.</p>
+
+
+	<p>Путь к созданному образу жесткого диска задается строкой:</p>
+
+
+<pre>
+&lt;source file='/var/calculate/vbox/hdd.qcow2'/&gt;
+</pre>
+
+	<p>Путь к установочному образу задается в секции, его следует поменять на ваш:</p>
+
+
+<pre>
+&lt;disk type='file' device='cdrom'&gt;
+</pre>
+
+	<p>Подробнее об xml-конфиге &mdash; <noindex><a class="external" href="http://libvirt.org/formatdomain.html" ref="nofollow">http://libvirt.org/formatdomain.html</a></noindex></p>
+
+
+	<p>Добавление машины на базе конфига:<br /><pre>
+virsh define testkvm.xml
+</pre></p>
+
+
+	<p>Запуск машины:<br /><pre>
+virsh start testkvm
+</pre></p>
+
+
+	<p>Останов машины:<br /><pre>
+virsh destroy testkvm
+</pre></p>
+
+
+	<p>это экстренный останов сравнимый с отрубанием питания.</p>
+
+
+	<p>Для поддержки нормальных остановки и перезапуска в гостевой машине должна быть установлена поддержка acpi.<br />В случае использование Calculate Linux в качестве гостевой машины, делается это следующим образом:<br /><pre>
+emerge -a sys-power/acpid
+rc-update add acpid boot
+</pre></p>
+
+
+	<p>Автозапуск гостевой машины при запуске демона libvirt осуществляется следующим образом:<br /><pre>
+virsh autostart testkvm
+</pre></p>
+
+
+	<p>Отключение автозагрузки:<br /><pre>
+virsh autostart --disable testkvm
+</pre></p>
+
+
+	<p>Также возможен, запуск вручную без использования libvirt-демона:<br /><pre>
+qemu-system-x86_64 -name calculate -cpu host -smp 4 -enable-kvm -localtime -m 2048 -no-fd-bootchk -net nic,model=virtio,vlan=0 -net user,vlan=0 -drive file=hdd.img,index=0,media=disk,if=virtio -drive file=/mnt/iso/cldx-20150224-i686.iso,media=cdrom -monitor telnet:0.0.0.0:4008,server,nowait -spice port=5901,disable-ticketing -vga qxl -usb
+</pre></p>
+
+
+	<h3 id="Virtio-mdash-что-это-и-с-чем-это-едят">Virtio &mdash; что это и с чем это едят<a href="#Virtio-mdash-что-это-и-с-чем-это-едят" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>При использовании обычных виртуальных дисков и сетевых карт система работает следующим образом. В гостевую систему предоставляются копии реальных устройств. Таким образом в гостевой системе драйвера устройств преобразуют высокоуровневые запросы в низкоуровневые, виртуальная система их перехватывает, преобразует в высокоуровневые и передает уже драйверам хост-системы. При использовании virtio-устройств цепочка сокращается, virtio-драйвера ничего не преобразуют, а передают напрямую хост-системе высокоуровневые запросы, что приводит к ускорению работы виртуальных машин.</p>
+
+
+	<h3 id="Команды-изменение-привода">Команды изменение привода<a href="#Команды-изменение-привода" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для изменения образа в виртуальном приводе можно воспользоваться следующими командами.</p>
+
+
+	<p>Извлечение образа:<br /><pre>
+change-media guest01 vdd --eject
+</pre></p>
+
+
+	<p>Вставка нового образа:<br /><pre>
+change-media guest01 vdd /pool/disc.iso
+</pre></p>
+
+
+	<p>Общий формат команды:<br /><pre>
+change-media &lt;domain&gt; &lt;path&gt; [&lt;source&gt;] [--eject] [--insert] [--update] [--current] [--live] [--config] [--force]
+</pre></p>
+
+
+	<h3 id="Настройка-сети">Настройка сети<a href="#Настройка-сети" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>При базовых настройках используется виртуальная сеть недоступная извне.<br />Доступ по ip может быть осуществлен с компьютера, на котором поднят KVM. Изнутри доступ происходит через NAT.</p>
+
+
+	<p>Вариантов настройки сети есть множество и это отдельная тема, которую можно разбирать очень и очень долго и ориентироваться надо на конкретный случай применения.</p>
+
+
+Возможные варианты настройки сети:
+	<ul>
+	<li>NAT Based &mdash; это вариант по умолчанию. Внутренняя сеть, предоставляющая доступ к внешней сети с автоматическим применением NAT. В приведенном выше примере конфигурации используется именно этот вариант.</li>
+		<li>Routed &mdash; Аналогично предыдущему внутренняя сеть, предоставляющая доступ к внешней сети, но без NAT. Предполагает дополнительные настройки таблиц маршрутизации во внешней сети.</li>
+		<li>Изолированная IPv4/IPv6 сеть.</li>
+		<li>Bridge &mdash; Подключение типа мост (Позволяет реализовать множество различных конфигураций, в том числе и с назначение IP из реальной сети).</li>
+		<li>Перенаправление одной PCI сетевых карт хост-машины на гостевую машину.</li>
+	</ul>
+
+
+	<p>Если вы хотите настраивать сеть через bridge, то вам следует пересобрать ядро, включив следующие параметры:</p>
+
+
+<pre>
+CONFIG_MACVLAN=m
+CONFIG_MACVTAP=m
+CONFIG_BRIDGE_NF_EBTABLES=m
+CONFIG_BRIDGE_EBT_MARK_T=m
+CONFIG_BRIDGE_EBT_T_NAT=m
+</pre>
+
+Подробно с возможностями настройки сети можно ознакомиться на страницах:
+	<ul>
+	<li><noindex><a class="external" href="https://libvirt.org/formatnetwork.html" ref="nofollow">https://libvirt.org/formatnetwork.html</a></noindex></li>
+		<li><noindex><a class="external" href="http://wiki.libvirt.org/page/Networking" ref="nofollow">http://wiki.libvirt.org/page/Networking</a></noindex></li>
+	</ul>
+</body>
+</html>

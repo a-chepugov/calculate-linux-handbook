@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>network configuration</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-сети">Настройка сети<a href="#Настройка-сети" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Настройки сети находятся в файле <code>/etc/conf.d/net</code>.</p>
+
+
+	<h2 id="Начальная-настройка">Начальная настройка<a href="#Начальная-настройка" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Перед тем, как настраивать конфигурационный файл, нужно убедиться, что в директории <code>/etc/init.d/</code> присутствует символическая ссылка на <code>/etc/init.d/net.lo</code> с именем конфигурируемого интерфейса (в примерах упоминается сетевой интерфейс <em>eth0</em>.</p>
+
+
+	<p>Если настройки сети получаем по <em>DHCP</em>, то конфигурационный файл будет иметь вид:<br /><pre>
+config_eth0="dhcp" 
+</pre></p>
+
+
+	<p>Если используем статический адрес, конфигурационный файл будет иметь вид:<br /><pre>
+#для интерфейса eth0 прописываем ip-адрес из 24-й сети
+config_eth0="192.168.0.7/24" 
+#указываем шлюз который будет использоваться в сети по умолчанию
+routes_eth0="default via 192.168.0.1" 
+</pre></p>
+
+
+	<p>Если настройки не прописаны в конфигурационном файле, то будет предпринята попытка получить настройки сети по <em>DHCP</em>.</p>
+
+
+	<p>Также при запуске системы можно обнаружить такого рода сообщение:</p>
+
+
+<pre>
+"Bringing up interface eth0
+Starting ifplugd on eth0
+Backgrounding.....
+WARNING: net.eth0 has started, but is inactive" 
+</pre>
+
+	<p>Не пугайтесь. Сеть продолжает подниматься, просто не тормозит загрузку системы. В некоторых случаях это удобно, а в некоторых нет. Те, кому подобная ситуация не нравится, могут дописать в <code>/etc/conf.d/net</code> такую строку:<br /><pre>
+modules_eth0="!plug" 
+</pre></p>
+
+
+	<p>Но помните, при следующем запуске придется дожидаться окончания загрузки сети.</p>
+
+
+	<h2 id="Расширенные-настройки-сети">Расширенные настройки сети<a href="#Расширенные-настройки-сети" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Иногда при наличии одной сетевой карты существует необходимость работать в нескольких сетях. Это можно реализовать, присвоив несколько адресов одному сетевому интерфейсу. Например:<br /><pre>
+#основные настройки получаем по DHCP, а IP присваиваем статически
+config_eth0="dhcp" "10.0.0.17/24" 
+#говорим, что пакеты для сети 10.0.0.0/24 пересылать не через шлюз,
+#полученный по DHCP, а через 10.0.0.1
+routes_eth0="10.0.0.0/24 via 10.0.0.1" 
+</pre></p>
+
+
+	<p>Для получения основных настроек сети не обязательно использовать <em>DHCP</em> - они могут быть заданы и статически:<br /><pre>
+#прописываем несколько статических адресов
+config_eth0="192.168.0.17/24" "10.0.0.17/24" 
+#указываем основной шлюз и дополнительный
+routes_eth0="default via 192.168.0.1" "10.0.0.0/24 via 10.0.0.1" 
+</pre></p>
+
+
+	<p><em>MTU</em> для интерфейса прописываем таким способом (актуально для <em>DSL</em>-модемов, в основном используют значение  <em>1000</em>):<br /><pre>
+mtu_eth0="1500" 
+</pre></p>
+
+
+	<p>Настройки <em>DNS</em> для интерфейса:<br /><pre>
+#указываем используемый в сети домен
+dns_domain_eth0="your.domain" 
+# указываем список DNS серверов в порядке их обхода
+dns_servers_eth0="192.168.0.2 192.168.0.3" 
+</pre></p>
+
+
+	<p>Если данные настройки отсутствуют, то настройки DNS берутся из <code>/etc/resolv.conf</code>.</p>
+
+
+	<p>Настройка синхронизации с сервером времени (<em>NTP</em>):<br /><pre>
+#перечислям список серверов для синхронизации
+ntp_servers_eth0="192.168.0.2 192.168.0.3" 
+</pre></p>
+
+
+	<p>Изменение <em>MAC-адреса</em>:<br /><pre>
+# указываем нужный MAC-адрес
+mac_eth0="01:23:45:67:89:AB" 
+</pre></p>
+</body>
+</html>

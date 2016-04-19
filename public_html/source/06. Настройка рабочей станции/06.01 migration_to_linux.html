@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>migration to linux</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Переход-на-Linux">Переход на Linux<a href="#Переход-на-Linux" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Переход-на-Linux">Переход на Linux</a></li>
+<li class="heading2"><a href="#Настройка-операционных-систем">Настройка операционных систем</a></li>
+<li class="heading3"><a href="#Calculate-Directory-Server">Calculate Directory Server</a></li>
+<li class="heading3"><a href="#Calculate-Linux-Desktop">Calculate Linux Desktop</a></li>
+<li class="heading3"><a href="#Windows-Workstation">Windows Workstation</a></li>
+<li class="heading2"><a href="#Работа-с-терминальным-Windows-сервером">Работа с терминальным Windows-сервером</a></li>
+</ul>
+
+
+	<h2 id="Настройка-операционных-систем">Настройка операционных систем<a href="#Настройка-операционных-систем" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>При помощи двух пакетов - <em>calculate-client</em> и <em>calculate-server</em> - вы можете построить гетерогенную сеть с Windows- и Linux-клиентами. Для того, чтобы использовать все предлагаемые возможности, используйте последние версии <a href="Calculate Directory Server.html" class="wiki-page">Calculate Directory Server</a> с предустановленным пакетом <em>calculate-server</em> и <a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a>, включающим <em>calculate-client</em> со всеми необходимыми для работы пакетами.</p>
+
+
+	<h3 id="Calculate-Directory-Server">Calculate Directory Server<a href="#Calculate-Directory-Server" class="wiki-anchor">&para;</a></h3>
+
+
+Установка и настройка контроллера домена.
+	<ol>
+	<li><a href="Загрузите.html" class="wiki-page">Загрузите</a> LiveCD <a href="Calculate Directory Server.html" class="wiki-page">Calculate Directory Server</a> и запишите образ на CD.</li>
+		<li>Загрузитесь с LiveCD. Теперь вы можете проверить работу системы и <a href="установить ее.html" class="wiki-page">установить ее</a> на жесткий диск.</li>
+		<li>Выполните <a href="настройку сети.html" class="wiki-page">настройку сети</a>.</li>
+		<li><a href="Настройте Samba-сервер.html" class="wiki-page">Настройте Samba-сервер</a> и другие необходимые сервисы.</li>
+		<li>Добавьте пользователей домена.</li>
+		<li>Установите пароль служебным пользователям <em>client</em> и <em>admin</em>, которые понадобятся для ввода соответственно Linux- и Windows- клиентов в домен, выполнив:<br /><pre>
+cl-passwd --smb client samba
+cl-passwd --smb admin  samba
+</pre></li>
+		<li>Настройте использование <em>distfiles</em> клиентами домена<br /><pre>
+cl-groupadd --gid 250 -f portage unix
+cl-usermod -a portage client unix
+chmod 0775 /var/calculate/remote
+chmod -R 2775 /var/calculate/remote/distfiles
+chown -R root:portage /var/calculate/remote/distfiles
+</pre></li>
+	</ol>
+
+
+	<h3 id="Calculate-Linux-Desktop">Calculate Linux Desktop<a href="#Calculate-Linux-Desktop" class="wiki-anchor">&para;</a></h3>
+
+
+Установка Linux-клиентов.
+	<ol>
+	<li><a href="Загрузите.html" class="wiki-page">Загрузите</a> LiveDVD <a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a> и запишите образ на DVD.</li>
+		<li>Загрузитесь с LiveDVD. Теперь вы можете проверить работу системы и <a href="установить её.html" class="wiki-page">установить её</a> на жесткий диск.</li>
+		<li><a href="Введите компьютер в домен.html" class="wiki-page">Введите компьютер в домен</a> <em>Calculate Directory Server</em>.</li>
+	</ol>
+
+
+При входе в домен будут доступны:
+	<ul>
+	<li>сетевой диск <em>Home</em>, используемый для хранения личных файлов пользователя;</li>
+		<li>сетевой диск <em>Disks</em>, используемый для хранения общих файлов;</li>
+		<li>сетевой диск <em>FTP</em>, используемый для быстрого доступа к FTP (если FTP-сервер сконфигурирован).</li>
+	</ul>
+
+
+	<p style="text-align:center;"><img src="/attachments/download/103" alt="" /></p>
+
+
+	<h3 id="Windows-Workstation">Windows Workstation<a href="#Windows-Workstation" class="wiki-anchor">&para;</a></h3>
+
+
+Для присоединения Windows-клиентов в домен <a href="Calculate Directory Server.html" class="wiki-page">Calculate Directory Server</a> выполните следующие действия:
+	<ol>
+	<li>Откройте  <em>Система (Пуск » Настройка » Панель управления » Система)</em>, перейдите на вкладку <em>Имя компьютера</em> и нажмите кнопку <em>Изменить...</em></li>
+	</ol>
+
+
+	<p style="text-align:center;"><img src="/attachments/download/102" alt="" /></p>
+
+
+	<ol>
+	<li>В открывшемся окне отметьте <em>Является членом домена</em>, впишите имя <em>NetBIOS</em>-группы, в которую входит сервер домена (по умолчанию - <em>Calculate</em>), и нажмите <em>ОК</em>.</li>
+		<li>После выполненных действий откроется окно для ввода имени и пароля. Впишите в поле логин <em>admin</em> и укажите пароль, который был задан при настройке <em>Calculate Directory Server</em> пользователю <em>admin</em>.</li>
+	</ol>
+
+
+	<p style="text-align:center;"><img src="/attachments/download/104" alt="" /></p>
+
+
+	<ol>
+	<li>При удачном подключении вы получите сообщение о вводе компьютера в домен. Поздравляем! Теперь компьютер следует (в лучших традициях Windows) перезагрузить.</li>
+	</ol>
+
+
+	<p style="text-align:center;"><img src="/attachments/download/106" alt="" /></p>
+
+
+При первом подключении к домену может появиться ошибка, в этом случае повторите вход, введя пароль пользователя <em>admin</em>.
+	<ol>
+	<li>После перезагрузки в окне входа в систему не забудьте указать ваш домен.</li>
+	</ol>
+
+
+При входе в домен будут доступны:
+	<ul>
+	<li>сетевой диск <em>H:</em>, используемый для хранения личных файлов пользователя;</li>
+		<li>сетевой диск <em>R:</em>, используемый для хранения общих файлов;</li>
+		<li>сетевой диск <em>T:</em>, используемый для быстрого доступа к FTP (если FTP-сервер сконфигурирован).</li>
+	</ul>
+
+
+	<p style="text-align:center;"><img src="/attachments/download/105" alt="" /></p>
+
+
+	<h2 id="Работа-с-терминальным-Windows-сервером">Работа с терминальным Windows-сервером<a href="#Работа-с-терминальным-Windows-сервером" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Настройку Windows-сервера мы опустим. После настройки введите сервер в домен <a href="Calculate Directory Server.html" class="wiki-page">Calculate Directory Server</a> - аналогично тому, как это делается для <em>Windows Workstation</em>.</p>
+
+
+	<p>Особого внимания заслуживает процесс запуска <em>Windows</em>-приложений в среде <em>CLD</em>.<br />Для примера, создадим иконку запуска <em>Photoshop</em>. Важно, чтобы окно занимало весь экран и в то же время не заезжало под верхнюю панель.<br />Управлять иконками можно на сервере: для этого создайте файл с иконкой в шаблоне пакета <a href="calculate-client.html" class="wiki-page new">calculate-client</a> в подмонтированном ресурсе <code>/var/calculate</code>.<br /><pre>
+/var/calculate/remote/client-profile/always/.local/share/applications/photoshop.desktop
+</pre></p>
+
+
+	<p>Файл должен быть следующего содержания:<br /><pre>
+[Desktop Entry]
+Version=1.0
+Name=Adobe Photoshop
+GenericName=графический редактор
+Comment=
+Exec=/usr/bin/keyexec rdesktop "-s 'C:\\Program Files\\Adobe\\Adobe Photoshop CS3\\photoshop.exe' -d calculate -a 16 -g #-hr_x11_width-#x#-sum(h,hr_x11_height-31)-# -T 'Adobe Photoshop' -S standard -zNDKE -p - winserver.localnet.org" 
+Icon=photoshop
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=Graphics;
+</pre></p>
+
+
+Примечание:
+	<ul>
+	<li>Имя сервера <em>winserver.localnet.org</em> нужно заменить на имя вашего сервера.</li>
+		<li>Иконка <em>photoshop</em> входит в состав <em>Calculate Linux Desktop</em>.</li>
+		<li>Размер окна вычисляется в <a href="функции.html" class="wiki-page">функции</a> <em>sum</em>, где 32 - высота верхней панели.</li>
+		<li>Утилита <a href=".html" class="wiki-page">keyexec</a> позволяет запускать приложения по хранимому в ключах ядра паролю.</li>
+		<li>Если вы предпочитаете хранить пароль доступа к <em>1С</em> в иконке запуска, воспользуйтесь <a href="функцией.html" class="wiki-page">функцией</a> <em>load</em> для считывания и подстановки содержимого файла в шаблон.</li>
+	</ul>
+</body>
+</html>

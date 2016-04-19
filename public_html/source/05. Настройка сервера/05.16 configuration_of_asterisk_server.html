@@ -1,0 +1,642 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>configuration of asterisk server</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-Asterisk-сервера">Настройка Asterisk сервера<a href="#Настройка-Asterisk-сервера" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#Настройка-Asterisk-сервера">Настройка Asterisk сервера</a></li>
+<li class="heading2"><a href="#Постановка-задачи">Постановка задачи</a></li>
+<li class="heading2"><a href="#Установка-сервера-Asterisk">Установка сервера Asterisk</a></li>
+<li class="heading3"><a href="#Конфигурация-USE-флагов-для-устанавливаемых-пакетов">Конфигурация USE-флагов для устанавливаемых пакетов</a></li>
+<li class="heading3"><a href="#Установка-пакетов">Установка пакетов</a></li>
+<li class="heading2"><a href="#Базовая-настройка-SIP">Базовая настройка SIP</a></li>
+<li class="heading3"><a href="#Создание-учетных-записей">Создание учетных записей</a></li>
+<li class="heading2"><a href="#Базовая-настройка-плана-набора">Базовая настройка плана набора</a></li>
+<li class="heading3"><a href="#Конфигурация-внутренних-вызовов">Конфигурация внутренних вызовов</a></li>
+<li class="heading2"><a href="#Настройка-связи-между-двумя-серверами-и-вызовов-между-ними">Настройка связи между двумя серверами и вызовов между ними</a></li>
+<li class="heading3"><a href="#Установка-связи-между-двумя-Asterisk-серверами-по-протоколу-SIP">Установка связи между двумя Asterisk-серверами по протоколу SIP</a></li>
+<li class="heading3"><a href="#Конфигурация-плана-набора-для-связи-между-серверами">Конфигурация плана набора для связи между серверами</a></li>
+<li class="heading2"><a href="#Настройка-платы-Digium-AEX804E-и-конфигурация-плана-набора">Настройка платы Digium AEX804E и конфигурация плана набора</a></li>
+<li class="heading3"><a href="#Настройка-системы-для-работы-с-платой-телефонии">Настройка системы для работы с платой телефонии</a></li>
+<li class="heading3"><a href="#Объяснение-понятий-FXO-и-FXS">Объяснение понятий FXO и FXS</a></li>
+<li class="heading3"><a href="#Настройка-FXO-каналов-на-Asterisk-сервере">Настройка FXO-каналов на Asterisk-сервере</a></li>
+<li class="heading3"><a href="#Конфигурация-плана-набора-для-приема-вызовов">Конфигурация плана набора для приема вызовов</a></li>
+<li class="heading3"><a href="#Создание-очередей-вызова">Создание очередей вызова</a></li>
+<li class="heading3"><a href="#Установка-своей-музыки-сообщения-ожидания-Music-On-Hold-MOH">Установка своей музыки (сообщения) ожидания (Music On Hold, MOH)</a></li>
+<li class="heading3"><a href="#Конфигурация-плана-набора-для-совершения-исходящих-вызовов">Конфигурация плана набора для совершения исходящих вызовов</a></li>
+<li class="heading2"><a href="#Заключение">Заключение</a></li>
+</ul>
+
+
+	<p style="text-align:left;">Для того чтобы настроить Calculate Directory Server в качестве IP-АТС используется Asterisk. Asterisk &mdash; компьютерная ATC под лицензией GPL поддерживающая большое количество VoIP протоколов. Настройка Asterisk производится путем редактирования файлов находящихся в директории <span class="bluecode" >/etc/asterisk</span>.</p>
+
+
+	<p style="text-align:left;">Разберем настройку Asterisk-сервера на примере несложной конфигурации.</p>
+
+
+	<h2 id="Постановка-задачи">Постановка задачи<a href="#Постановка-задачи" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Мы имеем один настроенный Asterisk-сервер в первом офисе, нам надо настроить второй сервер для нового офиса</li>
+		<li>На наш новый сервер мы получаем две телефонные линии по аналогу</li>
+		<li>Одна линия используется для телефонных разговоров, вторая для факсов</li>
+		<li>В сервере установлена плата Digium AEX804E &mdash; PCI-E плата на 8 портов, в которую установлен один модуль на 4 FXO-порта и модуль эхоподавления</li>
+		<li>Имеющийся сервер находится в Санкт-Петербурге, новый будет в Москве</li>
+		<li>Сервера должны быть связаны между собой и иметь единую систему нумерации внутренних номеров</li>
+		<li>На московском сервере должна быть следующая схема очередей звонков при поступающем вызове на основную линию:<br />Поступил звонок → проигрываем приветствие и предлагаем набрать добавочный номер → если добавочный номер не был набран, то переводим звонок на секретаря в СПБ → если секретарь не ответил, то переводим звонок на абонентов московского сервера → если московские абоненты не ответили, то переводим звонок на петербургских абонентов.</li>
+		<li>При звонках поступающих на факсовую линию — они должны адресоваться на факс</li>
+		<li>Для подключения факса по SIP нам необходим FXS-шлюз, например, Linksys SPA2102</li>
+		<li>Исходящие звонки должны совершаться по первой свободной линии. Если основная телефонная линия занята, то звонок идет через факсовую.</li>
+		<li>Звонки с московского сервера в Санкт-Петербург(код 812) должны проходить через сервер в Петербурге</li>
+		<li>Все нижеприведенные настройки тестировались и применимы для следующих версий пакетов:
+	<ul>
+	<li>net-misc/asterisk-1.6.2.17.3</li>
+		<li>net-misc/dahdi-2.4.1</li>
+		<li>net-misc/dahdi-tools-2.4.1</li>
+	</ul></li>
+	</ul>
+
+
+	<h2 id="Установка-сервера-Asterisk">Установка сервера Asterisk<a href="#Установка-сервера-Asterisk" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для начала работы нам необходимо установить в систему Calculate Directory Server пакет сервера Asterisk и сопутствующие пакеты.</p>
+
+
+	<h3 id="Конфигурация-USE-флагов-для-устанавливаемых-пакетов">Конфигурация USE-флагов для устанавливаемых пакетов<a href="#Конфигурация-USE-флагов-для-устанавливаемых-пакетов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Создадим файл <span class="bluecode" >/etc/portage/package.use/asterisk</span> &mdash; в нем мы пропишем все необходимые USE-флаги для нужных нам пакетов.</p>
+
+
+<pre>
+net-misc/asterisk alsa caps iconv jabber ldap samples speex ssl vorbis dahdi span
+net-misc/asterisk-core-sounds alaw g722 g729 gsm siren14 siren7 sln16 ulaw wav
+net-misc/asterisk-extra-sounds alaw g722 g729 gsm siren14 siren7 sln16 ulaw wav
+net-misc/asterisk-moh-opsound alaw g722 g729 gsm siren14 siren7 sln16 ulaw wav
+media-libs/speex sse ogg
+</pre> 
+
+	<p>Для пакета <span class="bluecode" >net-misc/asterisk</span> мы добавляем флаги <code>dahdi</code> (для работы с платой телефонии), <code>span</code> (для факсов) и <code>vorbis</code> (опционально для поддержки кодека vorbis). У остальных пакетов мы прописываем поддержку всех доступных кодеков.</p>
+
+
+	<h3 id="Установка-пакетов">Установка пакетов<a href="#Установка-пакетов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Теперь, когда мы установили необходимые USE-флаги, приступим к установке.<br />Вводим команду:<br /><pre>emerge -a asterisk dahdi dahdi-tools</pre></p>
+
+
+	<p>Мы получим такой список пакетов для установки:<br /><pre>
+These are the packages that would be merged, in order:
+
+Calculating dependencies... done!
+[ebuild  N     ] net-libs/libpri-1.4.11.4
+[ebuild  N     ] sys-libs/slang-2.2.2  USE="pcre png readline zlib -cjk" 
+[ebuild  N     ] dev-libs/iksemel-1.3  USE="-gnutls" 
+[ebuild  N     ] media-libs/spandsp-0.0.6_pre12-r1  USE="mmx sse sse2 sse3 -doc (-fixed-point) -static-libs
+[ebuild  N     ] net-misc/dahdi-2.4.1  USE="flash" 
+[ebuild  N     ] dev-libs/newt-0.52.12  USE="gpm nls -tcl" 
+[ebuild  N     ] net-misc/dahdi-tools-2.4.1  USE="-ppp" 
+[ebuild  N     ] net-misc/asterisk-1.6.2.17.3  USE="alsa caps dahdi iconv jabber ldap samples span speex ssl vorbis -doc -freetds -lua -newt -oss -postgres -radius -snmp -sqlite" 
+[ebuild  N     ] net-misc/asterisk-extra-sounds-1.4.11  USE="alaw g722 g729 gsm siren14 siren7 sln16 ulaw wav" LINGUAS="fr" 
+[ebuild  N     ] net-misc/asterisk-moh-opsound-2.03  USE="alaw g722 g729 gsm siren14 siren7 sln16 ulaw wav"[ebuild  N     ] net-misc/asterisk-core-sounds-1.4.19  USE="alaw g722 g729 gsm siren14 siren7 sln16 ulaw wav" LINGUAS="fr" 
+
+Would you like to merge these packages? [Yes/No]
+</pre></p>
+
+
+	<p>Соглашаемся на установку пакетов и ждем. После того, как все будет установлено, можно будет приступать к настройке.</p>
+
+
+	<h2 id="Базовая-настройка-SIP">Базовая настройка SIP<a href="#Базовая-настройка-SIP" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Задача поставлена &mdash; приступим к настройке нашего нового сервера.</p>
+
+
+	<h3 id="Создание-учетных-записей">Создание учетных записей<a href="#Создание-учетных-записей" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Сперва добавим несколько локальных SIP-абонентов. Для этого нам необходимо редактировать файл <span class="bluecode" >/etc/asterisk/sip.conf</span></p>
+
+
+	<p>Сначала добавим шаблон для общих настроек sip-телефонов:<br /><pre>
+[office-phones](!) 
+type=friend 
+context=outcoming-sip 
+secret=xxxxxxxx 
+host=dynamic 
+nat=no 
+qualify=yes 
+canreinvite=no 
+callgroup=1 
+pickupgroup=1 
+dtmfmode=auto 
+disallow=all 
+allow=g722
+</pre></p>
+
+
+Рассмотрим этот участок кода. Шаблон задается при помощи восклицательного знака в скобках около имени секции <code>[phones](!)</code>
+	<ul>
+	<li><code>type</code> &mdash; тип соединения (<code>peer</code> &mdash; только исходящие вызовы, <code>user</code> &mdash; входящие вызовы, <code>friend</code> &mdash; входящие и исходящие вызовы) </li>
+		<li><code>context</code> &mdash; контекст в <span class="bluecode" >/etc/asterisk/extension.conf</span> в который будет выполняться при звонке с телефона</li>
+		<li><code>secret</code> &mdash; пароль для SIP телефона </li>
+		<li><code>host</code> &mdash; имя хоста телефона (dynamic динамическое имя хоста) </li>
+		<li><code>nat</code> &mdash; сетевая трансляция адресов </li>
+		<li><code>qualify</code> &mdash; проверка функционирования телефона </li>
+		<li><code>canreinvite</code> &mdash; прямой доступ телефона к другому телефону минуя Asterisk </li>
+		<li><code>callgroup</code> &mdash; номер телефонной группы </li>
+		<li><code>pickupgroup</code> &mdash; номер группы захвата звонков </li>
+		<li><code>dtmfmode=auto</code> &mdash; dtmf режим (<code>auto|inband|info|rfc2833</code>)</li>
+		<li><code>disallow=all</code> &mdash; запрещает все кодеки</li>
+		<li><code>allow=g722</code> &mdash; разрешает использование кодека g722</li>
+	</ul>
+
+
+	<p>Теперь добавим секции для каждого телефона:<br /><pre>
+[001](office-phones)
+callerid="Менеджер 1" &lt;800&gt;
+[002](office-phones)
+callerid="Менеджер 2" &lt;801&gt;
+[003](office-phones)
+t38pt_udptl=yes
+callerid="Факс МСК" &lt;802&gt;
+disallow=all
+allow=alaw
+allow=ulaw
+</pre></p>
+
+
+	<p>Для факса мы переопределяем используемые кодеки, т. к. факсовый сигнал нормально проходит лишь при использовании кодека g711(alaw и ulaw) и t38pt_udptl=yes разрешает использование протокола t.38 для передачи факсов.</p>
+
+
+	<h2 id="Базовая-настройка-плана-набора">Базовая настройка плана набора<a href="#Базовая-настройка-плана-набора" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Наши телефоны и FXS-шлюз теперь могут зарегистрироваться на сервере, но звонить пока они еще не могут. Для этого нам надо создать контекст [outcoming-sip ] в файле <span class="bluecode" >/etc/asterisk/extensions.conf</span></p>
+
+
+	<h3 id="Конфигурация-внутренних-вызовов">Конфигурация внутренних вызовов<a href="#Конфигурация-внутренних-вызовов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для удобства выделим локальные номера в отдельную секцию:</p>
+
+
+<pre>
+[msk-local-phones]
+exten =&gt; 800,1,Log(NOTICE,"800 ACCOUNT")
+exten =&gt; 800,2,Dial(SIP/001,120,Tt)
+exten =&gt; 801,1,Log(NOTICE,"801 ACCOUNT")
+exten =&gt; 801,2,Dial(SIP/002,120,Tt)
+exten =&gt; 802,1,Log(NOTICE,"802 ACCOUNT")
+exten =&gt; 802,2,Dial(SIP/003,120,Tt)
+</pre>
+
+	<p>И сделаем секцию завершающую вызов:</p>
+
+
+<pre>
+[handup-sip]
+exten =&gt; _X!,1,HangUp()
+</pre>
+
+	<p>В секцию [outcoming-sip] теперь подключим наши секции:</p>
+
+
+<pre>
+[outcoming-sip]
+include =&gt; msk-local-phones
+include =&gt; handup-sip
+</pre>
+
+	<p>Теперь перезагрузив настройки Asterisk мы сможем звонить по номерам внутри сервера 800, 801 и 802 соответственно. Перезагрузка настроек asterisk выполняется следующим образом. Запускаем консоль управления Asterisk-сервером командой <span class="bluecode" >asterisk -r</span>  и прописываем в консоли <span class="bluecode" >reload</span> &mdash; это заставит Asterisk перечитать все настройки, либо же можно перечитать их по отдельности прописав <span class="bluecode" >sip reload</span> для перезагрузки настроек sip и <span class="bluecode" >dialplan reload</span> для перезагрузки настроек плана набора.<br />Введя команду <span class="bluecode" >sip show peers</span> мы можем посмотреть, какие абоненты у нас могут присутствовать на сервере и кто сейчас зарегистрирован и с какого IP.</p>
+
+
+	<h2 id="Настройка-связи-между-двумя-серверами-и-вызовов-между-ними">Настройка связи между двумя серверами и вызовов между ними<a href="#Настройка-связи-между-двумя-серверами-и-вызовов-между-ними" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Наши абоненты уже звонят друг-другу, но у нас есть еще и абоненты на нашем сервере в Петербурге, нам надо чтобы они могли звонить и им тоже. Для этого нам надо для начала настроить связь между нашими двумя серверами Asterisk.</p>
+
+
+	<h3 id="Установка-связи-между-двумя-Asterisk-серверами-по-протоколу-SIP">Установка связи между двумя Asterisk-серверами по протоколу SIP<a href="#Установка-связи-между-двумя-Asterisk-серверами-по-протоколу-SIP" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>На сервере в Москве прописываем в файле <span class="bluecode" >/etc/asterisk/sip.conf</span> следующее:</p>
+
+
+	<p>В секции [general]:<br /><pre>register =&gt; msk_asterisk:XXXXXXXXX@192.168.0.30/spb_asterisk</pre></p>
+
+
+	<p>И в конце создаем новую секцию:<br /><pre>[spb_asterisk]
+type=friend
+secret=XXXXXXXXX
+context=spb_incoming
+host=dynamic
+qualify=yes
+dtmfmode=rfc2833
+disallow=all
+allow=ulaw
+</pre></p>
+
+
+	<p>На сервере в Санкт-Петербурге пишем очень похожим образом:</p>
+
+
+	<p>В секции [general]:<br /><pre>register =&gt; spb_asterisk:XXXXXXXXX@192.168.1.25/msk_asterisk</pre></p>
+
+
+	<p>И в конце создаем новую секцию:<br /><pre>[msk_asterisk]
+type=friend
+secret=XXXXXXXXX
+context=msk_incoming
+host=dynamic
+qualify=yes
+dtmfmode=rfc2833
+disallow=all
+allow=ulaw
+</pre></p>
+
+
+	<p>Теперь рассмотрим подробнее что-же мы такое написали и для чего.<br /><pre>register =&gt; msk_asterisk:XXXXXXXXX@192.168.0.30/spb_asterisk</pre></p>
+
+
+	<p>Это указывает нашему московскому серверу зарегистрироваться на петербургском сервере <code>192.168.0.30/spb_asterisk</code> с логином <code>msk_asterisk</code> и паролем <code>XXXXXXXXX</code>.<br />Эти логин и пароль мы как раз задали, создав секцию <code>[msk_asterisk]</code> на нашем сервере в Петербурге. И соответственно петербургский сервер регистрируется на московском <code>192.168.1.25/msk_asterisk</code> с логином и паролем указанными секцией <code>[spb_asterisk]</code> в конфигурации московского сервера.</p>
+
+
+	<h3 id="Конфигурация-плана-набора-для-связи-между-серверами">Конфигурация плана набора для связи между серверами<a href="#Конфигурация-плана-набора-для-связи-между-серверами" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Связь между серверами установлена &mdash; необходимо описать план набора для того чтобы московские абоненты могли звонить петербургским и наоборот.</p>
+
+
+	<p>В файле <span class="bluecode" >/etc/asterisk/extensions.conf</span> на московском сервере создаем секцию <code>[spb-local-phones]</code>, в который мы пропишем наших петербургских абонентов:<br /><pre>
+[spb-local-phones]
+exten =&gt; 500,1,Dial(SIP/spb_asterisk/500,120,Tt)
+exten =&gt; 501,1,Dial(SIP/spb_asterisk/501,120,Tt)
+(... и т. д.)
+</pre></p>
+
+
+	<p>Отметим небольшую разницу с тем, как мы прописывали локальных абонентов.<br />Если локальным абонентам мы звонили <code>exten => 800,2,Dial(SIP/001,120,Tt)</code>, то есть набрав номер 800 мы совершали абоненту, который зарегистрирован с логином 001, то в данном случае <code>exten => 500,1,Dial(SIP/spb_asterisk/500,120,Tt)</code> мы звоним абоненту находящемуся на сервере spb_asterisk  с  телефонным номером 500.</p>
+
+
+	<p>В имеющуюся секцию <code>[outcoming-sip]</code> добавляем включение новой секции с локальными номерами петербургского сервера:<br /><pre>
+[outcoming-sip]
+include =&gt; msk-local-phones
+include =&gt; spb-local-phones
+include =&gt; handup-sip
+</pre></p>
+
+
+	<p>И создаем секцию <code>[spb_incoming]</code> для обработки вызовов поступающих с петербургского сервера:</p>
+
+
+<pre>
+[spb_incoming]
+include =&gt; msk-local-phones
+include =&gt; handup-sip
+</pre>
+
+	<p>На сервере в Петербурге прописываем аналогичным образом:</p>
+
+
+<pre>
+[msk-local-phones]
+exten =&gt; 800,1,Dial(SIP/msk_asterisk/800,120,Tt)
+exten =&gt; 801,1,Dial(SIP/msk_asterisk/801,120,Tt)
+exten =&gt; 802,1,Dial(SIP/msk_asterisk/802,120,Tt)
+
+[outcoming-sip]
+include =&gt; msk-local-phones
+include =&gt; spb-local-phones
+include =&gt; handup-sip
+
+[msk_incoming]
+include =&gt; spb-local-phones
+include =&gt; handup-sip
+</pre>
+
+	<p>Перегружаем настройки SIP и плана набора. Теперь наши абоненты в Москве и Петербурге (на обоих серверах установлена система Calculate Directory Server c пакетом Asterisk) могут общаться между собой.</p>
+
+
+	<h2 id="Настройка-платы-Digium-AEX804E-и-конфигурация-плана-набора">Настройка платы Digium AEX804E и конфигурация плана набора<a href="#Настройка-платы-Digium-AEX804E-и-конфигурация-плана-набора" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Наши абоненты звонят друг-другу, звонят абонентам петербургского сервера, но они пока еще не могут звонить на городские телефоны. Приступим к настройке нашей платы телефонии.</p>
+
+
+	<h3 id="Настройка-системы-для-работы-с-платой-телефонии">Настройка системы для работы с платой телефонии<a href="#Настройка-системы-для-работы-с-платой-телефонии" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для работы платы телефонии необходимы пакеты <span class="bluecode" >net-misc/dahdi</span> и <span class="bluecode" >net-misc/dahdi-tools</span>. <br />Когда они установлены, то закоментируем строку с модулем для нашей платы в файле <span class="bluecode" >/etc/modprobe.d/dahdi.blacklist.conf</span> для того чтобы модуль для нее загружался системой.</p>
+
+
+	<p>Файл примет следующий вид:<br /><pre>
+# blacklist all the drivers by default in order to ensure that
+# /etc/init.d/dahdi installs them in the correct order so that the spans are
+# ordered consistently.
+
+blacklist wct4xxp
+blacklist wcte12xp
+blacklist wct1xxp
+blacklist wcte11xp
+#blacklist wctdm24xxp
+blacklist wcfxo
+blacklist wctdm
+blacklist wctc4xxp
+blacklist wcb4xxp
+blacklist wcopenpci
+blacklist zaphfc
+</pre></p>
+
+
+	<p>В нашем случае нам необходим модуль <code>wctdm24xxp</code> &mdash; этот модуль используется платами TDM2400P/AEX2400, TDM800P/AEX800 и TDM410P/AEX410.</p>
+
+
+	<p>Теперь настроим каналы на нашей плате.  Для этого нам необходимо отредактировать файл <span class="bluecode" >/etc/dahdi/system.conf</span></p>
+
+
+	<p>В нашей плате установлен модуль на 4 FXO канала,  с номерами каналов от 5 до 8(если смотреть на плату, то это 4 левых гнезда. На этой плате нумерация каналов идет справа налево. Восьмой канал &mdash; крайний левый, первый канал &mdash; крайний правый.</p>
+
+
+	<p>В конфигурационном файле прописываем следующее:<br /><pre>
+fxsks=5
+fxsks=6
+fxsks=7
+fxsks=8
+</pre></p>
+
+
+	<p>Это указывает нам, что для каналов с 5-го по 8-й у нас используется сигнализация fxsks.</p>
+
+
+	<h3 id="Объяснение-понятий-FXO-и-FXS">Объяснение понятий FXO и FXS<a href="#Объяснение-понятий-FXO-и-FXS" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Немного отвлечемся и разберемся, что есть FXO и FXS и где какая сигнализация.<br />Порт <acronym title="Foreign eXchange Office">FXO</acronym> принимает телефонную линию с телефонной станции, то есть ведет себя как оконечное оборудование(телефонный аппарат) и использует сигнализацию fxsks.<br />Порт <acronym title="Foreign eXchange Station">FXS</acronym> генирирует сигнал готовности линии и выдает напряжение линии, то есть ведет себя как телефонная станция и использует сигнализацию fxoks.<br />Таким образом порты называются исходя из того, что к ним подключается и используют сигнализацию исходя из того, чем они являются сами.</p>
+
+
+	<h3 id="Настройка-FXO-каналов-на-Asterisk-сервере">Настройка FXO-каналов на Asterisk-сервере<a href="#Настройка-FXO-каналов-на-Asterisk-сервере" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Теперь мы запускаем демон dahdi <span class="bluecode" >/etc/init.d/dahdi start</span> и смотрим, что у нас все работает как надо командой <span class="bluecode" >dahdi_cfg -vv</span></p>
+
+
+	<p>Вывод команды:<br /><pre>
+DAHDI Tools Version - 2.4.1
+
+DAHDI Version: 2.4.1
+Echo Canceller(s):
+Configuration
+======================
+
+Channel map:
+
+Channel 05: FXS Kewlstart (Default) (Echo Canceler: none) (Slaves: 05)
+Channel 06: FXS Kewlstart (Default) (Echo Canceler: none) (Slaves: 06)
+Channel 07: FXS Kewlstart (Default) (Echo Canceler: none) (Slaves: 07)
+Channel 08: FXS Kewlstart (Default) (Echo Canceler: none) (Slaves: 08)
+
+4 channels to configure.
+
+etting echocan for channel 5 to none
+Setting echocan for channel 6 to none
+Setting echocan for channel 7 to none
+Setting echocan for channel 8 to none
+</pre></p>
+
+
+	<p>Теперь необходимо настроить каналы в самом Asterisk-сервере. Для этого мы редактируем файл <span class="bluecode" >/etc/asterisk/chan_dahdi.conf</span></p>
+
+
+	<p>В нем нам необходимо отредактировать секцию <code>[channels]</code>:<br /><pre>
+[channels]
+usecallerid=yes
+hidecallerid=no
+callwaiting=no
+threewaycalling=yes
+transfer=yes
+echocancel=yes
+echotraining=yes
+signaling=fxs_ks
+context=incoming_fxo
+group=1
+channel=&gt;7
+context=incoming_fxo_fax
+group=1
+channel=&gt;8
+</pre></p>
+
+
+Рассмотрим параметры:
+	<ul>
+	<li><code>usecallerid=yes</code> &mdash; активирует возможность передачи CallerID</li>
+		<li><code>hidecallerid=no</code> &mdash; указывает, что для исходящих вызовов будет передаваться CallerID</li>
+		<li><code>callwaiting=no</code> &mdash; деактивирует отложенный вызов</li>
+		<li><code>threewaycalling=yes</code> &mdash; активирует возможность подключения третьего абонента</li>
+		<li><code>transfer=yes</code> &mdash; разрешает переадресацию вызова</li>
+		<li><code>echocancel=yes</code> &mdash; активирует эхоподовление</li>
+		<li><code>echotraining=yes</code> &mdash; активирует режим измерения эха для ускорения настройки эхоподавления</li>
+		<li><code>signaling=fxs_ks</code> &mdash; указывает на использование сигнализации fxs</li>
+		<li><code>group=1</code> &mdash; группа каналов</li>
+	</ul>
+
+
+	<p>Первый контекст указывает как будет обрабатываться вызов для 7-го канала, второй для 8-го. Седьмой канал мы используем для основной линии, восьмой &mdash; для факсов. Параметр <code>group=1</code> для обоих каналов объединяет их в одну группу. Это позволит нам совершать вызовы через первую свободную линию.</p>
+
+
+	<h3 id="Конфигурация-плана-набора-для-приема-вызовов">Конфигурация плана набора для приема вызовов<a href="#Конфигурация-плана-набора-для-приема-вызовов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Настроим прием вызовов на наши линии.<br />Создаем контекст <code>[incoming_fxo]</code> в файле <span class="bluecode" >/etc/asterisk/extensions.conf</span>:<br /><pre>
+[incoming_fxo]
+exten =&gt; s,1,Answer()
+exten =&gt; s,n,Ringing()
+exten =&gt; s,n,Queue(welcome,n,,,12)
+exten =&gt; s,n,GotoIfTime(19:15-8:00,*,*,*?allRing:default)
+exten =&gt; s,n(allRing),NoOp()
+exten =&gt; s,n,Queue(allNoFaxes,r,,,600)
+exten =&gt; s,n,HangUp()
+exten =&gt; s,n(default),NoOp()
+exten =&gt; s,n,Queue(secretary,r,,,6)
+exten =&gt; s,n,Queue(msk-manager1,r,,,10)
+exten =&gt; s,n,Queue(spb-managers,r,,,600)
+include =&gt; handup-sip
+</pre></p>
+
+
+	<p>Здесь мы отвечаем на вызов и отправляем его в необходимую очередь.<br /><code>Queue(welcome,n,,,12)</code> отправляет звонок в очередь <code>welcome</code> на 12 секунд, параметр «n» позволяет набор во время нахождения в очереди и проигрывается музыка ожидания(Music On Hold, MOH). В очереди <code>welcome</code> мы проигрываем приветственное сообщение &mdash; это будет описано ниже.<br /><code>GotoIfTime(19:15-8:00,*,*,*?allRing:default)</code> &mdash; проверяется условие, если сейчас время от 19:15 вечера до 8:00 утра, то мы переходим к метке <code>allRing</code>, иначе к метке <code>default</code>. Это делается для того, чтобы в то время, когда большинства работников нет в офисе звонили все телефоны, а в рабочие часы &mdash; в установленном порядке. Далее под меткой <code>default</code> у нас звонок сначала на 6 секунд идет на секретаря, затем на 10 секунд на московских менеджеров и потом на 600 секунд на петербургских менеджеров. Параметр «r» в вызове <code>Queue()</code> отвечает за то, что вместо MOH звонящий слышит гудки, как при звонке (ringing).</p>
+
+
+	<p>Также нам нужен контекст для второй линии &mdash; создадим секцию <code>[incoming_fxo_fax]</code> в файле <span class="bluecode" >/etc/asterisk/extensions.conf</span>:<br /><pre>
+[incoming_fxo_fax]
+exten =&gt; s,1,Answer()
+exten =&gt; s,2,NoOp()
+exten =&gt; s,n,Ringing()
+exten =&gt; s,n,Queue(msk-faxes,r,,,600)
+include =&gt; handup-sip
+</pre></p>
+
+
+	<p>На этой линии мы просто отправляем поступивший звонок на факс на 600 секунд.</p>
+
+
+	<h3 id="Создание-очередей-вызова">Создание очередей вызова<a href="#Создание-очередей-вызова" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Теперь рассмотрим, как именно описываются очереди. Они описываются в файле <span class="bluecode" >/etc/asterisk/queues.conf</span>.<br /><pre>
+[welcome]
+strategy = ringall
+musicclass=welcome
+context=all-local-sip
+
+[secretary]
+strategy = ringall
+musicclass=default
+context=all-local-sip
+; Секретарь
+member =&gt; SIP/spb_asterisk/550,1
+
+[spb-managers]
+strategy = ringall
+musicclass=default
+context=all-local-sip
+; Менеджеры
+member =&gt; SIP/spb_asterisk/500,1
+member =&gt; SIP/spb_asterisk/501,1
+; (… и т. д.)
+
+[msk-faxes]
+strategy = ringall
+musicclass=default
+context=all-local-sip
+; Московский факс
+member =&gt; SIP/002,1
+
+[msk-manager1]
+strategy = ringall
+musicclass=default
+context=all-local-sip
+; Московские менеджеры
+member =&gt; SIP/001,1
+</pre></p>
+
+
+Основные параметры при описании очередей:
+	<ul>
+	<li>strategy &mdash; стратегия по которой обрабатываются поступающие вызовы, может принимать несколько значений:
+	<ul>
+	<li>ringall &mdash; вызываются все доступные участники до тех пор, пока кто-то из них не ответит на вызов (по умолчанию)</li>
+		<li>leastrecent &mdash; вызывается участник очереди, который вызывался меньшего всего</li>
+		<li>fewestcalls &mdash; вызывается участник очереди, ответивший на наименьшее количество звонков</li>
+		<li>random &mdash; случайным образом из участников очереди вызывается свободный</li>
+		<li>rrmemory &mdash; циклический вызов с памятью, запоминается последний ответивший участник очереди</li>
+	</ul>
+	</li>
+		<li>musicclass &mdash; задает, какая музыка или сообщение проигрывается во время ожидания в данной очереди(задается в файле <span class="bluecode" >/etc/asterisk/musiconhold.conf</span>)</li>
+		<li>context &mdash; задает, какой контекст будет обрабатывать набор номера во время ожидания.</li>
+		<li>member &mdash; задает участников очереди, обрабатывающих вызов. На каждого участника создается запись.</li>
+	</ul>
+
+
+	<p>Для обработки добавочного номера в очереди welcome мы указали контекст <code>[all-local-sip]</code> &mdash; он должен включать в себя все локальные московские и петербургские номера, создадим для него запись в файле <span class="bluecode" >/etc/asterisk/extensions.conf</span></p>
+
+
+<pre>
+[all-local-sip]
+include =&gt; msk-local-sip
+include =&gt; spb-local-sip
+include =&gt; handup-sip
+</pre>
+
+	<p>Постановка звонка в очередь и обработка происходит следующим образом:<br />Функцией <code>Queue(welcome,n,,,12)</code> в плане набора мы отправляемый поступивший звонок на обработку в очередь <code>welcome</code>. В ней в течении 12 секунд звонящий слышит приветственное сообщение и, так как мы передали параметр "n", может набрать добавочный номер, который обрабатывается контекстом <code>all-local-sip</code>. По истечении 12 секунд, если не был набран добавочный номер, звонок выходит из данной очереди и идет на следующий шаг обработки в плане набора.<br />При вызове функции <code>Queue(msk-manager1,r,,,10)</code> звонок переходит на обработку в очередь <code>msk-manager1</code> на 10 секунд. При нахождении в очереди, так как мы указали параметр "r", звонящий слышит гудки. В это время звонок обрабатывается в соответствии с заданной стратегией &mdash; в данном случае <code>ringall</code> (звонят телефоны у всех указанных членов очереди). Если кто-то из членов очереди берет трубку, то устанавливается соединение. В противном случае, если за 10 секунд трубка взята не была, то обработка вызова снова переходит к следующему шагу в плане набора.</p>
+
+
+	<h3 id="Установка-своей-музыки-сообщения-ожидания-Music-On-Hold-MOH">Установка своей музыки (сообщения) ожидания (Music On Hold, MOH)<a href="#Установка-своей-музыки-сообщения-ожидания-Music-On-Hold-MOH" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>У нас уже обрабатываются входящие на наши городские линии и мы проигрываем приветственное сообщение, указав для очереди <code>welcome</code> музыкальный класс welcome &mdash; рассмотрим, как именно он задается. Музыка ожидания описывается в файле  <span class="bluecode" >/etc/asterisk/musiconhold.conf</span></p>
+
+
+	<p>При установке asterisk он имеет следующий вид:<br /><pre>
+[general]
+
+[default]
+mode=files
+directory=moh
+</pre></p>
+
+
+	<p>Нам надо добавить в него следующую секцию:<br /><pre>
+[welcome]
+mode=files
+sort=alpha
+directory=/etc/asterisk/moh1
+</pre></p>
+
+
+	<p>В данной записи мы говорим Asterisk-серверу проигрывать файлы в алфавитном порядке из директории <span class="bluecode" >/etc/asterisk/moh1</span>. В эту директорию мы помещаем записанное сообщение. Для уменьшения нагрузки на сервере предварительно сконвертируем при помощи ffmpeg (пакет <span class="bluecode" >media-video/ffmpeg</span> предустановлен в системе Calculate Linux Desktop) наше сообщение в наиболее часто используемые кодеки alaw, ulaw, g722, g729, gsm и в Asterisk Native SLN из которого Asterisk сможет конвертировать сам налету.<br />Например конвертация в Native SLN при помощи ffmpeg делается следующим образом:<br /><pre>
+ffmpeg -i "[input file]" -ar 8000 -ac 1 -acodec pcm_s16le -f s16le "[output file].sln" 
+</pre></p>
+
+
+	<p>Сконвертировать имеющиеся mp3 файлы в mono wav и ulaw pcm можно следующим образом:<br /><pre>
+for f in `ls *.mp3` ; do FILE=$(basename $f .mp3) ; ffmpeg -i $FILE.mp3 -ar 8000 -ac 1 -ab 64 $FILE.wav -ar 8000 -ac 1 -ab 64 -f mulaw $FILE.pcm -map 0:0 -map 0:0 ; done
+</pre></p>
+
+
+	<h3 id="Конфигурация-плана-набора-для-совершения-исходящих-вызовов">Конфигурация плана набора для совершения исходящих вызовов<a href="#Конфигурация-плана-набора-для-совершения-исходящих-вызовов" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Теперь нам осталось настроить исходящие вызовы на городские номера. В файле <span class="bluecode" >/etc/asterisk/extensions.conf</span> создаем секцию <code>[city-calls]</code>:<br /><pre>
+[city-calls]
+exten =&gt; _98812XXXXXXX,1,Dial(SIP/spb_asterisk/${EXTEN})
+exten =&gt; _98812XXXXXXX,2,Congestion
+exten =&gt; _9XXXXXXX,1,Dial(DAHDI/g1/8495${EXTEN:1})
+exten =&gt; _9XXXXXXX,2,Congestion
+exten =&gt; _98.,1,Dial(DAHDI/g1/${EXTEN:1})
+exten =&gt; _98.,2,Congestion
+</pre></p>
+
+
+	<p>И подключаем ее к секции <code>[outcoming-sip]</code>:<br /><pre>
+[outcoming-sip]
+include =&gt; local-sip
+include =&gt; spb-local-sip
+include =&gt; city-calls
+include =&gt; handup-sip
+</pre></p>
+
+
+Таким образом вызовы на петербургские номера (код 812) у нас отправляются на сервер <code>spb_asterisk</code> и обрабатываются уже там. Вызовы на городские номера (7 цифр) дополняются до 10 цифр с кодом города (в данном случае в начало номера добавляется 8495 &mdash; сервер у нас находится в Москве) и вызовы на межгород вызываются как есть.<br />В вызове команды <code>Dial(DAHDI/g1/${EXTEN:1}</code>:
+	<ul>
+	<li><code>DAHDI</code> &mdash; указывает на то, что мы совершаем звонок через нашу FXO-плату</li>
+		<li><code>g1</code> &mdash; группа каналов 1 (мы это задавали при конфигурации FXO-каналов), звонок совершается через группу для того чтобы, если основная линия занят он шел через факсовую линию</li>
+		<li><code>${EXTEN}</code> и <code>${EXTEN:1}</code> &mdash; номер, который был набран. Полный синтаксис команды <code>${EXTEN:x:y}</code>, где <code>x</code> &mdash; начальное положение и <code>y</code> &mdash; количество возвращаемых цифр.</li>
+	</ul>
+
+
+	<h2 id="Заключение">Заключение<a href="#Заключение" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Таким образом мы настроили Asterisk-сервер в базовой конфигурации, соответствующей поставленной задаче. Это лишь основные настройки, позволяющие совершать и принимать необходимые вызовы. Сервер телефонии Asterisk предоставляет неограниченные возможности по настройке и конфигурации офисной IP-АТС. Надеемся, что данная статья поможет вам разобраться с настройкой Asterisk и послужит фундаментом, основываясь на котором, вы сможете создавать свою собственную конфигурацию.</p>
+</body>
+</html>

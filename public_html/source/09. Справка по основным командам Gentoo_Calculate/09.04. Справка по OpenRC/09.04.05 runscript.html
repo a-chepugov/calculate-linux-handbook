@@ -1,0 +1,707 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>runscript</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="RUNSCRIPT">RUNSCRIPT<a href="#RUNSCRIPT" class="wiki-anchor">&para;</a></h1>
+
+
+	<h2 id="НАЗВАНИЕ">НАЗВАНИЕ<a href="#НАЗВАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>runscript</strong>  - интерпретатор сценариев оболочки для служб</p>
+
+
+	<h2 id="СИНТАКСИС">СИНТАКСИС<a href="#СИНТАКСИС" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>runscript</strong> [<strong>-D , -nodeps</strong> ] [<strong>-d , -debug</strong> ] [<strong>-s , -ifstarted</strong> ] [<strong>-Z , -dry-run</strong> ] [<em>команда</em> ... ]</p>
+
+
+	<h2 id="ОПИСАНИЕ">ОПИСАНИЕ<a href="#ОПИСАНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>runscript</strong> фактически представляет собой интерпретатор shell-сценариев, предоставляющий простой интерфейс для зачастую сложных системных команд и демонов. Когда какая-либо служба вызывает команду, она сначала загружает множественный конфигурационный файл, затем управляющий им конфигурационный файл, далее /etc/rc.conf и, наконец, сам сценарий. Здесь <strong>runscript</strong> запускает заданную команду.</p>
+
+
+	<p>Команды определяются в сценарии как функции оболочки. Ниже приведен перечень функций, по умолчанию доступных для всех сценариев запуска:</p>
+
+
+	<p><em>describe</em></p>
+
+
+	<p style="padding-left:4em;">Описывает поведение службы и каждую команду, определяемую ей.</p>
+
+
+	<p><em>start</em></p>
+
+
+	<p style="padding-left:4em;">Прежде всего необходимо убедиться, что все службы, от которых зависит нормальная работа, запущены. Если какие-либо необходимые службы выдают ошибку при запуске, будет выполнен выход и выведено соответствующее сообщение; если же всё благополучно, вызывается функция запуска, если она существует.</p>
+
+
+	<p><em>stop</em></p>
+
+
+	<p style="padding-left:4em;">Прежде всего необходимо убедиться, что все службы, которые зависят от текущих операций, остановлены. Если какие-либо из этих служб выдают ошибку при остановке, будет выполнен выход и выведено соответствующее сообщение; если же всё благополучно, вызывается функция остановки, если она существует.</p>
+
+
+	<p><em>restart</em></p>
+
+
+	<p style="padding-left:4em;">Останавливает, а затем вновь запускает службу, вместе с зависимыми от нее.</p>
+
+
+	<p><em>status</em></p>
+
+
+	<p style="padding-left:4em;">Отображает текущее состояние службы. Будет возвращен соответствующий ему код, за исключением состояния "запущено" (started), при котором возвращается 0, для соответствия стандартному поведению команд.</p>
+
+
+	<p><em>zap</em></p>
+
+
+	<p style="padding-left:4em;">Устанавливает состояние службы "остановлено" (stopped) и удаляет все сохраненные данные о ней.</p>
+
+
+	<p>Следующие опции определяют параметры запуска службы:</p>
+
+
+	<p><strong>-d , -debug</strong></p>
+
+
+	<p style="padding-left:4em;">Включить xtrace в оболочке для отладки.</p>
+
+
+	<p><strong>-D , -nodeps</strong></p>
+
+
+	<p style="padding-left:4em;">Полностью игнорировать информацию о зависимостях, предоставляемую службой.</p>
+
+
+	<p><strong>-s , -ifstarted</strong></p>
+
+
+	<p style="padding-left:4em;">Выполнить команду, только если служба была запущена.</p>
+
+
+	<p><strong>-q , -quiet</strong></p>
+
+
+	<p style="padding-left:4em;">Отключить весь информационный вывод, генерируемый службой. Это не влияет на вывод любых других команд, не связанных с OpenRC.</p>
+
+
+	<p><strong>-v , -verbose</strong></p>
+
+
+	<p style="padding-left:4em;">Показывать дополнительный информационный вывод, генерируемый службой.</p>
+
+
+	<p><strong>-Z , -dry-run</strong></p>
+
+
+	<p style="padding-left:4em;">Показать, какие службы будут остановлены и/или запущены, но не останавливать / не запускать их.</p>
+
+
+	<p>Следующие переменные определяют сценарий службы:</p>
+
+
+	<p><em>extra_commands</em></p>
+
+
+	<p style="padding-left:4em;">Перечень дополнительных команд, определяемых службой, через пробел.</p>
+
+
+	<p><em>extra_started_commands</em></p>
+
+
+	<p style="padding-left:4em;">Перечень дополнительных команд, определяемых службой, через пробел. Работает только в том случае, если служба уже запущена.</p>
+
+
+	<p><em>extra_stopped_commands</em></p>
+
+
+	<p style="padding-left:4em;">Перечень дополнительных команд, определяемых службой, через пробел. Работает только в том случае, если служба уже остановлена.</p>
+
+
+	<p><em>description</em></p>
+
+
+	<p style="padding-left:4em;">Строка описания службы.</p>
+
+
+	<p><em>description_$command</em></p>
+
+
+	<p style="padding-left:4em;">Строка, описывающая дополнительную команду.</p>
+
+
+	<p><em>start_stop_daemon_args</em></p>
+
+
+	<p style="padding-left:4em;">Список аргументов, передаваемых start-stop-daemon'у при запуске службы.</p>
+
+
+	<p><em>command</em></p>
+
+
+	<p style="padding-left:4em;">Демон, обеспечивающий запуск и остановку посредством start-stop-daemon, если функция запуска-остановки не определена службой.</p>
+
+
+	<p><em>command_args</em></p>
+
+
+	<p style="padding-left:4em;">Список аргументов, передаваемых демону при запуске.</p>
+
+
+	<p><em>pidfile</em></p>
+
+
+	<p style="padding-left:4em;">Файл идентификатора процесса, используемый предыдущей командой.</p>
+
+
+	<p><em>name</em></p>
+
+
+	<p style="padding-left:4em;">Имя, используемое предыдущей командой.</p>
+
+
+	<p><em>retry</em></p>
+
+
+	<p style="padding-left:4em;">Количество попыток, которые будут предприняты при остановке службы. Это может быть как ожидание в секундах, так и многократные пары сигнал/ожидание (аналогично SIGTERM/5).</p>
+
+
+	<h2 id="ЗАВИСИМОСТИ">ЗАВИСИМОСТИ<a href="#ЗАВИСИМОСТИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Чтобы <strong>runscript</strong> запускался и останавливался в нужный момент по отношению к другим службам, вы должны определить <strong>функцию зависимости</strong>. Поскольку это функция, <strong>depend</strong> допускает самую тонкую настройку (см. пример ниже). Перечислим здесь функции, которые могут выступать в качестве <strong>функции зависимости</strong>. Вы просто передаете им имена служб, которые следует добавить к данному типу зависимости, а для удаления какой-либо службы сопровождаете ее префиксом !.</p>
+
+
+	<p><em>need</em></p>
+
+
+	<p style="padding-left:4em;">Служба не будет запускаться до запуска необходимых служб и не прекратит работу, пока службы, которым она необходима, не будут остановлены.</p>
+
+
+	<p><em>use</em></p>
+
+
+	<p style="padding-left:4em;">Служба попытается запустить другие используемые службы, добавленные на уровень запуска.</p>
+
+
+	<p><em>after</em></p>
+
+
+	<p style="padding-left:4em;">Служба будет запущена после данных служб и остановлена перед их остановкой.</p>
+
+
+	<p><em>before</em></p>
+
+
+	<p style="padding-left:4em;">Служба будет запущена перед запуском данных служб и остановлена после их остановки.</p>
+
+
+	<p><em>provide</em></p>
+
+
+	<p style="padding-left:4em;">Обеспечить данную виртуальную службу. Например, named обеспечивает dns.</p>
+
+
+	<p><em>config</em></p>
+
+
+	<p style="padding-left:4em;">Необходимо заново вычислить зависимости, поскольку файлы изменились.</p>
+
+
+	<p><em>keyword</em></p>
+
+
+	<p style="padding-left:4em;">Пометить службу ключевым словом. На данный момент поддерживаются следующие ключевые слова:</p>
+
+
+	<p style="padding-left:4em;"><strong>-shutdown</strong></p>
+
+
+	<p style="padding-left:8em;">Не останавливать службу при выходе из системы. Как правило, оставшиеся демоны могут получать сигнал SIGTERM непосредственно перед конечным закрытием. Это ключевое слово обычно имеют службы, обеспечивающие работу в сети, такие как сценарии запуска network и dhcpcd.</p>
+
+
+	<p style="padding-left:4em;"><strong>-stop</strong></p>
+
+
+	<p style="padding-left:8em;">Не останавливать службу при переходе на следующий уровень запуска, даже если его нет. Для выхода из системы.</p>
+
+
+	<p style="padding-left:4em;"><strong>-timeout</strong></p>
+
+
+	<p style="padding-left:8em;">Другие службы должны ожидать вплоть до запуска службы. Используйте данное ключевое слово, если запуск службы может занять более минуты.</p>
+
+
+	<p style="padding-left:4em;"><strong>-jail</strong></p>
+
+
+	<p style="padding-left:8em;">При виртуализации полностью исключать службу из зависимостей. Ее можно будет запустить, вызвав напрямую. Настройка через переменную <strong>rc_sys</strong> в файле /etc/rc.conf</p>
+
+
+	<p style="padding-left:4em;"><strong>-lxc</strong></p>
+
+
+	<p style="padding-left:8em;">Аналогично -jail, но для виртуализации на уровне операционной системы (LXC, Linux Resource Containers).</p>
+
+
+	<p style="padding-left:4em;"><strong>-openvz</strong></p>
+
+
+	<p style="padding-left:8em;">Аналогично -jail, но для систем OpenVZ.</p>
+
+
+	<p style="padding-left:4em;"><strong>-prefix</strong></p>
+
+
+	<p style="padding-left:8em;">Аналогично -jail, но для систем Prefix.</p>
+
+
+	<p style="padding-left:4em;"><strong>-uml</strong></p>
+
+
+	<p style="padding-left:8em;">Аналогично -jail, но для систем UML.</p>
+
+
+	<p style="padding-left:4em;"><strong>-vserver</strong></p>
+
+
+	<p style="padding-left:8em;">Аналогично -jail, но для систем VServer.</p>
+
+
+	<p style="padding-left:4em;"><strong>-xen0</strong></p>
+
+
+	<p style="padding-left:8em;">Аналогично -jail, но для систем Xen DOM0.</p>
+
+
+	<p style="padding-left:4em;"><strong>-xenu</strong></p>
+
+
+	<p style="padding-left:8em;">Аналогично -jail, но для систем Xen DOMU.</p>
+
+
+	<p>О том, как переопределять зависимости с помощью конфигурационных файлов, см. раздел <strong>ФАЙЛЫ</strong>.</p>
+
+
+	<h2 id="ВСТРОЕННЫЕ-ФУНКЦИИ">ВСТРОЕННЫЕ ФУНКЦИИ<a href="#ВСТРОЕННЫЕ-ФУНКЦИИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>runscript</strong> определяет некоторые встроенные функции, к которым вы можете обращаться из ваших служебных сценариев:</p>
+
+
+	<p><strong>einfo</strong> [<em>строка</em> ]</p>
+
+
+	<p style="padding-left:4em;">Выводит зеленый астериск перед строкой.</p>
+
+
+	<p><strong>ewarn</strong> [<em>строка</em> ]</p>
+
+
+	<p style="padding-left:4em;">Выводит желтый астериск перед строкой.</p>
+
+
+	<p><strong>eerror</strong> [<em>строка</em> ]</p>
+
+
+	<p style="padding-left:4em;">Выводит красный астериск перед строкой.</p>
+
+
+	<p><strong>ebegin</strong> [<em>строка</em> ]</p>
+
+
+	<p style="padding-left:4em;">Аналогично einfo, но с многоточием в конце.</p>
+
+
+	<p><strong>eend</strong> <em>возвращаемая_величина</em> [<em>строка</em> ]</p>
+
+
+	<p style="padding-left:4em;">Если <em>возвращаемая_величина</em> не равна 0, выводит строку с <strong>eerror</strong> и <strong>!!</strong> в квадратных скобках в конце. Иначе выводить ok в квадратных скобках в конце строки. Возвращается значение <em>возвращаемой_величины</em>.</p>
+
+
+	<p><strong>ewend</strong> <em>возвращаемая_величина</em> [<em>строка</em> ]</p>
+
+
+	<p style="padding-left:4em;">Аналогично <strong>eend</strong>, но вместо <strong>eerror</strong> использовать <strong>ewarn</strong>.</p>
+
+
+	<p>Перечисленные команды могут иметь префикс <strong>v</strong>: в этом случае они будут действовать, только если переменная окружения <em>EINFO_VERBOSE</em> имеет значение true.</p>
+
+
+	<p><strong>ewaitfile</strong> <em>время файл1 файл2</em> ...</p>
+
+
+	<p style="padding-left:4em;">Ожидать время в секундах, пока не будут перебраны все файлы. Если все файлы существуют, возвращает 0, иначе значение, отличное от единицы. Если значение времени меньше 1, ожидание будет бесконечным.</p>
+
+
+	<p><strong>is_newer_than</strong> <em>файл1 файл2</em> ...</p>
+
+
+	<p style="padding-left:4em;">Если файл1 новее файла2, возвращает 0, иначе 1. Если файл2 - каталог, проверяет также его содержимое.</p>
+
+
+	<p><strong>is_older_than</strong> <em>файл1 файл2</em> ...</p>
+
+
+	<p style="padding-left:4em;">Если файл1 новее файла2, возвращает 0, иначе 1. Если файл2 - каталог, проверяет также его содержимое.</p>
+
+
+	<p><strong>service_set_value</strong> <em>значение_имени</em></p>
+
+
+	<p style="padding-left:4em;">Сохраняет <em>значение_имени</em> для дальнейшего восстановления. Когда служба прекратит свою работу, сохраненные значения будут утрачены.</p>
+
+
+	<p><strong>service_get_value</strong> <em>имя</em></p>
+
+
+	<p style="padding-left:4em;">Возвращает сохраненное значение под <em>именем</em>.</p>
+
+
+	<p><strong>service_started</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Если служба запущена, возвращает 0, иначе 1.</p>
+
+
+	<p><strong>service_starting</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Если служба запускается, возвращает 0, иначе 1.</p>
+
+
+	<p><strong>service_inactive</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Если служба неактивна, возвращает 0, иначе 1.</p>
+
+
+	<p><strong>service_stopping</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Если служба прекращает свою работу, возвращает 0, иначе 1.</p>
+
+
+	<p><strong>service_stopped</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Если служба остановлена, возвращает 0, иначе 1.</p>
+
+
+	<p><strong>service_coldplugged</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">При холодном запуске службы возвращает 0, иначе 1.</p>
+
+
+	<p><strong>service_wasinactive</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Если служба была неактивна, возвращает 0, иначе 1.</p>
+
+
+	<p style="padding-left:4em;"><strong>service_started_daemon</strong> [<em>служба</em> ] <em>демон</em> [<em>индекс</em> ]</p>
+
+
+	<p>Если служба запустила демон через <strong>start-stop-daemon</strong>, возвращает 0, иначе 1. Если был указан индекс, это должен быть pid демона, запущенного службой.</p>
+
+
+	<p><strong>mark_service_started</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Пометить службу как запущенную.</p>
+
+
+	<p><strong>mark_service_starting</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Пометить службу как начинающую работу.</p>
+
+
+	<p><strong>mark_service_inactive</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Пометить службу как неактивную.</p>
+
+
+	<p><strong>mark_service_stopping</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Пометить службу как завершающую работу.</p>
+
+
+	<p><strong>mark_service_stopped</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Пометить службу как остановленную.</p>
+
+
+	<p><strong>mark_service_coldplugged</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Пометить службу как службу с холодной загрузкой.</p>
+
+
+	<p><strong>mark_service_wasinactive</strong> [<em>служба</em> ]</p>
+
+
+	<p style="padding-left:4em;">Пометить службу как неактивную.</p>
+
+
+	<p><strong>checkpath</strong></p>
+
+
+	<p style="padding-left:4em;">[<strong>-d , -directory</strong> ] [<strong>-f , -file</strong> ] [<strong>-m , -mode</strong> <em>режим</em> ] [<strong>-o , owner</strong> <em>владелец</em> ] <em>путь</em> ...</p>
+
+
+	<p>Проверяет существование <em>пути</em>, его типа, его <em>владельца</em>, <em>режимы</em> доступа. Если при проверке обнаруживается ошибка, путь будет исправлен.</p>
+
+
+	<p><strong>yesno</strong> <em>значение</em></p>
+
+
+	<p style="padding-left:4em;">Если значение соответствует YES, TRUE, ON или 1, возвращает 0 независимо от регистра, иначе возвращает 1.</p>
+
+
+	<h2 id="ОКРУЖЕНИЕ">ОКРУЖЕНИЕ<a href="#ОКРУЖЕНИЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>runscript</strong> присваивает значения следующим переменным окружения, которые можно использовать в сценариях служб:</p>
+
+
+	<p><em>RC_SVCNAME</em></p>
+
+
+	<p style="padding-left:4em;">Имя службы.</p>
+
+
+	<p><em>RC_RUNLEVEL</em></p>
+
+
+	<p style="padding-left:4em;">Текущий уровень запуска, на котором находится rc.</p>
+
+
+	<p><em>RC_BOOTLEVEL</em></p>
+
+
+	<p style="padding-left:4em;">Выбран загрузочный уровень запуска. По умолчанию - boot.</p>
+
+
+	<p><em>RC_DEFAULTLEVEL</em></p>
+
+
+	<p style="padding-left:4em;">Выбран основной уровень запуска. По умолчанию - default.</p>
+
+
+	<p><em>RC_SYS</em></p>
+
+
+	<p style="padding-left:4em;">Специальная переменная для дополнительного описания системы. Может принимать значения OPENVZ, XENU, XEN0, UML и VSERVER.</p>
+
+
+	<p><em>RC_UNAME</em></p>
+
+
+	<p style="padding-left:4em;">Результат выполнения команды `uname -s`.</p>
+
+
+	<h2 id="ФАЙЛЫ">ФАЙЛЫ<a href="#ФАЙЛЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Файлы конфигурации, связанные с расположением службы. Если уже существует файл, оканчивающийся на .${RC_RUNLEVEL}, будет использован он.</p>
+
+
+	<p><strong>../conf.d/${RC_SVCNAME%%.*}</strong></p>
+
+
+	<p style="padding-left:4em;">Множественный конфигурационный файл. Например: если ${RC_SVCNAME} - net.eth1, обращаться к ../conf.d/net.</p>
+
+
+	<p><strong>../conf.d/${RC_SVCNAME}</strong></p>
+
+
+	<p style="padding-left:4em;">Конфигурационный файл службы.</p>
+
+
+	<p><strong>/etc/rc.conf</strong></p>
+
+
+	<p style="padding-left:4em;">Конфигурационный файл хоста.</p>
+
+
+	<p>За исключением /etc/rc.conf, конфигурационные файлы могут также переопределять зависимости служб с помощью переменных. Просто добавьте к зависимости префикс rc_. Примеры:<br /><pre># В то время как большинство служб не требуют определенного интерфейса, наша
+# конфигурация openvpn в таковом нуждается, а именно в bge0.
+rc_need="net.bge0" 
+# В файле /etc/rc.conf пропишем
+rc_openvpn_need="net.bge0" 
+
+# Службы не должны зависеть от интерфейса tap1 для сетевой работы,
+# но нам необходимо добавить net.tap1 к уровню запуска default.
+rc_provide="!net" 
+# В файле /etc/conf.d/net пропишем
+rc_provide_tap1="!net" 
+# В файле /etc/rc.conf пропишем
+rc_net_tap1_provide="!net" 
+
+# Ключевые слова можно использовать с отрицанием. Это особенно удобно для пользователей prefix,
+# тестирующих OpenRC.
+rc_keyword="!noprefix"</pre></p>
+
+
+	<h2 id="ПРИМЕРЫ">ПРИМЕРЫ<a href="#ПРИМЕРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Ниже приводится пример сценария службы для foo.</p>
+
+
+<pre>#!/sbin/runscript
+command=/usr/bin/foo
+command_args="${foo_args} --bar" 
+pidfile=/var/run/foo.pid
+name="FooBar Daemon" 
+
+description="FooBar is a daemon that eats and drinks" 
+extra_commands="show" 
+extra_started_commands="drink eat" 
+description_drink="Opens mouth and reflexively swallows" 
+description_eat="Chews food in mouth" 
+description_show="Shows what's in the tummy" 
+
+_need_dbus()
+{
+    grep -q dbus /etc/foo/plugins
+}
+
+depend()
+{
+    # Мы сохраняем файл идентификатора процесса и пишем в каталог /var/cache, поэтому нам потребуется localmount:
+    need localmount
+    # Мы можем использовать сеть, но это не обязательно:
+    use net
+    # Служба должна следовать за bootmisc, чтобы каталог /var/run инициализировался до того,
+    # как мы поместим туда файл идентификатора процесса:
+    after bootmisc
+
+    # Foo может использовать демон dbus.
+    # Но если бы добавим dbus, пока foo работает,
+    # и потом остановим dbus, нам не нужно останавливать foo, поскольку foo не использовала dbus:
+    config /etc/foo/plugins
+    local _need=
+    if service_started; then
+        _need=`service_get_value need`
+    else
+        if _need_dbus; then
+           _need="${_need} dbus" 
+        fi
+    fi
+    need ${_need}
+}
+
+start_pre()
+{
+    # Убедимся, что наши каталоги не содержат ошибок:
+    checkpath --dir --owner foo:foo --mode 0664 \
+        /var/run/foo /var/cache/foo
+}
+
+start_post()
+{
+    # Сохраним необходимую службу:
+    if _need_dbus; then
+        service_set_value need dbus
+    fi
+}
+
+stop_post() {
+    # Удалим мусор:
+    rm -rf /var/cache/foo/*
+}
+
+drink()
+{
+    ebegin "Starting to drink" 
+    ${command} --drink beer
+    eend $? "Failed to drink any beer :(" 
+}
+
+eat()
+{
+    local result=0 retval= ate= food=
+    ebegin "Starting to eat" 
+
+    if yesno "${foo_diet}"; then
+        eend 1 "We are on a diet!" 
+        return 1
+    fi
+
+    for food in /usr/share/food/*; do
+        veinfo "Eating `basename ${food}`" 
+        ${command} --eat ${food}
+        retval=$?
+        : $((${result} += ${retval}))
+        [ ${retval} = 0 ] &#38;&#38; ate="${ate} `basename ${food}`" 
+    done
+
+    if eend ${result} "Failed to eat all the food"; then
+        service_set_value ate "${ate}" 
+    fi
+}
+
+show()
+{
+    einfo "Foo has eaten: `service_get_value ate`" 
+}</pre>
+
+	<h2 id="ОШИБКИ">ОШИБКИ<a href="#ОШИБКИ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>По причинам, связанным со способом загрузки конфигурационных файлов и необходимостью обрабатывать несколько служебных каталогов, вы можете использовать в каталогах служб только символические ссылки на другие службы из того же каталога. Вы не можете создавать символическую ссылку, указывающую на службу из другого каталога, даже если другой служебный каталог.</p>
+
+
+	<p>is_older_than должна бы возвращать 0 при успешной отработке, однако в этом случае она возвращает 1, для совместимости с базовым набором (baselayout) Gentoo. Мы рекомендуем пользователям использовать функцию is_newer_, которая работает привычным образом.</p>
+
+
+	<h2 id="СМ-ТАКЖЕ">СМ. ТАКЖЕ<a href="#СМ-ТАКЖЕ" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><strong>einfo</strong>(3), <strong><a href=".html" class="wiki-page">rc</a></strong>(8), <strong><a href=".html" class="wiki-page">rc-status</a></strong>(8), <strong><a href=".html" class="wiki-page">rc-update</a></strong>(8), <strong>rc_plugin_hook</strong>(3), <strong>sh</strong>(1p), <strong><a href=".html" class="wiki-page">start-stop-daemon</a></strong>(8), <strong>uname</strong>(1)</p>
+
+
+	<h2 id="АВТОРЫ">АВТОРЫ<a href="#АВТОРЫ" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Roy Marples &lt;<a class="email" href="mailto:roy@marples.name">roy@marples.name</a>&gt;</li>
+	</ul>
+
+
+	<h2 id="ПЕРЕВОД">ПЕРЕВОД<a href="#ПЕРЕВОД" class="wiki-anchor">&para;</a></h2>
+
+
+	<ul>
+	<li>Елена Гаврилова &lt;<a class="email" href="mailto:e.vl.gavrilova@yandex.ru">e.vl.gavrilova@yandex.ru</a>&gt;</li>
+	</ul>
+
+
+	<p>&nbsp;<br />&nbsp;</p>
+</body>
+</html>

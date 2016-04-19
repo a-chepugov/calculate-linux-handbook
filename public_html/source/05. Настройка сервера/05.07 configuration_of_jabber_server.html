@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>configuration of jabber server</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-Jabber-сервера">Настройка Jabber сервера<a href="#Настройка-Jabber-сервера" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>XMPP (ранее известный как Jabber) — Extensible Messaging and Presence Protocol (англ. расширяемый протокол обмена сообщениями и информацией о присутствии), это основанный на XML открытый, свободный для использования протокол для мгновенного обмена сообщениями и информацией о присутствии в режиме, близкому к режиму реального времени.</p>
+
+
+	<p>Настройка jabber сервера производится в несколько этапов:</p>
+
+
+	<h2 id="Установка-Jabber-сервиса-в-систему">Установка Jabber сервиса в систему<a href="#Установка-Jabber-сервиса-в-систему" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Jabber сервис, настраиваемый с помощью пакета Calculate-Server, требует, чтобы в системе был установлен сервис ldap. Если сервис не был ранее установлен, установим его командой:<br /><pre>
+cl-setup ldap
+</pre></p>
+
+
+	<p>Установка jabber сервиса производится командой<br /><pre>
+cl-setup jabber
+</pre></p>
+
+
+	<p>В этом случае сервис будет установлен с параметрами по умолчанию: имя хоста jabber сервиса - имя хоста машины, лог сообщений пользователей вестись не будет.</p>
+
+
+	<p>Для указания дополнительных jabber хостов (например <code>jabber.myhost.ru</code>) используется параметр --hosts:<br /><pre>
+cl-setup --hosts jabber.myhost.ru jabber
+</pre></p>
+
+
+	<p>Установка сервиса с ведением лога сообщений пользователей, производится командой:<br /><pre>
+cl-setup --history on jabber
+</pre></p>
+
+
+	<p>Сообщения будет сохраняться в директорию <em>/var/log/jabber</em></p>
+
+
+	<p>При установке сервиса потребуется пароль для учетной записи <em>admin</em>.</p>
+
+
+	<h2 id="Учетные-записи">Учетные записи<a href="#Учетные-записи" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Каждый пользователь в сети имеет уникальный идентификатор — <em>Jabber ID</em> (сокращенно JID). Адрес JID, подобно адресу электронной почты, содержит имя пользователя и доменное имя сервера, на котором зарегистрирован пользователь, разделённые знаком @. Например, пользователь user, зарегистрированный на сервере example.com, будет иметь адрес: <a class="email" href="mailto:user@example.com">user@example.com</a>.</p>
+
+
+	<h2 id="Управление-учетными-записями">Управление учетными записями<a href="#Управление-учетными-записями" class="wiki-anchor">&para;</a></h2>
+
+
+	<h3 id="Добавление-учетной-записи">Добавление учетной записи<a href="#Добавление-учетной-записи" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Добавление учетной записи сервиса jabber осуществляется командой <em>cl-useradd</em><br /><pre>
+# добавить пользователя guest@домен c Nickname Гость
+cl-useradd -p -c "Гость" guest jabber
+# добавить пользователя guest@домен с Nickname Гость, и установить для него фотографию
+cl-useradd -p -c "Гость" -i pic/guest.png guest jabber
+</pre></p>
+
+
+	<p>Поддерживаемые форматы изображений определяются возможностями <em>ImageMagick</em>. Если в системе его нет - доступен только формат jpeg.</p>
+
+
+	<h3 id="Смена-пароля">Смена пароля<a href="#Смена-пароля" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Смена пароля учетной записи сервиса jabber осуществляется командой <em>cl-passwd</em><br /><pre>
+cl-passwd guest jabber
+</pre></p>
+
+
+	<h3 id="Блокировка-и-удаление-учетной-записи">Блокировка и удаление учетной записи<a href="#Блокировка-и-удаление-учетной-записи" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Удаление учетной записи из сервиса jabber осуществляется командой <em>cl-userdel</em><br /><pre>
+cl-userdel guest jabber
+</pre></p>
+
+
+	<p>Блокировка учетной записи производится командой <em>cl-usermod -L</em><br /><pre>
+cl-usermod -L guest jabber
+</pre></p>
+
+
+	<p>Разблокировать учетную запись можно командой <em>cl-usermod -U</em><br /><pre>
+cl-usermod -U guest jabber
+</pre></p>
+
+
+	<h2 id="Группы">Группы<a href="#Группы" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><em>Группа</em> - набор JID, использующийся для рассылок сообщений нескольким пользователям одновременно. При подключении пользователя к jabber сервису он автоматически получит список групп и их участников. Пользователей без группы в список контактов добавлять придется в ручную. Пользователь может входить только в одну группу.</p>
+
+
+	<h3 id="Управление-группами">Управление группами<a href="#Управление-группами" class="wiki-anchor">&para;</a></h3>
+
+
+	<h4>Создание группы</h4>
+
+
+	<p>Создание группы сервиса jabber осуществляется командой <em>cl-groupadd</em><br /><pre>
+# создать группу с названием "Тестовая группа" 
+cl-groupadd "Тестовая группа" jabber
+</pre></p>
+
+
+	<p>Имя группы будет отображаться у пользователей в списке контактов.</p>
+
+
+	<h4>Удаление группы</h4>
+
+
+	<p>Удалить группу из сервиса jabber можно командой <em>cl-groupdel</em><br /><pre>
+# удалить "Тестовую группу" 
+cl-groupdel "Тестовая группа" jabber
+</pre></p>
+
+
+	<p>Удаляется только группа, все пользователи, которые были включены в эту группу остаются без группы.</p>
+
+
+	<h4>Переименование группы</h4>
+
+
+	<p>Переименовать существующую группу сервиса jabber можно командой <em>cl-groupmod</em><br /><pre>
+# назначить группе 'My test' новое имя 'Тестовая группа'
+cl-groupmod -n 'Тестовая группа' 'My test' jabber
+</pre></p>
+
+
+	<h4>Изменение состава группы</h4>
+
+
+	<p>Изменять состав jabber группы можно при помощи команд <em>cl-groupmod</em> и <em>cl-usermod</em><br /><pre>
+# Поместить пользователя guest в группу 'Guest group' 
+cl-usermod -g "Guest group" guest jabber
+# Удалить пользователя guest из группы 'Guest group'
+cl-groupmod -d guest "Guest group" jabber
+# Добавить пользователей guest,guest2 в группу 'Guest group'
+cl-groupmod -a guest,guest2 "Guest group" jabber
+</pre></p>
+
+
+	<h4>Ограничения</h4>
+
+
+	<p>Если на вашем сервере больше одного сетевого интерфейса, и вы желаете чтобы он работал только на одном из них, внесите в его конфиг соответствующую директиву {ip, {xxx, xxx, xxx, xxx}}, в раздел "listen". Обратите внимание! Разряды IP отделяются не точками, а запятыми!</p>
+
+
+<pre>
+{5223, ejabberd_c2s, [
+                       {access, c2s},
+                       {shaper, c2s_shaper},
+                       {ip, {192, 168, 1, 6}},
+                       {certfile, "/etc/jabber/ssl.pem"}, tls,
+                       {max_stanza_size, 65536}
+                     ]},
+</pre>
+
+	<p>Соответственно, эту директиву можно прописать во всех службах ejabberd: ejabberd_s2s, ejabberd_http, и т д.</p>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>calcboot</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="calcboot">calcboot<a href="#calcboot" class="wiki-anchor">&para;</a></h1>
+
+
+	<ul class="toc"><li class="heading1"><a href="#calcboot">calcboot</a></li>
+<li class="heading2"><a href="#Назначение">Назначение</a></li>
+<li class="heading2"><a href="#Описание-модуля-calcmenuc32">Описание модуля calcmenu.c32</a></li>
+<li class="heading3"><a href="#1-запоминание-значений-параметров">1. запоминание значений параметров</a></li>
+<li class="heading3"><a href="#2-замещение-значений-сохраненных-параметров">2. замещение значений сохраненных параметров</a></li>
+<li class="heading3"><a href="#3-замещение-значений-параметров-по-позициям">3. замещение значений параметров по позициям</a></li>
+<li class="heading3"><a href="#4-восстановление-начальной-позиции-курсора-в-меню-по-параметру">4. восстановление начальной позиции курсора в меню по параметру</a></li>
+<li class="heading3"><a href="#5-указание-значений-по-умолчанию-для-параметров-добавлено-в-версии-3865">5. указание значений по умолчанию для параметров (добавлено в версии 3.86.5)</a></li>
+</ul>
+
+
+	<h2 id="Назначение">Назначение<a href="#Назначение" class="wiki-anchor">&para;</a></h2>
+
+
+	<p><code>calcboot</code> представляет собой модуль для Syslinux (calcmenu.c32), позволяющий запоминать выбор при использовании нескольких загрузочных меню. Также в нем хранятся фоновые изображения для Grub и Syslinux.</p>
+
+
+	<h2 id="Описание-модуля-calcmenuc32">Описание модуля calcmenu.c32<a href="#Описание-модуля-calcmenuc32" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>calcmenu.c32 основан на vesamenu.c32 и реализует как все его возможности, так и дополнительные:</p>
+
+
+	<h3 id="1-запоминание-значений-параметров">1. запоминание значений параметров<a href="#1-запоминание-значений-параметров" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>При использование нескольких меню в поле <code>APPEND</code> заносится имя файла меню, к которому нужно перейти при выборе данного пункта. В отличии от стандартного vesamenu.c32 указанные параметры для меню не сбрасываются.</p>
+
+
+	<p>Пример пункта меню:</p>
+
+
+<pre>
+APPEND isolinux.cfg calculate=,be_BY
+</pre>
+
+	<p>При выборе такого пункта меню будет загружено меню из файла <code>isolinux.cfg</code>, а параметр <code>calculate=,be_BY</code> будет сохранен. В итоге при выборе пункта меню из <code>isolinux.cfg</code>, содержащего</p>
+
+
+<pre>
+KERNEL /boot/vmlinuz
+APPEND root=/dev/ram0 initrd=/boot/initrd init=/linuxrc looptype=squashfs unionfs
+</pre><br />будет запущено ядро с параметрами, указанными в <code>APPEND</code>, плюс <code>calculate=,be_BY</code>.
+
+	<h3 id="2-замещение-значений-сохраненных-параметров">2. замещение значений сохраненных параметров<a href="#2-замещение-значений-сохраненных-параметров" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Сохраненные параметры не повторяются. То есть если параметр <code>calculate</code> уже сохранен, и осуществляется выбор пункта меню, у которого также указан параметр <code>calculate</code>, значение <code>calculate</code> будет заменено на новое.</p>
+
+
+	<h3 id="3-замещение-значений-параметров-по-позициям">3. замещение значений параметров по позициям<a href="#3-замещение-значений-параметров-по-позициям" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Каждый параметр может хранить несколько значений, если они разделены запятой. Например, параметр <code>calculate</code> будет хранить язык и временную зону (<code>calculate=ru_RU,Europe/Moscow</code>). Для реализации этого создаются два различных меню (<code>lang.cfg, timezone.cfg</code>), пункты меню которых содержат следующие <code>APPEND</code>:</p>
+
+
+<pre>
+lang.cfg
+...
+APPEND timzone.cfg calculate=ru_RU,
+...
+</pre><br /><pre>
+timezone.cfg
+...
+APPEND othermenu.cfg calculate=,Europe/Moscow
+...
+</pre>
+
+	<p>При выборе таких пунктов меню для <code>othermenu.cfg</code> будет сохранен параметр <code>calculate</code> со значением <code>ru_RU,Europe/Moscow</code>.</p>
+
+
+	<h3 id="4-восстановление-начальной-позиции-курсора-в-меню-по-параметру">4. восстановление начальной позиции курсора в меню по параметру<a href="#4-восстановление-начальной-позиции-курсора-в-меню-по-параметру" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Чтобы запоминалось положение курсора выбора языка, временной зоны и т.д., в файле описания меню используется</p>
+
+
+<pre>
+MENUPARAM параметр номер
+</pre>
+
+	<p>где "параметр" - название параметра, который хранит выбранное значение, а "номер" - номер позиции в значении. Например, для <code>timezone.cfg</code>, хранящей описание меню с часовыми поясами, используется</p>
+
+
+<pre>
+MENUPARAM calculate 1
+</pre> 
+
+	<p>т.е. параметр <code>calculate</code>, второе значение. Таким образом, при отображении меню <code>timezone.cfg</code>, если есть сохраненный параметр <code>calculate</code> и у него есть значение во второй позиции, то курсор будет указывать на необходимый пункт меню.</p>
+
+
+	<h3 id="5-указание-значений-по-умолчанию-для-параметров-добавлено-в-версии-3865">5. указание значений по умолчанию для параметров (добавлено в версии 3.86.5)<a href="#5-указание-значений-по-умолчанию-для-параметров-добавлено-в-версии-3865" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для указания значений используется <br /><pre>
+DEFAULTPARAM параметры
+</pre></p>
+
+
+	<p>Например, для указания русского языка по умолчанию:<br /><pre>
+DEFAULTPARAM calculate=lang:ru_RU,keymap:ru_RU
+</pre></p>
+</body>
+</html>

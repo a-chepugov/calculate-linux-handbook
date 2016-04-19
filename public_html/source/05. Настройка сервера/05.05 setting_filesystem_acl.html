@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>setting filesystem acl</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+pre {font-size:133% }
+</style>
+</head>
+<body>
+<h1 id="Настройка-прав-доступа-ACL">Настройка прав доступа ACL<a href="#Настройка-прав-доступа-ACL" class="wiki-anchor">&para;</a></h1>
+
+
+	<p>Для создания прав доступа к файлам Samba ресурса сервера используйте <em>ACL</em> (<em>Access Control List</em> — список контроля доступа). При помощи ACL вы можете установить доступ к файлам определенным группам, либо конечным пользователям.</p>
+
+
+	<p>Стандартные команды работы с ACL - <em>setfacl</em> и <em>getfacl</em> - подробно описаны в руководстве, поэтому здесь мы ограничимся примерами.</p>
+
+
+	<p>После <a href="настройки Samba сервера.html" class="wiki-page">настройки Samba сервера</a>, создаётся путь для общей точки монтирования <em>/var/calculate/server-data/samba/share</em>.</p>
+
+
+	<p>Внимание. Убедитесь, что файловая система диска, содержащего указанную директорию, поддерживает ACL. <em>Не забудьте в опции монтирования файловой системы указать параметр "acl" (для xfs не требуется).</em></p>
+
+
+	<h2 id="Новый-ресурс">Новый ресурс<a href="#Новый-ресурс" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для примера допустим у вас в системе есть две группы <code>manager</code> и <code>logist</code>, а также два пользователя <code>iivanov</code> и <code>apetrov</code>.</p>
+
+
+	<p>Создадим директорию <code>Менеджер</code> для доступа на чтение и запись пользователям, входящим в группу <span class="bluecode" >manager</span>.<br /><pre>
+mkdir -m 700 Менеджер
+setfacl -m d:g:manager:rwx,g:manager:rwx Менеджер
+</pre></p>
+
+
+	<p>Первая команда создаст директорию с правами чтения выполнения и изменения содержимого для пользователя <span class="bluecode" >root</span>. Второй командой мы установим те же права для пользователей группы <span class="bluecode" >manager</span>.</p>
+
+
+	<p>Файлы и директории, создаваемые пользователями этой группы, либо <span class="bluecode" >root</span>-ом, будут наследовать атрибуты доступа.</p>
+
+
+	<h2 id="Просмотр-прав-доступа">Просмотр прав доступа<a href="#Просмотр-прав-доступа" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Права на доступ к директории, вы можете посмотреть из консоли, либо через файловый менеджер <span class="bluecode" >dolphin</span>, с <a href="Calculate Linux Desktop.html" class="wiki-page">Calculate Linux Desktop</a> (KDE версия).</p>
+
+
+	<p>Увидеть права доступа из консоли можно выполнив команду:</p>
+
+
+	<pre><code>getfacl Менеджер</code></pre>
+
+
+	<p>Программа выведет следующий текст:<br /><pre>
+# file: \320\234\320\265\320\275\320\265\320\264\320\266\320\265\321\200/
+# owner: root
+# group: root
+user::rwx
+group::---
+group:manager:rwx
+mask::rwx
+other::---
+default:user::rwx
+default:group::---
+default:group:manager:rwx
+default:mask::rwx
+default:other::---
+</pre></p>
+
+
+	<p>Для просмотра прав из <span class="bluecode" >dolphin</span>, нажмите на файле или директории правой кнопкой мыши, выберите вкладку <code>Права</code>, далее нажмите на кнопку <em>Дополнительные права</em>. Растяните открывшееся окно, чтобы увидеть все атрибуты.</p>
+
+
+	<h2 id="Управление-доступом">Управление доступом<a href="#Управление-доступом" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для управлением доступом используется команда <em>setfacl</em>.<br />Для модификации или добавления правила используется параметр <span class="bluecode" >-m</span>.</p>
+
+
+	<pre><code>-m user:[пользователь]:права[,user:пользователь:права]<br />-m group:[группа]:права[,group:группа:права]</code></pre>
+
+
+	<p>Если <em>пользователь</em> пропущен, то <em>права</em> назначаются владельцу файла.<br />Если <em>группа</em> пропущена, то <em>права</em> назначаются группе-владельцу файла.</p>
+
+
+	<h3 id="Пример">Пример<a href="#Пример" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Добавить право на чтение/запись файла <code>secretinfo</code> пользователям <span class="bluecode" >iivanov</span> и <span class="bluecode" >apetrov</span>:</p>
+
+
+	<pre><code>setfacl -m user:iivanov:rw,u:apetrov:rw secretinfo</code></pre>
+
+
+	<p>Добавить право на чтение/выполнение файла <code>runit</code> группе <&lt;manager&gt;:</p>
+
+
+	<pre><code>setfacl -m group:manager:rx runit</code></pre>
+
+
+	<p>Права можно комбинировать в одной строке.</p>
+
+
+	<h3 id="Пример">Пример<a href="#Пример" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Добавить для файла <code>qwerty</code> право чтения для пользователя <span class="bluecode" >iivanov</span>, право чтение/запись для <span class="bluecode" >apetrov</span>, чтение выполнение для группы <span class="bluecode" >logist</span>, запретить группе <span class="bluecode" >workers</span> выполнять какие либо действия.<br /><pre>
+setfacl --modify u:iivanov:r,u:apetrov:rw,g:workers:-,g:logist:rx qwerty
+</pre></p>
+
+
+	<h2 id="Права-по-умолчанию">Права по умолчанию<a href="#Права-по-умолчанию" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для директорий можно указать ACL права, которые будут автоматически добавляться для файлов и директорий, создаваемых в ней. Для этого используется идентификатор <span class="bluecode" >default</span> или параметр <span class="bluecode" >-d</span>. На саму директорию права указанные в <span class="bluecode" >default</span> не распространяются.</p>
+
+
+	<h3 id="Пример">Пример<a href="#Пример" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Для файлов и директорий, создаваемых в директории <code>managerdata</code>, добавить право чтение/записи для пользователя <span class="bluecode" >iivanov</span>.</p>
+
+
+	<pre><code>setfacl -m default:user:iivanov:rw managerdata</code></pre>
+
+
+	<h2 id="Рекурсивная-установка-прав">Рекурсивная установка прав<a href="#Рекурсивная-установка-прав" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для установки прав для всех файлов и директорий внутри директории используется параметр <span class="bluecode" >-R</span>. Так как для того, чтобы читать файл необходимы права на чтение <span class="bluecode" >r</span>, а для того чтобы читать директорию необходимы права на чтение и выполнение <span class="bluecode" >rx</span>, то можно при указании прав вместо <span class="bluecode" >х</span> указывать <span class="bluecode" >X</span>. Флаг <span class="bluecode" >X</span> устанавливает права на выполнение только для директорий и файлов, которые уже имеют право на выполнение. Флаг <span class="bluecode" >X</span> вычисляется на момент запуска <span class="bluecode" >setfacl</span>, поэтому в <span class="bluecode" >default</span> правилах она интерпретируется как <span class="bluecode" >x</span>.</p>
+
+
+	<h3 id="Пример">Пример<a href="#Пример" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Разрешить пользователю <span class="bluecode" >apetrov</span> читать все файлы и просматривать директории в <code>folder</code>.</p>
+
+
+	<pre><code>setfacl -R -m d:u:apetrov:rwx,u:apetrov:rwX folder</code></pre>
+
+
+	<p>или</p>
+
+
+	<pre><code>setfacl -R -m d:u:apetrov:rw,u:apetrov:rwX folder</code></pre>
+
+
+	<p>Обе команды имеют недостаток, который проявляется при создании новых файлов и директорий. Разница в том, что в первом случае пользователь <span class="bluecode" >apetrov</span> получит право на выполнение всех новых файлов создаваемых в <code>folder</code> и вложенных директориях, а во втором случае пользователь не сможет просматривать новые директории.</p>
+
+
+	<h2 id="Удаление-прав">Удаление прав<a href="#Удаление-прав" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для удаления правила для пользователя или группы используется параметр <span class="bluecode" >-x</span>.</p>
+
+
+	<h3 id="Пример">Пример<a href="#Пример" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Удалить права доступа к файлу <code>secretfile</code> для пользователя <span class="bluecode" >iivanov</span>.</p>
+
+
+	<pre><code>setfacl -x u:iivanov secretfile</code></pre>
+
+
+	<p>Удалить права доступа ко всем файлам и директориям внутри <code>folder</code> для пользователя <span class="bluecode" >apetrov</span>.</p>
+
+
+	<pre><code>setfacl -R -x u:apetrov folder</code></pre>
+
+
+	<h2 id="Очистка-правил">Очистка правил<a href="#Очистка-правил" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для удаления всех ACL правил используется опция <span class="bluecode" >-b</span>. Ее также можно использовать совместно с <span class="bluecode" >-m</span>, для того, чтобы заместить права.</p>
+
+
+	<h3 id="Пример">Пример<a href="#Пример" class="wiki-anchor">&para;</a></h3>
+
+
+	<p>Удалить все ACL правила и разрешить пользователю <span class="bluecode" >iivanov</span> читать <code>secretfile</code>.</p>
+
+
+	<pre><code>setfacl -b -m u:iivanov:r secretfile</code></pre>
+
+
+	<h2 id="Копирование-ACL">Копирование ACL<a href="#Копирование-ACL" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Для того, чтобы установить ACL на файл аналогичный какому-либо другому файлу используется команда:</p>
+
+
+	<pre><code>getfacl basefile | setfacl -b -M - targetfile</code></pre>
+
+
+	<p>В этом случае файл targetfile будет иметь такие же права как и <code>basefile</code>. Это достигается за счет параметра <span class="bluecode" ><del>M</span>, при помощи которого можно задавать права из файла (или стандартного потока ввода <span class="bluecode" ></del></span>).</p>
+
+
+	<h2 id="Эффективная-маска">Эффективная маска<a href="#Эффективная-маска" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Эффективная маска используется для ограничения определенного действия для всех пользователей и групп описанных в ACL. То есть можно например запретить всем писать в файл установив эффективную маску <span class="bluecode" >r-x</span>.</p>
+
+
+	<h3 id="Пример">Пример<a href="#Пример" class="wiki-anchor">&para;</a></h3>
+
+
+	<pre><code>setfacl -m m::rx filename</code></pre>
+
+
+	<p>Иногда эффективная маска вычисляется автоматически (например при действии <span class="bluecode" >chmod</span>, а также при создании файла, так как применяется права <span class="bluecode" >umask</span>). Для отмены маски ее следует установить в значение <span class="bluecode" >rwx</span>.</p>
+
+
+	<h2 id="Порядок-определения-доступа-к-файлу">Порядок определения доступа к файлу.<a href="#Порядок-определения-доступа-к-файлу" class="wiki-anchor">&para;</a></h2>
+
+
+	<p>Может ли пользователь выполнить действие над файлом или директорией определяются следующим образом.</p>
+
+
+	<ol>
+	<li>Используются права владельца, если пользователь им является.</li>
+		<li>Используются права, указанные конкретно для этого пользователя.</li>
+		<li>Если действие разрешено хотя бы для одной из группы в которую входит пользователь.</li>
+		<li>Если пользователь не входит ни в одну группу описанную в ACL, то используются права для <span class="bluecode" >other</span>.</li>
+	</ol>
+</body>
+</html>
